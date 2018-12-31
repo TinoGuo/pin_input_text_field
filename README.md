@@ -2,6 +2,9 @@
 
 A textField widget to help display different style pin
 
+## Installing
+Install the latest version from pub.
+
 ## Usage
 
 ```

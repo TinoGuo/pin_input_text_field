@@ -1,7 +1,7 @@
 name: pin_input_text_field
 description: A textField widget to help display different style pin
 version: 0.0.1
-author: Tino (guochenghaha@gmail.com)
+author: Tino <guochenghaha@gmail.com>
 homepage: https://github.com/TinoGuo/pin_input_text_field
 
 environment:
