@@ -1,8 +1,8 @@
 name: pin_input_text_field
 description: A textField widget to help display different style pin
 version: 0.0.1
-author: Tino
-homepage:
+author: Tino (guochenghaha@gmail.com)
+homepage: https://github.com/TinoGuo/pin_input_text_field
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
