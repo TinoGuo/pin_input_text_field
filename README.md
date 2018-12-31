@@ -16,7 +16,7 @@ BoxTightDecoration
 ![](https://user-gold-cdn.xitu.io/2018/12/31/168035580f8f7a2e?w=804&h=1696&f=gif&s=3533729)
 
 ## Installing
-Install the latest version from pub.
+Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
 
 ## Usage
 
