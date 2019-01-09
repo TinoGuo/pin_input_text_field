@@ -11,3 +11,7 @@
 * add enteredColor for UnderlineDecoration&BoxLooseDecoration
 * remove const default variable in PinInputTextField.
 * fix wrong place in painting
+
+## [0.1.1] - 2019/01/09
+
+* change license from MIT to Apache
