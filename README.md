@@ -1,6 +1,6 @@
 # pin_input_text_field
 
-A textField widget to help display different style pin
+[![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field) A TextField widget to help display different style pin
 
 ## Example
 
