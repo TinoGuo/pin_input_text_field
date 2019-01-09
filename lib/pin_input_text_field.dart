@@ -53,9 +53,13 @@ class UnderlineDecoration extends PinDecoration {
   /// The height of the underline.
   final double lineHeight;
 
+  /// The underline changed color when user enter pin.
+  final Color enteredColor;
+
   const UnderlineDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    this.enteredColor,
     this.gapSpace: 16.0,
     this.color: Colors.black,
     this.lineHeight: 2.0,
@@ -85,10 +89,10 @@ class BoxTightDecoration extends PinDecoration {
   const BoxTightDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    this.solidColor,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
     this.strokeColor: Colors.cyan,
-    this.solidColor,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -115,9 +119,13 @@ class BoxLooseDecoration extends PinDecoration {
   /// The box inside solid color.
   final Color solidColor;
 
+  /// The border changed color when user enter pin.
+  final Color enteredColor;
+
   const BoxLooseDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    this.enteredColor,
     this.solidColor,
     this.radius: const Radius.circular(8.0),
     this.strokeWidth: 1.0,
@@ -176,10 +184,14 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     super.initState();
     _controller.addListener(() {
       setState(() {
-        _text = _controller.text;
-        if (widget.onPinChanged != null) {
-          widget.onPinChanged(_text);
+        /// Only trigger when text is really changed.
+        if (widget.onPinChanged != null &&
+            _text != null &&
+            _controller.text != null &&
+            _text.compareTo(_controller.text) != 0) {
+          widget.onPinChanged(_controller.text);
         }
+        _text = _controller.text;
       });
     });
   }
@@ -249,19 +261,22 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 }
 
 class _PinPaint extends CustomPainter {
-  final String text;
+  String text;
   final int pinLength;
   final double space;
   final PinEntryType type;
   final PinDecoration decoration;
 
   _PinPaint({
-    this.text,
+    String text,
     this.pinLength,
     this.decoration,
     this.space: 4.0,
     this.type: PinEntryType.boxTight,
-  });
+  }) {
+    text ??= "";
+    this.text = text.trim();
+  }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
@@ -313,11 +328,6 @@ class _PinPaint extends CustomPainter {
           Offset(offsetX, size.height - dr.strokeWidth), borderPaint);
     }
 
-    /// Do not draw the text when text is blank.
-    if (text == null || text.trim().isEmpty) {
-      return;
-    }
-
     /// The char index of the [text]
     var index = 0;
     var startY = 0.0;
@@ -359,7 +369,6 @@ class _PinPaint extends CustomPainter {
       if (startY == 0.0) {
         startY = size.height / 2 - textPainter.height / 2;
       }
-      debugPrint('textpain width:${textPainter.width} $singleWidth');
       startX = dr.strokeWidth * (index + 1) +
           singleWidth * index +
           singleWidth / 2 -
@@ -398,6 +407,11 @@ class _PinPaint extends CustomPainter {
 
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
+      if (i < text.length && dr.enteredColor != null) {
+        borderPaint.color = dr.enteredColor;
+      } else {
+        borderPaint.color = dr.strokeColor;
+      }
       RRect rRect = RRect.fromRectAndRadius(
           Rect.fromLTRB(
             startX,
@@ -411,11 +425,6 @@ class _PinPaint extends CustomPainter {
         canvas.drawRRect(rRect, insidePaint);
       }
       startX += singleWidth + dr.gapSpace + dr.strokeWidth * 2;
-    }
-
-    /// Do not draw the text when text is blank.
-    if (text == null || text.trim().isEmpty) {
-      return;
     }
 
     /// The char index of the [text]
@@ -486,14 +495,14 @@ class _PinPaint extends CustomPainter {
         (size.width - (pinLength - 1) * dr.gapSpace) / pinLength;
 
     for (int i = 0; i < pinLength; i++) {
+      if (i < text.length && dr.enteredColor != null) {
+        underlinePaint.color = dr.enteredColor;
+      } else {
+        underlinePaint.color = dr.color;
+      }
       canvas.drawLine(Offset(startX, startY),
           Offset(startX + singleWidth, startY), underlinePaint);
       startX += singleWidth + dr.gapSpace;
-    }
-
-    /// Do not draw the text when text is blank.
-    if (text == null || text.trim().isEmpty) {
-      return;
     }
 
     /// The char index of the [text]
