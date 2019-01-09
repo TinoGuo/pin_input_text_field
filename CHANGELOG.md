@@ -2,7 +2,7 @@
 
 * first commit.
 
-## [0.1] - 2019/01/09
+## [0.1.0] - 2019/01/09
 
 * add comment to help understand source code.
 * add obscure style to be more customize.
