@@ -79,12 +79,16 @@ class BoxTightDecoration extends PinDecoration {
   /// The box border color.
   final Color strokeColor;
 
+  /// The box inside solid color.
+  final Color solidColor;
+
   const BoxTightDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
     this.strokeColor: Colors.cyan,
+    this.solidColor,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -108,9 +112,13 @@ class BoxLooseDecoration extends PinDecoration {
   /// The box border color.
   final Color strokeColor;
 
+  /// The box inside solid color.
+  final Color solidColor;
+
   const BoxLooseDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    this.solidColor,
     this.radius: const Radius.circular(8.0),
     this.strokeWidth: 1.0,
     this.gapSpace: 16.0,
@@ -268,18 +276,41 @@ class _PinPaint extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
 
+    /// Assign paint if [solidColor] is not null
+    Paint insidePaint;
+    if (dr.solidColor != null) {
+      insidePaint = Paint()
+        ..color = dr.solidColor
+        ..strokeWidth = dr.strokeWidth
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true;
+    }
+
     Rect rect = Rect.fromLTRB(
-        dr.strokeWidth, 0.0, size.width - dr.strokeWidth, size.height);
+      dr.strokeWidth / 2,
+      dr.strokeWidth / 2,
+      size.width - dr.strokeWidth / 2,
+      size.height - dr.strokeWidth / 2,
+    );
+
+    if (insidePaint != null) {
+      canvas.drawRRect(RRect.fromRectAndRadius(rect, dr.radius), insidePaint);
+    }
 
     /// Draw the whole rect.
     canvas.drawRRect(RRect.fromRectAndRadius(rect, dr.radius), borderPaint);
 
     /// Calculate the width of each underline.
-    double singleWidth = (size.width - dr.strokeWidth * 2) / pinLength;
+    double singleWidth =
+        (size.width - dr.strokeWidth * (pinLength + 1)) / pinLength;
 
-    for (int i = 0; i < pinLength - 1; i++) {
-      canvas.drawLine(Offset(singleWidth * (i + 1), 0),
-          Offset(singleWidth * (i + 1), size.height), borderPaint);
+    for (int i = 1; i < pinLength; i++) {
+      double offsetX = singleWidth +
+          dr.strokeWidth * i +
+          dr.strokeWidth / 2 +
+          singleWidth * (i - 1);
+      canvas.drawLine(Offset(offsetX, dr.strokeWidth),
+          Offset(offsetX, size.height - dr.strokeWidth), borderPaint);
     }
 
     /// Do not draw the text when text is blank.
@@ -328,7 +359,11 @@ class _PinPaint extends CustomPainter {
       if (startY == 0.0) {
         startY = size.height / 2 - textPainter.height / 2;
       }
-      startX = singleWidth * index + singleWidth / 2 - textPainter.width / 2;
+      debugPrint('textpain width:${textPainter.width} $singleWidth');
+      startX = dr.strokeWidth * (index + 1) +
+          singleWidth * index +
+          singleWidth / 2 -
+          textPainter.width / 2;
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
@@ -343,27 +378,39 @@ class _PinPaint extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
 
-    /// Calculate the width of each underline.
-    double singleWidth =
-        (size.width - dr.strokeWidth * 2 - ((pinLength - 1) * dr.gapSpace)) /
-            pinLength;
+    /// Assign paint if [solidColor] is not null
+    Paint insidePaint;
+    if (dr.solidColor != null) {
+      insidePaint = Paint()
+        ..color = dr.solidColor
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true;
+    }
 
-    var startX = dr.strokeWidth;
-    var startY = size.height - dr.strokeWidth;
+    /// Calculate the width of each underline.
+    double singleWidth = (size.width -
+            dr.strokeWidth * 2 * pinLength -
+            ((pinLength - 1) * dr.gapSpace)) /
+        pinLength;
+
+    var startX = dr.strokeWidth / 2;
+    var startY = size.height - dr.strokeWidth / 2;
 
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
-      canvas.drawRRect(
-          RRect.fromRectAndRadius(
-              Rect.fromLTRB(
-                startX,
-                dr.strokeWidth,
-                startX + singleWidth,
-                startY,
-              ),
-              dr.radius),
-          borderPaint);
-      startX += singleWidth + dr.gapSpace;
+      RRect rRect = RRect.fromRectAndRadius(
+          Rect.fromLTRB(
+            startX,
+            dr.strokeWidth / 2,
+            startX + singleWidth + dr.strokeWidth,
+            startY,
+          ),
+          dr.radius);
+      canvas.drawRRect(rRect, borderPaint);
+      if (insidePaint != null) {
+        canvas.drawRRect(rRect, insidePaint);
+      }
+      startX += singleWidth + dr.gapSpace + dr.strokeWidth * 2;
     }
 
     /// Do not draw the text when text is blank.
@@ -414,7 +461,9 @@ class _PinPaint extends CustomPainter {
       startX = singleWidth * index +
           singleWidth / 2 -
           textPainter.width / 2 +
-          dr.gapSpace * index;
+          dr.gapSpace * index +
+          dr.strokeWidth * index * 2 +
+          dr.strokeWidth;
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
