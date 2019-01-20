@@ -194,7 +194,11 @@ class PinInputTextField extends StatefulWidget {
   /// If null, this widget will create its own [PinEditingController].
   final PinEditingController pinEditingController;
 
-//  final PinController pinController;
+  /// Same as [TextField]'s autoFocus.
+  final bool autoFocus;
+
+  /// Same as [TextField]'s focusNode.
+  final FocusNode focusNode;
 
   PinInputTextField({
     this.pinLength: 6,
@@ -205,6 +209,8 @@ class PinInputTextField extends StatefulWidget {
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
     pinEditingController,
+    this.focusNode,
+    this.autoFocus = false,
   })  : assert(pinLength > 0),
         inputFormatters = inputFormatter ??
             <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
@@ -304,6 +310,10 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
           /// only accept digits.
           inputFormatters: widget.inputFormatters,
+
+          focusNode: widget.focusNode,
+
+          autofocus: widget.autoFocus,
 
           /// Clear default text decoration.
           decoration: InputDecoration(
