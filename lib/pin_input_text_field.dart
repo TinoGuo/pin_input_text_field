@@ -162,7 +162,9 @@ class PinEditingController extends TextEditingController {
   @override
   set text(String newText) {
     /// Cut the parameter string if the length is longer than [_pinMaxLength].
-    if (newText != null && newText.length > _pinMaxLength) {
+    if (newText != null &&
+        _pinMaxLength != null &&
+        newText.length > _pinMaxLength) {
       newText = newText.substring(0, _pinMaxLength);
     }
     super.text = newText;
