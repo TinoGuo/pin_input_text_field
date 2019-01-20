@@ -16,3 +16,6 @@ pin_input_text_field.iml
 .idea/**
 .idea/workspace.xml
 .idea/vcs.xml
+
+android
+ios
