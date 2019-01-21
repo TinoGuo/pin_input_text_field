@@ -45,17 +45,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PinEditingController _pinEditingController = PinEditingController();
-  PinDecoration _pinDecoration = UnderlineDecoration(textStyle: _textStyle);
+  static final int _pinLength = 4;
   static final TextStyle _textStyle = TextStyle(
     color: Colors.black,
     fontSize: 24,
   );
+  PinEditingController _pinEditingController = PinEditingController();
+  PinDecoration _pinDecoration = UnderlineDecoration(
+    textStyle: _textStyle,
+    enteredColor: Colors.deepOrange,
+  );
   bool _obscureEnable = false;
   PinEntryType _pinEntryType = PinEntryType.underline;
+  Color _solidColor = Colors.purpleAccent;
+  bool _solidEnable = false;
 
   void _setPinValue() {
-    _pinEditingController.text = "1234";
+    _pinEditingController.text = _generateRandomPin();
+  }
+
+  String _generateRandomPin() {
+    StringBuffer sb = StringBuffer();
+    for (int i = 0; i < _pinLength; i++) {
+      sb.write("$i");
+    }
+    return sb.toString();
   }
 
   @override
@@ -79,8 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = UnderlineDecoration(
             textStyle: _textStyle,
+            enteredColor: Colors.deepOrange,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
+              obscureText: '*',
             ),
           );
         });
@@ -89,8 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = BoxTightDecoration(
             textStyle: _textStyle,
+            solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
+              obscureText: '*',
             ),
           );
         });
@@ -99,8 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = BoxLooseDecoration(
             textStyle: _textStyle,
+            enteredColor: Colors.deepOrange,
+            solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
+              obscureText: '*',
             ),
           );
         });
@@ -164,10 +185,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     }),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'solidEnabled',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(
+                  width: 12,
+                ),
+                Checkbox(
+                    value: _solidEnable,
+                    onChanged: (enable) {
+                      setState(() {
+                        _solidEnable = enable;
+                        _selectedMenu(_pinEntryType);
+                      });
+                    }),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
               child: PinInputTextField(
-                pinLength: 4,
+                pinLength: _pinLength,
                 decoration: _pinDecoration,
                 pinEditingController: _pinEditingController,
                 autoFocus: true,
