@@ -64,7 +64,7 @@ class UnderlineDecoration extends PinDecoration {
     ObscureStyle obscureStyle,
     this.enteredColor,
     this.gapSpace: 16.0,
-    this.color: Colors.black,
+    this.color: Colors.cyan,
     this.lineHeight: 2.0,
   }) : super(
           textStyle: textStyle,
