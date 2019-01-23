@@ -1,3 +1,7 @@
+## [0.2.1] - 2019/01/20
+* change default color of underlineDecoration from Colors.Black to Colors.cyan.
+* add more detail example. 
+
 ## [0.2.0] - 2019/01/20
 
 * add keyboardType & inputFormatters control.
