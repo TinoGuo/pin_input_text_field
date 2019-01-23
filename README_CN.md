@@ -1,12 +1,12 @@
-[![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field)
+[![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field) 
 
 # pin_input_text_field
 
-PinInputTextField is a TextField widget to help display different style pin.
+PinInputTextField是一个Flutter平台上用来展示不同样式的验证码，简单好用！
 
-## Example
+## 例子🌰
 
-### Decoration
+### 装饰器
 
 UnderlineDecoration
 ![](https://user-gold-cdn.xitu.io/2018/12/31/1680354b3f04d824?w=808&h=1696&f=gif&s=2209887)
@@ -19,19 +19,19 @@ BoxLooseDecoration
 BoxTightDecoration
 ![](https://user-gold-cdn.xitu.io/2018/12/31/168035580f8f7a2e?w=804&h=1696&f=gif&s=3533729)
 
-### ObscureStyle
+### 密码模式
 
 ```
-/// Determine whether replace [obscureText] with number.
+/// 是否需要替换[obscureText]开启密码模式.
 final bool isTextObscure;
-/// The display text when [isTextObscure] is true
+/// 当[isTextObscure]开启时，替换验证码的字符串，长度必须为1.
 final String obscureText;
 ```
 
-## Installing
-Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
+## 安装
+从[pub](https://pub.dartlang.org/packages/pin_input_text_field)安装最新版.
 
-## Usage
+## 使用
 
 ```
 PinEditingController _pinEditingController = PinEditingController();
@@ -44,12 +44,12 @@ bool _obscureEnable = false;
 PinEntryType _pinEntryType = PinEntryType.underline;
 
 PinInputTextField(
-                pinLength: 4,                                   /// The length of the pin.
-                decoration: _pinDecoration,                     /// Control the display of text and border.
-                pinEditingController: _pinEditingController,    /// Control pin and observe pin.
+                pinLength: 4,                                   /// 验证码长度，默认为4.
+                decoration: _pinDecoration,                     /// 外观装饰器，用于控制文字和边框.
+                pinEditingController: _pinEditingController,    /// 观察以及设置值.
                 autoFocus: true,    
                 onSubmit: (pin) {
-                    /// Add action to handle submit.
+                    /// 处理用户点击完成.
                     debugPrint('submit pin:$pin');
                 },
               ),
