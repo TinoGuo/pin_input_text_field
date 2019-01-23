@@ -2,6 +2,7 @@
 
 # pin_input_text_field
 
+[中文版点我](./README_CN.md)
 PinInputTextField is a TextField widget to help display different style pin.
 
 ## Example
