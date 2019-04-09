@@ -1,7 +1,5 @@
 library pin_input_text_field;
 
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,7 +84,7 @@ class BoxTightDecoration extends PinDecoration {
   /// The box border color.
   final Color strokeColor;
 
-  /// The box inside solid color.
+  /// The box inside solid color, sometimes it equals to the box background.
   final Color solidColor;
 
   const BoxTightDecoration({
@@ -119,7 +117,7 @@ class BoxLooseDecoration extends PinDecoration {
   /// The box border color.
   final Color strokeColor;
 
-  /// The box inside solid color.
+  /// The box inside solid color, sometimes it equals to the box background.
   final Color solidColor;
 
   /// The border changed color when user enter pin.
@@ -288,7 +286,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           controller: _controller,
           style: TextStyle(
             /// Hide the editing text.
-            color: Colors.transparent,
+            color: Colors.black,
+            fontSize: 0,
           ),
 
           /// Hide the Cursor.
@@ -296,6 +295,12 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
           /// Hide the cursor.
           cursorWidth: 0.0,
+
+          /// No need to correct the user input.
+          autocorrect: false,
+
+          /// Center the input to make more natrual.
+          textAlign: TextAlign.center,
 
           /// Disable the actual textField selection.
           enableInteractiveSelection: false,
@@ -313,9 +318,15 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           /// only accept digits.
           inputFormatters: widget.inputFormatters,
 
+          /// Defines the keyboard focus for this widget.
           focusNode: widget.focusNode,
 
+          /// {@macro flutter.widgets.editableText.autofocus}
           autofocus: widget.autoFocus,
+
+          /// {@macro flutter.widgets.editableText.obscureText}
+          /// Default value of the obscureText is false. Make
+          obscureText: true,
 
           /// Clear default text decoration.
           decoration: InputDecoration(
@@ -341,8 +352,8 @@ class _PinPaint extends CustomPainter {
   final PinDecoration decoration;
 
   _PinPaint({
-    String text,
-    this.pinLength,
+    @required String text,
+    @required this.pinLength,
     this.decoration,
     this.space: 4.0,
     this.type: PinEntryType.boxTight,
