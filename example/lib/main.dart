@@ -226,6 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: _pinDecoration,
                 pinEditingController: _pinEditingController,
                 autoFocus: true,
+                textInputAction: TextInputAction.go,
                 onSubmit: (pin) {
                   debugPrint('submit pin:$pin');
                 },

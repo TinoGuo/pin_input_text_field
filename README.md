@@ -10,14 +10,17 @@ PinInputTextField is a TextField widget to help display different style pin.
 ### Decoration
 
 UnderlineDecoration
+
 ![](gifs/underline.gif)
 
 
 BoxLooseDecoration
+
 ![](gifs/boxloose.gif)
 
 
 BoxTightDecoration
+
 ![](gifs/boxtight.gif)
 
 ## Installing
@@ -69,9 +72,13 @@ Customizable attributes for PinInputTextField
     <tr>
         <td>focusNode</td>
         <td>FocusNode</td>
-        <td>Same as TextField's focusNode.</td>
+        <td>Same as TextField's focusNode</td>
     </tr>
-   
+    <tr>
+        <td>textInputAction</td>
+        <td>TextInputAction.done</td>
+        <td>Same as TextField's textInputAction, not working in digit mode.</td>
+    </tr>
 </table>
 
 ### ObscureStyle

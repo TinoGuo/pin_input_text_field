@@ -3,6 +3,7 @@
 * New: no need to correct user's input.
 * New: align actual text in center to make popup window more natural.
 * New: obscure mode is always on now.
+* New: add `textInputAction` to control TextInputAction.
 
 ### Breaking Change
 - `PinEditingController` constructor must provide pinLength.

@@ -9,14 +9,17 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 ### 装饰器
 
 UnderlineDecoration
+
 ![](gifs/underline.gif)
 
 
 BoxLooseDecoration
+
 ![](gifs/boxloose.gif)
 
 
 BoxTightDecoration
+
 ![](gifs/boxtight.gif)
 
 ## 安装
@@ -70,7 +73,11 @@ PinInputTextField的自定义属性
         <td>FocusNode</td>
         <td>跟TextField的focusNode一样.</td>
     </tr>
-   
+    <tr>
+        <td>textInputAction</td>
+        <td>TextInputAction.done</td>
+        <td>跟TextField的textInputAction一样, 数字模式下无效</td>
+    </tr>
 </table>
 
 ### 密码模式
