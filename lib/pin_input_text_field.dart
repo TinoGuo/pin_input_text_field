@@ -194,6 +194,9 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s focusNode.
   final FocusNode focusNode;
 
+  /// Same as [TextField]'s textInputAction.
+  final TextInputAction textInputAction;
+
   PinInputTextField({
     this.pinLength: 6,
     this.onSubmit,
@@ -203,6 +206,7 @@ class PinInputTextField extends StatefulWidget {
     PinEditingController pinEditingController,
     this.focusNode,
     this.autoFocus = false,
+    this.textInputAction = TextInputAction.done,
   })  :
 
         ///pinLength must larger than 0.
@@ -298,6 +302,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
         /// {@macro flutter.widgets.editableText.autofocus}
         autofocus: widget.autoFocus,
+
+        /// The type of action button to use for the keyboard.
+        ///
+        /// Defaults to [TextInputAction.done]
+        textInputAction: widget.textInputAction,
 
         /// {@macro flutter.widgets.editableText.obscureText}
         /// Default value of the obscureText is false. Make
