@@ -143,37 +143,32 @@ class BoxLooseDecoration extends PinDecoration {
 
 /// Helper class to handle inner or outside controller.
 class PinEditingController extends TextEditingController {
-  /// Determine whether this class is defined inner.
-  bool _inner;
-
   /// Control the maxLength of pin.
-  int _pinMaxLength;
+  int pinMaxLength;
 
-  PinEditingController._inner({String text, bool inner})
-      : _inner = inner,
-        super(text: text);
+  /// If the value set to true, the controller will dispose when the widget dispose.
+  final bool autoDispose;
 
-  PinEditingController({String text})
-      : _inner = false,
+  PinEditingController({
+    String text,
+    this.autoDispose = true,
+    @required int pinLength,
+  })  : this.pinMaxLength = pinLength,
         super(text: text);
 
   @override
   set text(String newText) {
     /// Cut the parameter string if the length is longer than [_pinMaxLength].
     if (newText != null &&
-        _pinMaxLength != null &&
-        newText.length > _pinMaxLength) {
-      newText = newText.substring(0, _pinMaxLength);
+        pinMaxLength != null &&
+        newText.length > pinMaxLength) {
+      newText = newText.substring(0, pinMaxLength);
     }
     super.text = newText;
   }
 }
 
 class PinInputTextField extends StatefulWidget {
-  final double width;
-
-  final double height;
-
   /// The max length of pin.
   final int pinLength;
 
@@ -190,7 +185,6 @@ class PinInputTextField extends StatefulWidget {
   final TextInputType keyboardType;
 
   /// Controls the pin being edited.
-  ///
   /// If null, this widget will create its own [PinEditingController].
   final PinEditingController pinEditingController;
 
@@ -202,20 +196,26 @@ class PinInputTextField extends StatefulWidget {
 
   PinInputTextField({
     this.pinLength: 6,
-    this.width,
-    this.height,
     this.onSubmit,
     this.decoration: const BoxLooseDecoration(),
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
-    pinEditingController,
+    PinEditingController pinEditingController,
     this.focusNode,
     this.autoFocus = false,
-  })  : assert(pinLength > 0),
+  })  :
+
+        ///pinLength must larger than 0.
+        ///If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
+        assert(pinLength != null &&
+            pinLength > 0 &&
+            ((pinEditingController != null &&
+                    pinEditingController.pinMaxLength == pinLength) ||
+                pinEditingController == null)),
         inputFormatters = inputFormatter ??
             <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
-        pinEditingController =
-            pinEditingController ?? PinEditingController._inner(inner: false);
+        this.pinEditingController =
+            pinEditingController ?? PinEditingController(pinLength: pinLength);
 
   @override
   State createState() {
@@ -224,119 +224,93 @@ class PinInputTextField extends StatefulWidget {
 }
 
 class _PinInputTextFieldState extends State<PinInputTextField> {
-  PinEditingController _controller;
+  /// The display text to the user.
   String _text;
 
   @override
   void initState() {
-    super.initState();
-    _controller = widget.pinEditingController;
-    _controller._pinMaxLength = widget.pinLength;
-
-    _controller.addListener(() {
-      /// Reset the cursor position when in needed.
-      /// Relevant issue see [https://github.com/flutter/flutter/issues/11416],
-      /// Only work in Android.
+    widget.pinEditingController.addListener(() {
       setState(() {
-        _text = _controller.text;
-        if (Platform.isAndroid &&
-            _controller.text != null &&
-            _controller.selection.start < _controller.text.length) {
-          _controller.selection = TextSelection.fromPosition(
-            TextPosition(offset: _controller.text.length),
-          );
-        }
+        _text = widget.pinEditingController.text;
       });
     });
-  }
-
-  @override
-  void didUpdateWidget(PinInputTextField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // If the controller change from inside to outside,
-    // we should dispose the controller to prevent leak;
-    if (!_controller._inner && oldWidget.pinEditingController._inner) {
-      oldWidget.pinEditingController.dispose();
-    }
+    super.initState();
   }
 
   @override
   void dispose() {
-    /// Only work in inner controller.
-    if (_controller._inner) {
-      _controller.dispose();
+    /// Only execute when the controller is autoDispose.
+    if (widget.pinEditingController.autoDispose) {
+      widget.pinEditingController.dispose();
     }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      child: CustomPaint(
-        /// The foreground pain to display pin.
-        foregroundPainter: _PinPaint(
-          text: _text,
-          pinLength: widget.pinLength,
-          decoration: widget.decoration,
+    return CustomPaint(
+      /// The foreground paint to display pin.
+      foregroundPainter: _PinPaint(
+        text: _text,
+        pinLength: widget.pinLength,
+        decoration: widget.decoration,
+      ),
+      child: TextField(
+        /// Actual textEditingController.
+        controller: widget.pinEditingController,
+
+        /// Fake the text style.
+        style: TextStyle(
+          /// Hide the editing text.
+          color: Colors.transparent,
         ),
-        child: TextField(
-          /// Actual textEditingController.
-          controller: _controller,
-          style: TextStyle(
-            /// Hide the editing text.
-            color: Colors.black,
-            fontSize: 0,
-          ),
 
-          /// Hide the Cursor.
-          cursorColor: Colors.transparent,
+        /// Hide the Cursor.
+        cursorColor: Colors.transparent,
 
-          /// Hide the cursor.
-          cursorWidth: 0.0,
+        /// Hide the cursor.
+        cursorWidth: 0.0,
 
-          /// No need to correct the user input.
-          autocorrect: false,
+        /// No need to correct the user input.
+        autocorrect: false,
 
-          /// Center the input to make more natrual.
-          textAlign: TextAlign.center,
+        /// Center the input to make more natrual.
+        textAlign: TextAlign.center,
 
-          /// Disable the actual textField selection.
-          enableInteractiveSelection: false,
+        /// Disable the actual textField selection.
+        enableInteractiveSelection: false,
 
-          /// The maxLength of the pin input, the default value is 6.
-          maxLength: widget.pinLength,
+        /// The maxLength of the pin input, the default value is 6.
+        maxLength: widget.pinLength,
 
-          /// If use system keyboard and user click done, it will execute callback
-          /// Note!!! Custom keyboard in Android will not execute, see the related issue [https://github.com/flutter/flutter/issues/19027]
-          onSubmitted: widget.onSubmit,
+        /// If use system keyboard and user click done, it will execute callback
+        /// Note!!! Custom keyboard in Android will not execute, see the related issue [https://github.com/flutter/flutter/issues/19027]
+        onSubmitted: widget.onSubmit,
 
-          /// Default text input type is number.
-          keyboardType: widget.keyboardType,
+        /// Default text input type is number.
+        keyboardType: widget.keyboardType,
 
-          /// only accept digits.
-          inputFormatters: widget.inputFormatters,
+        /// only accept digits.
+        inputFormatters: widget.inputFormatters,
 
-          /// Defines the keyboard focus for this widget.
-          focusNode: widget.focusNode,
+        /// Defines the keyboard focus for this widget.
+        focusNode: widget.focusNode,
 
-          /// {@macro flutter.widgets.editableText.autofocus}
-          autofocus: widget.autoFocus,
+        /// {@macro flutter.widgets.editableText.autofocus}
+        autofocus: widget.autoFocus,
 
-          /// {@macro flutter.widgets.editableText.obscureText}
-          /// Default value of the obscureText is false. Make
-          obscureText: true,
+        /// {@macro flutter.widgets.editableText.obscureText}
+        /// Default value of the obscureText is false. Make
+        obscureText: true,
 
-          /// Clear default text decoration.
-          decoration: InputDecoration(
-            /// Hide the counterText
-            counterText: '',
+        /// Clear default text decoration.
+        decoration: InputDecoration(
+          /// Hide the counterText
+          counterText: '',
 
-            /// Hide the outline border.
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-            ),
+          /// Hide the outline border.
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
           ),
         ),
       ),
