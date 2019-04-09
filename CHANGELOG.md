@@ -1,4 +1,16 @@
+## [0.3.0] - 2019/04/09
+
+* New: no need to correct user's input.
+* New: align actual text in center to make popup window more natural.
+* New: obscure mode is always on now.
+
+### Breaking Change
+- `PinEditingController` constructor must provide pinLength.
+- `PinEditingController` constructor provide new field `autoDispose` to simplify dispose.
+- `PinTextField` constructor remove `width` and `height` field, if you want customize size of the `PinInputTextField`, you can wrap a `Container` widget.
+
 ## [0.2.1] - 2019/01/20
+
 * change default color of underlineDecoration from Colors.Black to Colors.cyan.
 * add more detail example. 
 

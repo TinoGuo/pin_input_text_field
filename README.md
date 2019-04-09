@@ -10,15 +10,69 @@ PinInputTextField is a TextField widget to help display different style pin.
 ### Decoration
 
 UnderlineDecoration
-![](https://user-gold-cdn.xitu.io/2018/12/31/1680354b3f04d824?w=808&h=1696&f=gif&s=2209887)
+![](gifs/underline.gif)
 
 
 BoxLooseDecoration
-![](https://user-gold-cdn.xitu.io/2018/12/31/168035580f8f7a2e?w=804&h=1696&f=gif&s=3533729)
+![](gifs/boxloose.gif)
 
 
 BoxTightDecoration
-![](https://user-gold-cdn.xitu.io/2018/12/31/168035580f8f7a2e?w=804&h=1696&f=gif&s=3533729)
+![](gifs/boxtight.gif)
+
+## Installing
+Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
+
+## Usage
+
+### Attributes
+Customizable attributes for PinInputTextField
+<table>
+    <th>Attribute Name</th>
+    <th>Example Value</th>
+    <th>Description</th>
+    <tr>
+        <td>pinLength</td>
+        <td>6</td>
+        <td>The max length of pin, the default is 6</td>
+    </tr>
+    <tr>
+        <td>onSubmit</td>
+        <td>(String pin){}</td>
+        <td>The callback will execute when user click done, sometimes is not working in Android.</td>
+    </tr>
+    <tr>
+        <td>decoration</td>
+        <td>BoxLooseDecoration</td>
+        <td>Decorate the pin, there are 3 inside styles, the default is BoxLooseDecoration</td>
+    </tr>
+    <tr>
+        <td>inputFormatters</td>
+        <td>WhitelistingTextInputFormatter.digitsOnly</td>
+        <td>Just like TextField's inputFormatter, the default is WhitelistingTextInputFormatter.digitsOnly</td>
+    </tr>
+    <tr>
+        <td>keyboardType</td>
+        <td>TextInputType.phone</td>
+        <td>Just like TextField's keyboardType, the default is TextInputType.phone</td>
+    </tr>
+    <tr>
+        <td>pinEditingController</td>
+        <td>PinEditingController</td>
+        <td>Controls the pin being edited. If null, this widget will create its own PinEditingController</td>
+    </tr>
+    <tr>
+        <td>autoFocus</td>
+        <td>false</td>
+        <td>Same as TextField's autoFocus, the default is false</td>
+    </tr>
+    <tr>
+        <td>focusNode</td>
+        <td>FocusNode</td>
+        <td>Same as TextField's focusNode.</td>
+    </tr>
+   
+</table>
 
 ### ObscureStyle
 
@@ -29,29 +83,6 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## Installing
-Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
+## Known Issue
 
-## Usage
-
-```
-PinEditingController _pinEditingController = PinEditingController();
-PinDecoration _pinDecoration = UnderlineDecoration(textStyle: _textStyle);
-static final TextStyle _textStyle = TextStyle(
-  color: Colors.black,
-  fontSize: 24,
- );
-bool _obscureEnable = false;
-PinEntryType _pinEntryType = PinEntryType.underline;
-
-PinInputTextField(
-                pinLength: 4,                                   /// The length of the pin.
-                decoration: _pinDecoration,                     /// Control the display of text and border.
-                pinEditingController: _pinEditingController,    /// Control pin and observe pin.
-                autoFocus: true,    
-                onSubmit: (pin) {
-                    /// Add action to handle submit.
-                    debugPrint('submit pin:$pin');
-                },
-              ),
-```
+The `PinEditingController` listener will execute more than once in some situations, you can filter some duplicate values in your code. 

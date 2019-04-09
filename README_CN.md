@@ -9,15 +9,69 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 ### 装饰器
 
 UnderlineDecoration
-![](https://user-gold-cdn.xitu.io/2018/12/31/1680354b3f04d824?w=808&h=1696&f=gif&s=2209887)
+![](gifs/underline.gif)
 
 
 BoxLooseDecoration
-![](https://user-gold-cdn.xitu.io/2018/12/31/168035580f8f7a2e?w=804&h=1696&f=gif&s=3533729)
+![](gifs/boxloose.gif)
 
 
 BoxTightDecoration
-![](https://user-gold-cdn.xitu.io/2018/12/31/168035580f8f7a2e?w=804&h=1696&f=gif&s=3533729)
+![](gifs/boxtight.gif)
+
+## 安装
+从[pub](https://pub.dartlang.org/packages/pin_input_text_field)安装最新版.
+
+## 使用
+
+### 属性
+PinInputTextField的自定义属性
+<table>
+    <th>属性名</th>
+    <th>参考值</th>
+    <th>描述</th>
+    <tr>
+        <td>pinLength</td>
+        <td>6</td>
+        <td>验证码的长度, 默认是6</td>
+    </tr>
+    <tr>
+        <td>onSubmit</td>
+        <td>(String pin){}</td>
+        <td>用户点击键盘右下角时触发，Android平台有时不一定生效</td>
+    </tr>
+    <tr>
+        <td>decoration</td>
+        <td>BoxLooseDecoration</td>
+        <td>内置三种验证码样式，默认是BoxLooseDecoration</td>
+    </tr>
+    <tr>
+        <td>inputFormatters</td>
+        <td>WhitelistingTextInputFormatter.digitsOnly</td>
+        <td>跟TextField的inputFormatters一样, 默认是WhitelistingTextInputFormatter.digitsOnly</td>
+    </tr>
+    <tr>
+        <td>keyboardType</td>
+        <td>TextInputType.phone</td>
+        <td>跟TextField的keyboardType一样, 默认是TextInputType.phone</td>
+    </tr>
+    <tr>
+        <td>pinEditingController</td>
+        <td>PinEditingController</td>
+        <td>控制和监听用户输入。如果为空，内部会创建一个默认的控制器</td>
+    </tr>
+    <tr>
+        <td>autoFocus</td>
+        <td>false</td>
+        <td>跟TextField的autoFocus一样, 默认是false</td>
+    </tr>
+    <tr>
+        <td>focusNode</td>
+        <td>FocusNode</td>
+        <td>跟TextField的focusNode一样.</td>
+    </tr>
+   
+</table>
 
 ### 密码模式
 
@@ -28,29 +82,6 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## 安装
-从[pub](https://pub.dartlang.org/packages/pin_input_text_field)安装最新版.
+## 已知问题
 
-## 使用
-
-```
-PinEditingController _pinEditingController = PinEditingController();
-PinDecoration _pinDecoration = UnderlineDecoration(textStyle: _textStyle);
-static final TextStyle _textStyle = TextStyle(
-  color: Colors.black,
-  fontSize: 24,
- );
-bool _obscureEnable = false;
-PinEntryType _pinEntryType = PinEntryType.underline;
-
-PinInputTextField(
-                pinLength: 4,                                   /// 验证码长度，默认为4.
-                decoration: _pinDecoration,                     /// 外观装饰器，用于控制文字和边框.
-                pinEditingController: _pinEditingController,    /// 观察以及设置值.
-                autoFocus: true,    
-                onSubmit: (pin) {
-                    /// 处理用户点击完成.
-                    debugPrint('submit pin:$pin');
-                },
-              ),
-```
+目前`PinEditingController`的Listener会执行多次，可以在应用层的代码上过滤下

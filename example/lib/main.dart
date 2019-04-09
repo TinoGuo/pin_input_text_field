@@ -45,21 +45,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /// Default max pin length.
   static final int _pinLength = 4;
+
+  /// Default Text style.
   static final TextStyle _textStyle = TextStyle(
     color: Colors.black,
     fontSize: 24,
   );
-  PinEditingController _pinEditingController = PinEditingController();
+
+  /// Control the input text field.
+  PinEditingController _pinEditingController =
+      PinEditingController(pinLength: _pinLength, autoDispose: false);
+
+  /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
     textStyle: _textStyle,
     enteredColor: Colors.deepOrange,
   );
+
+  /// Control whether show the obscureCode.
   bool _obscureEnable = false;
+
   PinEntryType _pinEntryType = PinEntryType.underline;
   Color _solidColor = Colors.purpleAccent;
   bool _solidEnable = false;
 
+  /// Set a random pin to the textField.
   void _setPinValue() {
     _pinEditingController.text = _generateRandomPin();
   }
