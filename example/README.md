@@ -1,9 +1,19 @@
-# example
+# example/main.dart
+```
 
-A example pin Flutter application.
+/// more examples see https://github.com/TinoGuo/pin_input_text_field/tree/master/example
+import 'package:pin_input_text_field/pin_input_text_field.dart';
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
+PinInputTextField(
+                pinLength: 4,
+                decoration: _pinDecoration,
+                pinEditingController: _pinEditingController,
+                autoFocus: true,
+                textInputAction: TextInputAction.go,
+                onSubmit: (pin) {
+                  debugPrint('submit pin:$pin');
+                },
+              )
+```
 
 

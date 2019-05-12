@@ -1,3 +1,6 @@
+## [0.3.1] - 2019/05/12
+* Update: complete example `readme.md` and `pubspec.yaml`.
+
 ## [0.3.0] - 2019/04/09
 
 * New: no need to correct user's input.
