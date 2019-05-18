@@ -82,7 +82,7 @@ Customizable attributes for PinInputTextField
     <tr>
         <td>enabled</td>
         <td>true</td>
-        <td>Same as TextField's enabled</td>
+        <td>Same as TextField's enabled, the default is true</td>
     </tr>
 </table>
 
