@@ -78,6 +78,11 @@ PinInputTextField的自定义属性
         <td>TextInputAction.done</td>
         <td>跟TextField的textInputAction一样, 数字模式下无效</td>
     </tr>
+    <tr>
+        <td>enabled</td>
+        <td>true</td>
+        <td>跟TextField的enabled, 默认是true</td>
+    </tr>
 </table>
 
 ### 密码模式
