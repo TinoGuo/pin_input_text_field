@@ -79,6 +79,11 @@ Customizable attributes for PinInputTextField
         <td>TextInputAction.done</td>
         <td>Same as TextField's textInputAction, not working in digit mode.</td>
     </tr>
+    <tr>
+        <td>enabled</td>
+        <td>true</td>
+        <td>Same as TextField's enabled, the default is true</td>
+    </tr>
 </table>
 
 ### ObscureStyle

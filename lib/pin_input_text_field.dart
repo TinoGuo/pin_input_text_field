@@ -197,6 +197,9 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s textInputAction.
   final TextInputAction textInputAction;
 
+  ///Just like [TextField]'s enabled.
+  final bool enabled;
+
   PinInputTextField({
     this.pinLength: 6,
     this.onSubmit,
@@ -207,6 +210,7 @@ class PinInputTextField extends StatefulWidget {
     this.focusNode,
     this.autoFocus = false,
     this.textInputAction = TextInputAction.done,
+    this.enabled = true,
   })  :
 
         ///pinLength must larger than 0.
@@ -322,6 +326,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
             borderSide: BorderSide.none,
           ),
         ),
+        enabled: widget.enabled,
       ),
     );
   }
