@@ -71,6 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Color _solidColor = Colors.purpleAccent;
   bool _solidEnable = false;
 
+  /// Control whether textField is enable.
+  bool _enable = true;
+
   /// Set a random pin to the textField.
   void _setPinValue() {
     _pinEditingController.text = _generateRandomPin();
@@ -219,6 +222,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     }),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'enabled',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 12),
+                Checkbox(
+                  value: _enable,
+                  onChanged: (enable) {
+                    setState(() {
+                      _enable = enable;
+                    });
+                  },
+                )
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
               child: PinInputTextField(
@@ -227,6 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 pinEditingController: _pinEditingController,
                 autoFocus: true,
                 textInputAction: TextInputAction.go,
+                enabled: _enable,
                 onSubmit: (pin) {
                   debugPrint('submit pin:$pin');
                 },
