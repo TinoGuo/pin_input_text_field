@@ -1,3 +1,6 @@
+## [0.4.0] - 2019/05/23
+* New: add 'enable' to control pin input.
+
 ## [0.3.1] - 2019/05/12
 * Update: complete example `readme.md` and `pubspec.yaml`.
 
