@@ -35,12 +35,13 @@ class ObscureStyle {
   final bool isTextObscure;
 
   /// The display text when [isTextObscure] is true
+  /// Do Not pass multiline string, it's not a good idea.
   final String obscureText;
 
   const ObscureStyle({
     this.isTextObscure: false,
     this.obscureText: '*',
-  }) : assert(obscureText.length == 1);
+  }) : assert(obscureText.length > 0);
 }
 
 /// The object determine the underline color etc.
