@@ -31,6 +31,9 @@ abstract class PinDecoration {
 
 /// The object determine the obscure display
 class ObscureStyle {
+  /// The wrap line string.
+  static final _wrapLine = '\n';
+
   /// Determine whether replace [obscureText] with number.
   final bool isTextObscure;
 
@@ -38,10 +41,12 @@ class ObscureStyle {
   /// Do Not pass multiline string, it's not a good idea.
   final String obscureText;
 
-  const ObscureStyle({
+  ObscureStyle({
     this.isTextObscure: false,
     this.obscureText: '*',
-  }) : assert(obscureText.length > 0);
+  }) : assert(obscureText.length > 0 &&
+            obscureText.indexOf(_wrapLine) ==
+                -1); // Not allowed empty string and multiline string.
 }
 
 /// The object determine the underline color etc.
