@@ -37,7 +37,7 @@ class ObscureStyle {
   /// Determine whether replace [obscureText] with number.
   final bool isTextObscure;
 
-  /// The display text when [isTextObscure] is true
+  /// The display text when [isTextObscure] is true, default is '*'
   /// Do Not pass multiline string, it's not a good idea.
   final String obscureText;
 
@@ -209,7 +209,7 @@ class PinInputTextField extends StatefulWidget {
   PinInputTextField({
     this.pinLength: 6,
     this.onSubmit,
-    this.decoration: const BoxLooseDecoration(),
+    this.decoration: BoxLooseDecoration(),
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
     PinEditingController pinEditingController,
