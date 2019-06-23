@@ -209,7 +209,7 @@ class PinInputTextField extends StatefulWidget {
   PinInputTextField({
     this.pinLength: 6,
     this.onSubmit,
-    this.decoration: BoxLooseDecoration(),
+    this.decoration: const BoxLooseDecoration(),
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
     PinEditingController pinEditingController,
