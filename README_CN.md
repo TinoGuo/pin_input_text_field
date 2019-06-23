@@ -90,7 +90,7 @@ PinInputTextField的自定义属性
 ```
 /// 是否需要替换[obscureText]开启密码模式.
 final bool isTextObscure;
-/// 当[isTextObscure]开启时，替换验证码的字符串，长度必须为1.
+/// 当[isTextObscure]开启时，替换验证码的字符串，支持emoji
 final String obscureText;
 ```
 

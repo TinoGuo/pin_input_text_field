@@ -1,3 +1,6 @@
+## [1.0.0] - 2019/06/23
+* Update: obscure text support emoji now.
+
 ## [0.4.0] - 2019/05/23
 * New: add 'enable' to control pin input.
 

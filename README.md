@@ -91,7 +91,7 @@ Customizable attributes for PinInputTextField
 ```
 /// Determine whether replace [obscureText] with number.
 final bool isTextObscure;
-/// The display text when [isTextObscure] is true
+/// The display text when [isTextObscure] is true, emoji supported
 final String obscureText;
 ```
 
