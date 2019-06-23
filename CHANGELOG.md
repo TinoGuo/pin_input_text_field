@@ -1,3 +1,6 @@
+## [1.0.1] - 2019/06/23
+* Fix: fix fatal error
+
 ## [1.0.0] - 2019/06/23
 * Update: obscure text support emoji now.
 
