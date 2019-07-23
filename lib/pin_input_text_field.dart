@@ -234,7 +234,23 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         _text = widget.pinEditingController.text;
       });
     });
-    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(PinInputTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    /// If the newLength is shorter than now and the current text length longer
+    /// than pinLength, So we should cut the superfluous subString.
+    if (oldWidget.pinLength > widget.pinLength &&
+        _text.length > widget.pinLength) {
+      setState(() {
+        _text = _text.substring(0, widget.pinLength);
+      });
+      widget.pinEditingController.text = _text;
+      widget.pinEditingController.selection =
+          TextSelection.collapsed(offset: _text.length);
+    }
   }
 
   @override
