@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Control the input text field.
   PinEditingController _pinEditingController =
-      PinEditingController(pinLength: _pinLength, autoDispose: false);
+      PinEditingController(autoDispose: false);
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(

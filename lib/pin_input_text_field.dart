@@ -149,29 +149,13 @@ class BoxLooseDecoration extends PinDecoration {
 
 /// Helper class to handle inner or outside controller.
 class PinEditingController extends TextEditingController {
-  /// Control the maxLength of pin.
-  int pinMaxLength;
-
   /// If the value set to true, the controller will dispose when the widget dispose.
   final bool autoDispose;
 
   PinEditingController({
     String text,
     this.autoDispose = true,
-    @required int pinLength,
-  })  : this.pinMaxLength = pinLength,
-        super(text: text);
-
-  @override
-  set text(String newText) {
-    /// Cut the parameter string if the length is longer than [_pinMaxLength].
-    if (newText != null &&
-        pinMaxLength != null &&
-        newText.length > pinMaxLength) {
-      newText = newText.substring(0, pinMaxLength);
-    }
-    super.text = newText;
-  }
+  }) : super(text: text);
 }
 
 class PinInputTextField extends StatefulWidget {
@@ -221,15 +205,16 @@ class PinInputTextField extends StatefulWidget {
 
         ///pinLength must larger than 0.
         ///If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
-        assert(pinLength != null &&
-            pinLength > 0 &&
-            ((pinEditingController != null &&
-                    pinEditingController.pinMaxLength == pinLength) ||
-                pinEditingController == null)),
-        inputFormatters = inputFormatter ??
-            <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+        assert(pinLength != null && pinLength > 0),
+        inputFormatters = inputFormatter == null
+            ? <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(pinLength)
+              ]
+            : inputFormatter
+          ..add(LengthLimitingTextInputFormatter(pinLength)),
         this.pinEditingController =
-            pinEditingController ?? PinEditingController(pinLength: pinLength);
+            pinEditingController ?? PinEditingController();
 
   @override
   State createState() {
@@ -243,6 +228,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
   @override
   void initState() {
+    super.initState();
     widget.pinEditingController.addListener(() {
       setState(() {
         _text = widget.pinEditingController.text;
