@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
             solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
-              obscureText: '🤣',
+              obscureText: '👿',
             ),
           );
         });
