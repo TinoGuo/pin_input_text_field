@@ -73,12 +73,15 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Control whether textField is enable.
   bool _enable = true;
 
-  /// Set a random pin to the textField.
+  /// Set a pin to the textField.
   void _setPinValue() {
-    _pinEditingController.text = _generateRandomPin();
+    var text = _generatePin();
+    _pinEditingController
+      ..text = text
+      ..selection = TextSelection.collapsed(offset: text.runes.length);
   }
 
-  String _generateRandomPin() {
+  String _generatePin() {
     StringBuffer sb = StringBuffer();
     for (int i = 1; i <= _pinLength; i++) {
       sb.write("$i");
@@ -143,6 +146,146 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Widget _buildInListView() {
+    return ListView(
+      children: <Widget>[
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Icon(Icons.edit),
+            Text('1'),
+            Expanded(
+              child: PinInputTextField(
+                decoration: BoxLooseDecoration(
+                    textStyle: TextStyle(color: Colors.black)),
+                autoFocus: false,
+                pinLength: 4,
+                controller: _pinEditingController,
+              ),
+            ),
+          ],
+        ),
+        PinInputTextField(
+          pinLength: 4,
+          autoFocus: false,
+          decoration: BoxLooseDecoration(
+            textStyle: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Container(
+          height: 120,
+          color: Colors.purple,
+        ),
+        Container(
+          height: 120,
+          color: Colors.pink,
+        ),
+        Container(
+          height: 120,
+          color: Colors.deepOrange,
+        ),
+        Container(
+          height: 120,
+          color: Colors.teal,
+        ),
+        Container(
+          height: 120,
+          color: Colors.cyan,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNormal() {
+    return Center(
+      // Center is a layout widget. It takes a single child and positions it
+      // in the middle of the parent.
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'obscureEnabled',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Checkbox(
+                  value: _obscureEnable,
+                  onChanged: (enable) {
+                    setState(() {
+                      _obscureEnable = enable;
+                      _selectedMenu(_pinEntryType);
+                    });
+                  }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'solidEnabled',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Checkbox(
+                  value: _solidEnable,
+                  onChanged: (enable) {
+                    setState(() {
+                      _solidEnable = enable;
+                      _selectedMenu(_pinEntryType);
+                    });
+                  }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'enabled',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(width: 12),
+              Checkbox(
+                value: _enable,
+                onChanged: (enable) {
+                  setState(() {
+                    _enable = enable;
+                  });
+                },
+              )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
+            child: PinInputTextField(
+              pinLength: _pinLength,
+              decoration: _pinDecoration,
+              controller: _pinEditingController,
+              autoFocus: true,
+              textInputAction: TextInputAction.go,
+              enabled: _enable,
+              onSubmit: (pin) {
+                debugPrint('submit pin:$pin');
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,91 +314,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'obscureEnabled',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Checkbox(
-                    value: _obscureEnable,
-                    onChanged: (enable) {
-                      setState(() {
-                        _obscureEnable = enable;
-                        _selectedMenu(_pinEntryType);
-                      });
-                    }),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'solidEnabled',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Checkbox(
-                    value: _solidEnable,
-                    onChanged: (enable) {
-                      setState(() {
-                        _solidEnable = enable;
-                        _selectedMenu(_pinEntryType);
-                      });
-                    }),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'enabled',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(width: 12),
-                Checkbox(
-                  value: _enable,
-                  onChanged: (enable) {
-                    setState(() {
-                      _enable = enable;
-                    });
-                  },
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
-              child: PinInputTextField(
-                pinLength: _pinLength,
-                decoration: _pinDecoration,
-                controller: _pinEditingController,
-                autoFocus: true,
-                textInputAction: TextInputAction.go,
-                enabled: _enable,
-                onSubmit: (pin) {
-                  debugPrint('submit pin:$pin');
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _buildNormal(),
       floatingActionButton: FloatingActionButton(
         onPressed: _setPinValue,
         tooltip: 'setPinValue',
