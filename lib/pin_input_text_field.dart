@@ -147,33 +147,6 @@ class BoxLooseDecoration extends PinDecoration {
   PinEntryType get pinEntryType => PinEntryType.boxLoose;
 }
 
-/// Helper class to handle inner or outside controller.
-class PinEditingController extends TextEditingController {
-  /// Control the maxLength of pin.
-  int pinMaxLength;
-
-  /// If the value set to true, the controller will dispose when the widget dispose.
-  final bool autoDispose;
-
-  PinEditingController({
-    String text,
-    this.autoDispose = true,
-    @required int pinLength,
-  })  : this.pinMaxLength = pinLength,
-        super(text: text);
-
-  @override
-  set text(String newText) {
-    /// Cut the parameter string if the length is longer than [_pinMaxLength].
-    if (newText != null &&
-        pinMaxLength != null &&
-        newText.length > pinMaxLength) {
-      newText = newText.substring(0, pinMaxLength);
-    }
-    super.text = newText;
-  }
-}
-
 class PinInputTextField extends StatefulWidget {
   /// The max length of pin.
   final int pinLength;
@@ -191,8 +164,7 @@ class PinInputTextField extends StatefulWidget {
   final TextInputType keyboardType;
 
   /// Controls the pin being edited.
-  /// If null, this widget will create its own [PinEditingController].
-  final PinEditingController pinEditingController;
+  final TextEditingController controller;
 
   /// Same as [TextField]'s autoFocus.
   final bool autoFocus;
@@ -207,12 +179,13 @@ class PinInputTextField extends StatefulWidget {
   final bool enabled;
 
   PinInputTextField({
+    Key key,
     this.pinLength: 6,
     this.onSubmit,
     this.decoration: const BoxLooseDecoration(),
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
-    PinEditingController pinEditingController,
+    this.controller,
     this.focusNode,
     this.autoFocus = false,
     this.textInputAction = TextInputAction.done,
@@ -221,15 +194,15 @@ class PinInputTextField extends StatefulWidget {
 
         ///pinLength must larger than 0.
         ///If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
-        assert(pinLength != null &&
-            pinLength > 0 &&
-            ((pinEditingController != null &&
-                    pinEditingController.pinMaxLength == pinLength) ||
-                pinEditingController == null)),
-        inputFormatters = inputFormatter ??
-            <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
-        this.pinEditingController =
-            pinEditingController ?? PinEditingController(pinLength: pinLength);
+        assert(pinLength != null && pinLength > 0),
+        inputFormatters = inputFormatter == null
+            ? <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(pinLength)
+              ]
+            : inputFormatter
+          ..add(LengthLimitingTextInputFormatter(pinLength)),
+        super(key: key);
 
   @override
   State createState() {
@@ -241,23 +214,76 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   /// The display text to the user.
   String _text;
 
+  TextEditingController _controller;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? _controller;
+
+  void _pinChanged() {
+    setState(() {
+      if (_effectiveController.text.runes.length > widget.pinLength) {
+        _text = String.fromCharCodes(
+            _effectiveController.text.runes.take(widget.pinLength));
+      } else {
+        _text = _effectiveController.text;
+      }
+
+      /// This below code will cause dead loop in iOS,
+      /// you should assign selection when you set text.
+//      _effectiveController.selection = TextSelection.collapsed(
+//          offset: _effectiveController.text.runes.length);
+    });
+  }
+
   @override
   void initState() {
-    widget.pinEditingController.addListener(() {
-      setState(() {
-        _text = widget.pinEditingController.text;
-      });
-    });
     super.initState();
+    if (widget.controller == null) {
+      _controller = TextEditingController();
+    }
+    _effectiveController.addListener(_pinChanged);
   }
 
   @override
   void dispose() {
-    /// Only execute when the controller is autoDispose.
-    if (widget.pinEditingController.autoDispose) {
-      widget.pinEditingController.dispose();
-    }
+    // Ensure no listener will execute after dispose.
+    _effectiveController.removeListener(_pinChanged);
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(PinInputTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.controller == null && oldWidget.controller != null) {
+      oldWidget.controller.removeListener(_pinChanged);
+      _controller = TextEditingController.fromValue(oldWidget.controller.value);
+      _controller.addListener(_pinChanged);
+    } else if (widget.controller != null && oldWidget.controller == null) {
+      _controller.removeListener(_pinChanged);
+      _controller = null;
+      widget.controller.addListener(_pinChanged);
+      // Invalidate the text when controller hold different old text.
+      if (_text != widget.controller.text) {
+        _pinChanged();
+      }
+    } else if (widget.controller != oldWidget.controller) {
+      // The old controller and current controller is not null and not the same.
+      oldWidget.controller.removeListener(_pinChanged);
+      widget.controller.addListener(_pinChanged);
+    }
+
+    /// If the newLength is shorter than now and the current text length longer
+    /// than [pinLength], So we should cut the superfluous subString.
+    if (oldWidget.pinLength > widget.pinLength &&
+        _text.runes.length > widget.pinLength) {
+      setState(() {
+        _text = _text.substring(0, widget.pinLength);
+        _effectiveController.text = _text;
+        _effectiveController.selection =
+            TextSelection.collapsed(offset: _text.runes.length);
+      });
+    }
   }
 
   @override
@@ -271,7 +297,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       ),
       child: TextField(
         /// Actual textEditingController.
-        controller: widget.pinEditingController,
+        controller: _effectiveController,
 
         /// Fake the text style.
         style: TextStyle(
@@ -288,7 +314,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         /// No need to correct the user input.
         autocorrect: false,
 
-        /// Center the input to make more natrual.
+        /// Center the input to make more natural.
         textAlign: TextAlign.center,
 
         /// Disable the actual textField selection.
