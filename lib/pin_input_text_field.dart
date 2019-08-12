@@ -222,10 +222,16 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   void _pinChanged() {
     setState(() {
       if (_effectiveController.text.runes.length > widget.pinLength) {
-        _text = _effectiveController.text.substring(0, widget.pinLength);
+        _text = String.fromCharCodes(
+            _effectiveController.text.runes.take(widget.pinLength));
       } else {
         _text = _effectiveController.text;
       }
+
+      /// This below code will cause dead loop in iOS,
+      /// you should assign selection when you set text.
+//      _effectiveController.selection = TextSelection.collapsed(
+//          offset: _effectiveController.text.runes.length);
     });
   }
 
