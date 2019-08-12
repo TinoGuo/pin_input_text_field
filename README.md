@@ -5,6 +5,11 @@
 [中文版点我](./README_CN.md)
 PinInputTextField is a TextField widget to help display different style pin.
 
+## Notice after Version 2.0.0
+Please set the selection when you set the text programmatically, just like [this](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81)
+I can't set the selection in lib code, because if I did it will cause dead loop in iOS.
+If you have any idea, please make a Pull Request.
+
 ## Example
 
 ### Decoration
@@ -97,4 +102,4 @@ final String obscureText;
 
 ## Known Issue
 
-The `PinEditingController` listener will execute more than once in some situations, you can filter some duplicate values in your code. 
+The `PinEditingController` listener will execute more than once when programmatically set text, you can filter some duplicate values in your code. 

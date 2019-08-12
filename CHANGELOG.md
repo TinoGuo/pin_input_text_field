@@ -1,3 +1,10 @@
+## [2.0.0] - 2019/08/12
+* **Update: parameter `pinEditingController` renamed to `controller`.**
+* **Remove: remove the `PinEditingController` class, just simply use `TextEditingController`.**
+* Fix: support dynamically changing of length & controller.
+* New: allow custom `key`.
+* **Notice: Please set the selection when you set the text programmatically.** 
+
 ## [1.0.1] - 2019/06/23
 * Fix: fix fatal error
 
