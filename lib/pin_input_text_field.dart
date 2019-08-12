@@ -178,8 +178,8 @@ class PinInputTextField extends StatefulWidget {
   ///Just like [TextField]'s enabled.
   final bool enabled;
 
-  //TODO Add Key
   PinInputTextField({
+    Key key,
     this.pinLength: 6,
     this.onSubmit,
     this.decoration: const BoxLooseDecoration(),
@@ -201,7 +201,8 @@ class PinInputTextField extends StatefulWidget {
                 LengthLimitingTextInputFormatter(pinLength)
               ]
             : inputFormatter
-          ..add(LengthLimitingTextInputFormatter(pinLength));
+          ..add(LengthLimitingTextInputFormatter(pinLength)),
+        super(key: key);
 
   @override
   State createState() {
