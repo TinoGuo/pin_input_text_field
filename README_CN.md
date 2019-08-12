@@ -6,8 +6,10 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 
 ## 2.0.0版本注意事项
 如果你在程序中手动设text，请把selection也同时赋值，参考[这个](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
+
 目前我还不能在库代码设置，如果这么做会导致iOS设备死循环.
-如果你有什么好的建议，请提PR，谢谢.
+
+**如果你有什么好的建议，请提PR，谢谢.**
 
 ## 例子🌰
 
