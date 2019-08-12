@@ -55,8 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   );
 
   /// Control the input text field.
-  PinEditingController _pinEditingController =
-      PinEditingController(autoDispose: false);
+  TextEditingController _pinEditingController = TextEditingController();
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
@@ -81,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _generateRandomPin() {
     StringBuffer sb = StringBuffer();
-    for (int i = 0; i < _pinLength; i++) {
+    for (int i = 1; i <= _pinLength; i++) {
       sb.write("$i");
     }
     return sb.toString();
@@ -245,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: PinInputTextField(
                 pinLength: _pinLength,
                 decoration: _pinDecoration,
-                pinEditingController: _pinEditingController,
+                controller: _pinEditingController,
                 autoFocus: true,
                 textInputAction: TextInputAction.go,
                 enabled: _enable,
