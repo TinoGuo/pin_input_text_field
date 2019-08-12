@@ -220,15 +220,13 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       widget.controller ?? _controller;
 
   void _pinChanged() {
-    if (_effectiveController.text.runes.length > widget.pinLength) {
-      _text = _effectiveController.text.substring(0, widget.pinLength);
-    } else {
-      _text = _effectiveController.text;
-    }
-    // Ensure the selection is the last pos.
-    _effectiveController.selection =
-        TextSelection.collapsed(offset: _effectiveController.text.runes.length);
-    setState(() {});
+    setState(() {
+      if (_effectiveController.text.runes.length > widget.pinLength) {
+        _text = _effectiveController.text.substring(0, widget.pinLength);
+      } else {
+        _text = _effectiveController.text;
+      }
+    });
   }
 
   @override
@@ -259,8 +257,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       _controller.removeListener(_pinChanged);
       _controller = null;
       widget.controller.addListener(_pinChanged);
-      // Invalidate the text when controller hold a old text.
-      if (widget.controller.text.isNotEmpty) {
+      // Invalidate the text when controller hold different old text.
+      if (_text != widget.controller.text) {
         _pinChanged();
       }
     } else if (widget.controller != oldWidget.controller) {
