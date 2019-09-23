@@ -44,7 +44,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   /// Default max pin length.
   static final int _pinLength = 4;
 
@@ -53,6 +54,17 @@ class _MyHomePageState extends State<MyHomePage> {
     color: Colors.black,
     fontSize: 24,
   );
+
+  /// PinInputTextFormField form-key
+  final GlobalKey<FormFieldState<String>> _formKey =
+      GlobalKey<FormFieldState<String>>(debugLabel: '_formkey');
+
+  final List<Tab> _tabs = <Tab>[
+    Tab(text: 'PinInputTextField'),
+    Tab(text: 'PinInputTextFormField'),
+  ];
+
+  TabController _tabController;
 
   /// Control the input text field.
   TextEditingController _pinEditingController = TextEditingController();
@@ -72,6 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Control whether textField is enable.
   bool _enable = true;
+
+  /// Indicate whether the PinInputTextFormField has error or not
+  /// after being validated.
+  bool _hasError = false;
 
   /// Set a pin to the textField.
   void _setPinValue() {
@@ -95,11 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint('changed pin:${_pinEditingController.text}');
     });
     super.initState();
+    _tabController = TabController(vsync: this, length: _tabs.length);
   }
 
   @override
   void dispose() {
     _pinEditingController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -198,7 +216,17 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildNormal() {
+  Widget _buildExampleBody() {
+    return TabBarView(
+      controller: _tabController,
+      children: <Widget>[
+        _buildPinInputTextFieldExample(),
+        _buildPinInputTextFormFieldExample(),
+      ],
+    );
+  }
+
+  Widget _buildPinInputTextFieldExample() {
     return Center(
       // Center is a layout widget. It takes a single child and positions it
       // in the middle of the parent.
@@ -286,6 +314,130 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Widget _buildPinInputTextFormFieldExample() {
+    return Center(
+      // Center is a layout widget. It takes a single child and positions it
+      // in the middle of the parent.
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'obscureEnabled',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Checkbox(
+                  value: _obscureEnable,
+                  onChanged: (enable) {
+                    setState(() {
+                      _obscureEnable = enable;
+                      _selectedMenu(_pinEntryType);
+                    });
+                  }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'solidEnabled',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Checkbox(
+                  value: _solidEnable,
+                  onChanged: (enable) {
+                    setState(() {
+                      _solidEnable = enable;
+                      _selectedMenu(_pinEntryType);
+                    });
+                  }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'enabled',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(width: 12),
+              Checkbox(
+                value: _enable,
+                onChanged: (enable) {
+                  setState(() {
+                    _enable = enable;
+                  });
+                },
+              )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
+            child: PinInputTextFormField(
+              key: _formKey,
+              pinLength: _pinLength,
+              decoration: _pinDecoration,
+              controller: _pinEditingController,
+              autoFocus: true,
+              textInputAction: TextInputAction.go,
+              enabled: _enable,
+              onSubmit: (pin) {
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                }
+              },
+              onSaved: (pin) {
+                debugPrint('submit pin:$pin');
+              },
+              validator: (pin) {
+                if (pin.isEmpty) {
+                  setState(() {
+                    _hasError = true;
+                  });
+                  return 'Pin cannot empty.';
+                }
+                setState(() {
+                  _hasError = false;
+                });
+                return null;
+              },
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    _formKey.currentState.save();
+                  }
+                },
+                child: Text('Submit'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                textColor: Colors.white,
+                color: _hasError ? Colors.red : Colors.green,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -313,8 +465,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
         ],
+        bottom: TabBar(
+          tabs: _tabs,
+          controller: _tabController,
+        ),
       ),
-      body: _buildNormal(),
+      body: _buildExampleBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: _setPinValue,
         tooltip: 'setPinValue',
