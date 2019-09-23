@@ -680,3 +680,144 @@ class _PinPaint extends CustomPainter {
     }
   }
 }
+
+class PinInputTextFormField extends FormField<String> {
+  /// Controls the pin being edited.
+  final TextEditingController controller;
+
+  final int pinLength;
+
+  PinInputTextFormField({
+    Key key,
+    this.controller,
+    String initialValue,
+    this.pinLength = 6,
+    ValueChanged<String> onSubmit,
+    PinDecoration decoration = const BoxLooseDecoration(),
+    List<TextInputFormatter> inputFormatter,
+    TextInputType keyboardType = TextInputType.phone,
+    FocusNode focusNode,
+    bool autoFocus = false,
+    TextInputAction textInputAction = TextInputAction.done,
+    bool enabled = true,
+    FormFieldSetter<String> onSaved,
+    FormFieldValidator<String> validator,
+    bool autovalidate = false,
+  })  : assert(initialValue == null || controller == null),
+        assert(autovalidate != null),
+        assert(pinLength != null && pinLength > 0),
+        super(
+            key: key,
+            initialValue:
+                controller != null ? controller.text : (initialValue ?? ''),
+            onSaved: onSaved,
+            validator: validator,
+            autovalidate: autovalidate,
+            enabled: enabled,
+            builder: (FormFieldState<String> field) {
+              final _PinInputTextFormFieldState state = field;
+              return PinInputTextField(
+                pinLength: pinLength,
+                onSubmit: onSubmit,
+                decoration: decoration,
+                inputFormatter: inputFormatter,
+                keyboardType: keyboardType,
+                controller: state._effectiveController,
+                focusNode: focusNode,
+                autoFocus: autoFocus,
+                textInputAction: textInputAction,
+                enabled: enabled,
+              );
+            });
+
+  @override
+  _PinInputTextFormFieldState createState() => _PinInputTextFormFieldState();
+}
+
+class _PinInputTextFormFieldState extends FormFieldState<String> {
+  TextEditingController _controller;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? _controller;
+
+  @override
+  PinInputTextFormField get widget => super.widget;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.controller == null) {
+      _controller = TextEditingController(text: widget.initialValue);
+    } else {
+      widget.controller.addListener(_handleControllerChanged);
+    }
+  }
+
+  @override
+  void didUpdateWidget(PinInputTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerChanged);
+      widget.controller?.addListener(_handleControllerChanged);
+
+      if (oldWidget.controller != null && widget.controller == null)
+        _controller = TextEditingController.fromValue(
+          oldWidget.controller.value,
+        );
+      if (widget.controller != null) {
+        _handleControllerChanged();
+        if (oldWidget.controller == null) {
+          _controller = null;
+        }
+      }
+
+      if (oldWidget.pinLength > widget.pinLength &&
+          value.runes.length > widget.pinLength) {
+        setState(() {
+          setValue(value.substring(0, widget.pinLength));
+          _effectiveController.text = value;
+          _effectiveController.selection = TextSelection.collapsed(
+            offset: value.runes.length,
+          );
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_handleControllerChanged);
+    super.dispose();
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    setState(() {
+      _effectiveController.text = widget.initialValue;
+    });
+  }
+
+  @override
+  void didChange(String value) {
+    if (value.runes.length > widget.pinLength) {
+      super.didChange(String.fromCharCodes(
+        value.runes.take(widget.pinLength),
+      ));
+    } else {
+      super.didChange(value);
+    }
+  }
+
+  void _handleControllerChanged() {
+    // Suppress changes that originated from within this class.
+    //
+    // In the case where a controller has been passed in to this widget, we
+    // register this change listener. In these cases, we'll also receive change
+    // notifications for changes originating from within this class -- for
+    // example, the reset() method. In such cases, the FormField value will
+    // already have been set.
+    if (_effectiveController.text != value)
+      didChange(_effectiveController.text);
+  }
+}
