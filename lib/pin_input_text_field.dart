@@ -21,11 +21,24 @@ abstract class PinDecoration {
 
   final ObscureStyle obscureStyle;
 
+  final String errorText;
+
+  final TextStyle errorTextStyle;
+
   PinEntryType get pinEntryType;
 
   const PinDecoration({
     this.textStyle,
     this.obscureStyle,
+    this.errorText,
+    this.errorTextStyle,
+  });
+
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
   });
 }
 
@@ -66,6 +79,11 @@ class UnderlineDecoration extends PinDecoration {
   const UnderlineDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle: const TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+    ),
     this.enteredColor,
     this.gapSpace: 16.0,
     this.color: Colors.cyan,
@@ -73,10 +91,31 @@ class UnderlineDecoration extends PinDecoration {
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
         );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.underline;
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+  }) {
+    return UnderlineDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      enteredColor: this.enteredColor,
+      color: this.color,
+      gapSpace: this.gapSpace,
+      lineHeight: this.lineHeight,
+    );
+  }
 }
 
 /// The object determine the box stroke etc.
@@ -96,6 +135,11 @@ class BoxTightDecoration extends PinDecoration {
   const BoxTightDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle: const TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+    ),
     this.solidColor,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
@@ -103,10 +147,31 @@ class BoxTightDecoration extends PinDecoration {
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
         );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxTight;
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+  }) {
+    return BoxTightDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      solidColor: this.solidColor,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
+      radius: this.radius,
+    );
+  }
 }
 
 /// The object determine the box stroke etc.
@@ -132,6 +197,11 @@ class BoxLooseDecoration extends PinDecoration {
   const BoxLooseDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle: const TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+    ),
     this.enteredColor,
     this.solidColor,
     this.radius: const Radius.circular(8.0),
@@ -141,10 +211,33 @@ class BoxLooseDecoration extends PinDecoration {
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
         );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxLoose;
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+  }) {
+    return BoxLooseDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      solidColor: this.solidColor,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
+      radius: this.radius,
+      enteredColor: this.enteredColor,
+      gapSpace: this.gapSpace,
+    );
+  }
 }
 
 class PinInputTextField extends StatefulWidget {
@@ -303,6 +396,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         style: TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
+          fontSize: widget.decoration.textStyle.fontSize,
         ),
 
         /// Hide the Cursor.
@@ -357,6 +451,9 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
           ),
+
+          errorText: widget.decoration.errorText,
+          errorStyle: widget.decoration.errorTextStyle,
         ),
         enabled: widget.enabled,
       ),
@@ -387,6 +484,13 @@ class _PinPaint extends CustomPainter {
       !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
 
   _drawBoxTight(Canvas canvas, Size size) {
+    double mainHeight;
+    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    } else {
+      mainHeight = size.height;
+    }
+
     /// Force convert to [BoxTightDecoration].
     var dr = decoration as BoxTightDecoration;
     Paint borderPaint = Paint()
@@ -409,7 +513,7 @@ class _PinPaint extends CustomPainter {
       dr.strokeWidth / 2,
       dr.strokeWidth / 2,
       size.width - dr.strokeWidth / 2,
-      size.height - dr.strokeWidth / 2,
+      mainHeight - dr.strokeWidth / 2,
     );
 
     if (insidePaint != null) {
@@ -429,7 +533,7 @@ class _PinPaint extends CustomPainter {
           dr.strokeWidth / 2 +
           singleWidth * (i - 1);
       canvas.drawLine(Offset(offsetX, dr.strokeWidth),
-          Offset(offsetX, size.height - dr.strokeWidth), borderPaint);
+          Offset(offsetX, mainHeight - dr.strokeWidth), borderPaint);
     }
 
     /// The char index of the [text]
@@ -471,7 +575,7 @@ class _PinPaint extends CustomPainter {
 
       /// No need to compute again
       if (startY == 0.0) {
-        startY = size.height / 2 - textPainter.height / 2;
+        startY = mainHeight / 2 - textPainter.height / 2;
       }
       startX = dr.strokeWidth * (index + 1) +
           singleWidth * index +
@@ -483,6 +587,13 @@ class _PinPaint extends CustomPainter {
   }
 
   _drawBoxLoose(Canvas canvas, Size size) {
+    double mainHeight;
+    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    } else {
+      mainHeight = size.height;
+    }
+
     /// Force convert to [BoxLooseDecoration].
     var dr = decoration as BoxLooseDecoration;
     Paint borderPaint = Paint()
@@ -507,7 +618,7 @@ class _PinPaint extends CustomPainter {
         pinLength;
 
     var startX = dr.strokeWidth / 2;
-    var startY = size.height - dr.strokeWidth / 2;
+    var startY = mainHeight - dr.strokeWidth / 2;
 
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
@@ -569,7 +680,7 @@ class _PinPaint extends CustomPainter {
 
       /// No need to compute again
       if (startY == 0.0) {
-        startY = size.height / 2 - textPainter.height / 2;
+        startY = mainHeight / 2 - textPainter.height / 2;
       }
       startX = singleWidth * index +
           singleWidth / 2 -
@@ -583,6 +694,13 @@ class _PinPaint extends CustomPainter {
   }
 
   _drawUnderLine(Canvas canvas, Size size) {
+    double mainHeight;
+    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    } else {
+      mainHeight = size.height;
+    }
+
     /// Force convert to [UnderlineDecoration].
     var dr = decoration as UnderlineDecoration;
     Paint underlinePaint = Paint()
@@ -592,7 +710,7 @@ class _PinPaint extends CustomPainter {
       ..isAntiAlias = true;
 
     var startX = 0.0;
-    var startY = size.height - dr.lineHeight;
+    var startY = mainHeight - dr.lineHeight;
 
     /// Calculate the width of each underline.
     double singleWidth =
@@ -648,7 +766,7 @@ class _PinPaint extends CustomPainter {
 
       /// No need to compute again
       if (startY == 0.0) {
-        startY = size.height / 2 - textPainter.height / 2;
+        startY = mainHeight / 2 - textPainter.height / 2;
       }
       startX = singleWidth * index +
           singleWidth / 2 -
@@ -719,7 +837,7 @@ class PinInputTextFormField extends FormField<String> {
               return PinInputTextField(
                 pinLength: pinLength,
                 onSubmit: onSubmit,
-                decoration: decoration,
+                decoration: decoration.copyWith(errorText: field.errorText),
                 inputFormatter: inputFormatter,
                 keyboardType: keyboardType,
                 controller: state._effectiveController,
