@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage>
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
     textStyle: _textStyle,
-    enteredColor: Colors.deepOrange,
+    enteredColor: Colors.green,
   );
 
   /// Control whether show the obscureCode.
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage>
         setState(() {
           _pinDecoration = UnderlineDecoration(
             textStyle: _textStyle,
-            enteredColor: Colors.deepOrange,
+            enteredColor: Colors.green,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '😂',
@@ -152,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage>
         setState(() {
           _pinDecoration = BoxLooseDecoration(
             textStyle: _textStyle,
-            enteredColor: Colors.deepOrange,
+            enteredColor: Colors.green,
             solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
