@@ -829,7 +829,22 @@ class PinInputTextFormField extends FormField<String> {
             initialValue:
                 controller != null ? controller.text : (initialValue ?? ''),
             onSaved: onSaved,
-            validator: validator,
+            validator: (value) {
+              var result = validator(value);
+              if (result == null) {
+                if (value.isEmpty) {
+                  return 'Input field is empty.';
+                }
+                if (value.length < pinLength) {
+                  if (pinLength - value.length > 1) {
+                    return 'Missing ${pinLength - value.length} digits of input.';
+                  } else {
+                    return 'Missing last digit of input.';
+                  }
+                }
+              }
+              return result;
+            },
             autovalidate: autovalidate,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
