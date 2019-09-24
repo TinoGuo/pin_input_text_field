@@ -624,6 +624,18 @@ class _PinPaint extends CustomPainter {
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
         borderPaint.color = dr.enteredColor;
+      } else if (decoration.errorText != null &&
+          decoration.errorText.isNotEmpty) {
+        /// only draw error-color as border-color or solid-color
+        /// if errorText is not null
+        if (dr.solidColor == null) {
+          borderPaint.color = decoration.errorTextStyle.color;
+        } else {
+          insidePaint = Paint()
+            ..color = decoration.errorTextStyle.color
+            ..style = PaintingStyle.fill
+            ..isAntiAlias = true;
+        }
       } else {
         borderPaint.color = dr.strokeColor;
       }
@@ -719,6 +731,9 @@ class _PinPaint extends CustomPainter {
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
         underlinePaint.color = dr.enteredColor;
+      } else if (decoration.errorText != null &&
+          decoration.errorText.isNotEmpty) {
+        underlinePaint.color = decoration.errorTextStyle.color;
       } else {
         underlinePaint.color = dr.color;
       }
