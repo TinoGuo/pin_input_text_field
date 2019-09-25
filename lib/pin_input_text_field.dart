@@ -19,10 +19,13 @@ abstract class PinDecoration {
   /// The style of painting text.
   final TextStyle textStyle;
 
+  /// The style of obscure text.
   final ObscureStyle obscureStyle;
 
+  /// The error text that will be displayed if any
   final String errorText;
 
+  /// The style of error text.
   final TextStyle errorTextStyle;
 
   PinEntryType get pinEntryType;
@@ -34,6 +37,8 @@ abstract class PinDecoration {
     this.errorTextStyle,
   });
 
+  /// Creates a copy of this pin decoration with the given fields replaced
+  /// by the new values.
   PinDecoration copyWith({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
@@ -452,7 +457,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
             borderSide: BorderSide.none,
           ),
 
+          /// Bind the error text from pin decoration to this input decoration.
           errorText: widget.decoration.errorText,
+
+          /// Bind the style of error text from pin decoration to
+          /// this input decoration.
           errorStyle: widget.decoration.errorTextStyle,
         ),
         enabled: widget.enabled,
@@ -484,6 +493,11 @@ class _PinPaint extends CustomPainter {
       !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
 
   _drawBoxTight(Canvas canvas, Size size) {
+    /// Calculate the height of paint area for drawing the pin field.
+    /// it should honor the error text (if any) drawn by
+    /// the actual texfield behind.
+    /// but, since we can access the drawn textfield behind from here,
+    /// we use a simple logic to calculate it.
     double mainHeight;
     if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
       mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
@@ -587,6 +601,11 @@ class _PinPaint extends CustomPainter {
   }
 
   _drawBoxLoose(Canvas canvas, Size size) {
+    /// Calculate the height of paint area for drawing the pin field.
+    /// it should honor the error text (if any) drawn by
+    /// the actual texfield behind.
+    /// but, since we can access the drawn textfield behind from here,
+    /// we use a simple logic to calculate it.
     double mainHeight;
     if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
       mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
@@ -706,6 +725,11 @@ class _PinPaint extends CustomPainter {
   }
 
   _drawUnderLine(Canvas canvas, Size size) {
+    /// Calculate the height of paint area for drawing the pin field.
+    /// it should honor the error text (if any) drawn by
+    /// the actual texfield behind.
+    /// but, since we can access the drawn textfield behind from here,
+    /// we use a simple logic to calculate it.
     double mainHeight;
     if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
       mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
@@ -733,6 +757,7 @@ class _PinPaint extends CustomPainter {
         underlinePaint.color = dr.enteredColor;
       } else if (decoration.errorText != null &&
           decoration.errorText.isNotEmpty) {
+        /// only draw error-color as underline-color if errorText is not null
         underlinePaint.color = decoration.errorTextStyle.color;
       } else {
         underlinePaint.color = dr.color;
@@ -818,6 +843,7 @@ class PinInputTextFormField extends FormField<String> {
   /// Controls the pin being edited.
   final TextEditingController controller;
 
+  /// The max length of pin.
   final int pinLength;
 
   PinInputTextFormField({
