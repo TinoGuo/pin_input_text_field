@@ -103,6 +103,12 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
+## 贡献者
+
+这个项目的存在要感谢所有贡献者
+[rajajain08](https://github.com/rajajain08)
+[alyyasser](https://github.com/alyyasser)
+
 ## 已知问题
 
 目前`PinEditingController`的Listener会在手动设置text值时执行多次，可以在应用层的代码上过滤下

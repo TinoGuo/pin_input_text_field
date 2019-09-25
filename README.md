@@ -106,6 +106,9 @@ final String obscureText;
 
 ## Contributors
 
+This project exists thanks to all the people who contribute.
+[rajajain08](https://github.com/rajajain08)
+[alyyasser](https://github.com/alyyasser)
 
 ## Known Issue
 
