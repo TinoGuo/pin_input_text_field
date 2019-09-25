@@ -1,4 +1,5 @@
 [![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field) 
+![GitHub](https://img.shields.io/github/license/TinoGuo/pin_input_text_field)
 
 # pin_input_text_field
 
