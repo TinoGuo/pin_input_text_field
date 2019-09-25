@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
@@ -44,16 +46,21 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   /// Default max pin length.
   static final int _pinLength = 4;
 
   /// Default Text style.
-  static final TextStyle _textStyle = TextStyle(
+  static const TextStyle _textStyle = TextStyle(
     color: Colors.black,
     fontSize: 24,
   );
+
+  static const List<String> labels = const [
+    'obscure',
+    'solid  ',
+    'enabled',
+  ];
 
   /// PinInputTextFormField form-key
   final GlobalKey<FormFieldState<String>> _formKey =
@@ -68,6 +75,9 @@ class _MyHomePageState extends State<MyHomePage>
 
   /// Control the input text field.
   TextEditingController _pinEditingController = TextEditingController();
+
+  /// Control the floatingActionButton animation.
+  AnimationController _animationController;
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
@@ -112,6 +122,10 @@ class _MyHomePageState extends State<MyHomePage>
     });
     super.initState();
     _tabController = TabController(vsync: this, length: _tabs.length);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   @override
@@ -233,81 +247,16 @@ class _MyHomePageState extends State<MyHomePage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'obscureEnabled',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Checkbox(
-                  value: _obscureEnable,
-                  onChanged: (enable) {
-                    setState(() {
-                      _obscureEnable = enable;
-                      _selectedMenu(_pinEntryType);
-                    });
-                  }),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'solidEnabled',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Checkbox(
-                  value: _solidEnable,
-                  onChanged: (enable) {
-                    setState(() {
-                      _solidEnable = enable;
-                      _selectedMenu(_pinEntryType);
-                    });
-                  }),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'enabled',
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(width: 12),
-              Checkbox(
-                value: _enable,
-                onChanged: (enable) {
-                  setState(() {
-                    _enable = enable;
-                  });
-                },
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
-            child: PinInputTextField(
-              pinLength: _pinLength,
-              decoration: _pinDecoration,
-              controller: _pinEditingController,
-              autoFocus: true,
-              textInputAction: TextInputAction.go,
-              enabled: _enable,
-              onSubmit: (pin) {
-                debugPrint('submit pin:$pin');
-              },
-            ),
+          PinInputTextField(
+            pinLength: _pinLength,
+            decoration: _pinDecoration,
+            controller: _pinEditingController,
+            autoFocus: true,
+            textInputAction: TextInputAction.go,
+            enabled: _enable,
+            onSubmit: (pin) {
+              debugPrint('submit pin:$pin');
+            },
           ),
         ],
       ),
@@ -321,99 +270,37 @@ class _MyHomePageState extends State<MyHomePage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'obscureEnabled',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Checkbox(
-                  value: _obscureEnable,
-                  onChanged: (enable) {
-                    setState(() {
-                      _obscureEnable = enable;
-                      _selectedMenu(_pinEntryType);
-                    });
-                  }),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'solidEnabled',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Checkbox(
-                  value: _solidEnable,
-                  onChanged: (enable) {
-                    setState(() {
-                      _solidEnable = enable;
-                      _selectedMenu(_pinEntryType);
-                    });
-                  }),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'enabled',
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(width: 12),
-              Checkbox(
-                value: _enable,
-                onChanged: (enable) {
-                  setState(() {
-                    _enable = enable;
-                  });
-                },
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12, right: 12, top: 32),
-            child: PinInputTextFormField(
-              key: _formKey,
-              pinLength: _pinLength,
-              decoration: _pinDecoration,
-              controller: _pinEditingController,
-              autoFocus: true,
-              textInputAction: TextInputAction.go,
-              enabled: _enable,
-              onSubmit: (pin) {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                }
-              },
-              onSaved: (pin) {
-                debugPrint('submit pin:$pin');
-              },
-              validator: (pin) {
-                if (pin.isEmpty) {
-                  setState(() {
-                    _hasError = true;
-                  });
-                  return 'Pin cannot empty.';
-                }
+          PinInputTextFormField(
+            key: _formKey,
+            pinLength: _pinLength,
+            decoration: _pinDecoration,
+            controller: _pinEditingController,
+            autoFocus: true,
+            textInputAction: TextInputAction.go,
+            enabled: _enable,
+            onSubmit: (pin) {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+              }
+            },
+            onSaved: (pin) {
+              debugPrint('submit pin:$pin');
+            },
+            validator: (pin) {
+              if (pin.isEmpty) {
                 setState(() {
-                  _hasError = false;
+                  _hasError = true;
                 });
-                return null;
-              },
-            ),
+                return 'Pin cannot empty.';
+              }
+              setState(() {
+                _hasError = false;
+              });
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -438,8 +325,51 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
+  _buildCheckGroup(bool initValue, String label, ValueChanged<bool> onChanged) {
+    final backgroundColor = Theme.of(context).accentColor;
+    return Card(
+      color: backgroundColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            label,
+            style: TextStyle(fontSize: 18),
+          ),
+          SizedBox(width: 12),
+          Checkbox(
+            value: initValue,
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<ValueChanged<bool>> checkedListeners = [
+      (enable) {
+        debugPrint('1st');
+        setState(() {
+          _obscureEnable = enable;
+          _selectedMenu(_pinEntryType);
+        });
+      },
+      (enable) {
+        debugPrint('2nd');
+        setState(() {
+          _solidEnable = enable;
+          _selectedMenu(_pinEntryType);
+        });
+      },
+      (enable) {
+        debugPrint('3rd');
+        setState(() {
+          _enable = enable;
+        });
+      }
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -471,11 +401,56 @@ class _MyHomePageState extends State<MyHomePage>
         ),
       ),
       body: _buildExampleBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _setPinValue,
-        tooltip: 'setPinValue',
-        child: Icon(Icons.border_color),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(3, (int index) {
+          Widget child = Container(
+            height: 70,
+            width: 180,
+            alignment: FractionalOffset.topCenter,
+            child: ScaleTransition(
+              scale: CurvedAnimation(
+                parent: _animationController,
+                curve:
+                    Interval(0.0, 1.0 - index / 3 / 2.0, curve: Curves.easeOut),
+              ),
+              child: _buildCheckGroup(
+                index == 0
+                    ? _obscureEnable
+                    : index == 1 ? _solidEnable : _enable,
+                labels[index],
+                checkedListeners[index],
+              ),
+            ),
+          );
+          return child;
+        }).toList()
+          ..add(
+            FloatingActionButton(
+              heroTag: null,
+              child: AnimatedBuilder(
+                animation: _animationController,
+                builder: (BuildContext context, Widget child) {
+                  return Transform(
+                    transform: Matrix4.rotationZ(
+                        _animationController.value * 0.5 * pi),
+                    alignment: FractionalOffset.center,
+                    child: Icon(_animationController.isDismissed
+                        ? Icons.edit
+                        : Icons.close),
+                  );
+                },
+              ),
+              onPressed: () {
+                if (_animationController.isDismissed) {
+                  _animationController.forward();
+                } else {
+                  _animationController.reverse();
+                }
+              },
+            ),
+          ),
+      ),
     );
   }
 }
