@@ -1,5 +1,6 @@
 [![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field)
 ![GitHub](https://img.shields.io/github/license/TinoGuo/pin_input_text_field)
+![GitHub top language](https://img.shields.io/github/languages/top/TinoGuo/pin_input_text_field)
 
 # pin_input_text_field
 
@@ -102,6 +103,9 @@ final bool isTextObscure;
 /// The display text when [isTextObscure] is true, emoji supported
 final String obscureText;
 ```
+
+## Contributors
+
 
 ## Known Issue
 
