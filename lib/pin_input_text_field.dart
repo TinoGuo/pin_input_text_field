@@ -19,13 +19,31 @@ abstract class PinDecoration {
   /// The style of painting text.
   final TextStyle textStyle;
 
+  /// The style of obscure text.
   final ObscureStyle obscureStyle;
+
+  /// The error text that will be displayed if any
+  final String errorText;
+
+  /// The style of error text.
+  final TextStyle errorTextStyle;
 
   PinEntryType get pinEntryType;
 
   const PinDecoration({
     this.textStyle,
     this.obscureStyle,
+    this.errorText,
+    this.errorTextStyle,
+  });
+
+  /// Creates a copy of this pin decoration with the given fields replaced
+  /// by the new values.
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
   });
 }
 
@@ -66,6 +84,11 @@ class UnderlineDecoration extends PinDecoration {
   const UnderlineDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle: const TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+    ),
     this.enteredColor,
     this.gapSpace: 16.0,
     this.color: Colors.cyan,
@@ -73,10 +96,31 @@ class UnderlineDecoration extends PinDecoration {
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
         );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.underline;
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+  }) {
+    return UnderlineDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      enteredColor: this.enteredColor,
+      color: this.color,
+      gapSpace: this.gapSpace,
+      lineHeight: this.lineHeight,
+    );
+  }
 }
 
 /// The object determine the box stroke etc.
@@ -96,6 +140,11 @@ class BoxTightDecoration extends PinDecoration {
   const BoxTightDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle: const TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+    ),
     this.solidColor,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
@@ -103,10 +152,31 @@ class BoxTightDecoration extends PinDecoration {
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
         );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxTight;
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+  }) {
+    return BoxTightDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      solidColor: this.solidColor,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
+      radius: this.radius,
+    );
+  }
 }
 
 /// The object determine the box stroke etc.
@@ -132,6 +202,11 @@ class BoxLooseDecoration extends PinDecoration {
   const BoxLooseDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle: const TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+    ),
     this.enteredColor,
     this.solidColor,
     this.radius: const Radius.circular(8.0),
@@ -141,10 +216,33 @@ class BoxLooseDecoration extends PinDecoration {
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
         );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxLoose;
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+  }) {
+    return BoxLooseDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      solidColor: this.solidColor,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
+      radius: this.radius,
+      enteredColor: this.enteredColor,
+      gapSpace: this.gapSpace,
+    );
+  }
 }
 
 class PinInputTextField extends StatefulWidget {
@@ -303,6 +401,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         style: TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
+          fontSize: widget.decoration.textStyle.fontSize,
         ),
 
         /// Hide the Cursor.
@@ -357,6 +456,13 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
           ),
+
+          /// Bind the error text from pin decoration to this input decoration.
+          errorText: widget.decoration.errorText,
+
+          /// Bind the style of error text from pin decoration to
+          /// this input decoration.
+          errorStyle: widget.decoration.errorTextStyle,
         ),
         enabled: widget.enabled,
       ),
@@ -387,6 +493,18 @@ class _PinPaint extends CustomPainter {
       !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
 
   _drawBoxTight(Canvas canvas, Size size) {
+    /// Calculate the height of paint area for drawing the pin field.
+    /// it should honor the error text (if any) drawn by
+    /// the actual texfield behind.
+    /// but, since we can access the drawn textfield behind from here,
+    /// we use a simple logic to calculate it.
+    double mainHeight;
+    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    } else {
+      mainHeight = size.height;
+    }
+
     /// Force convert to [BoxTightDecoration].
     var dr = decoration as BoxTightDecoration;
     Paint borderPaint = Paint()
@@ -409,7 +527,7 @@ class _PinPaint extends CustomPainter {
       dr.strokeWidth / 2,
       dr.strokeWidth / 2,
       size.width - dr.strokeWidth / 2,
-      size.height - dr.strokeWidth / 2,
+      mainHeight - dr.strokeWidth / 2,
     );
 
     if (insidePaint != null) {
@@ -429,7 +547,7 @@ class _PinPaint extends CustomPainter {
           dr.strokeWidth / 2 +
           singleWidth * (i - 1);
       canvas.drawLine(Offset(offsetX, dr.strokeWidth),
-          Offset(offsetX, size.height - dr.strokeWidth), borderPaint);
+          Offset(offsetX, mainHeight - dr.strokeWidth), borderPaint);
     }
 
     /// The char index of the [text]
@@ -471,7 +589,7 @@ class _PinPaint extends CustomPainter {
 
       /// No need to compute again
       if (startY == 0.0) {
-        startY = size.height / 2 - textPainter.height / 2;
+        startY = mainHeight / 2 - textPainter.height / 2;
       }
       startX = dr.strokeWidth * (index + 1) +
           singleWidth * index +
@@ -483,6 +601,18 @@ class _PinPaint extends CustomPainter {
   }
 
   _drawBoxLoose(Canvas canvas, Size size) {
+    /// Calculate the height of paint area for drawing the pin field.
+    /// it should honor the error text (if any) drawn by
+    /// the actual texfield behind.
+    /// but, since we can access the drawn textfield behind from here,
+    /// we use a simple logic to calculate it.
+    double mainHeight;
+    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    } else {
+      mainHeight = size.height;
+    }
+
     /// Force convert to [BoxLooseDecoration].
     var dr = decoration as BoxLooseDecoration;
     Paint borderPaint = Paint()
@@ -507,12 +637,24 @@ class _PinPaint extends CustomPainter {
         pinLength;
 
     var startX = dr.strokeWidth / 2;
-    var startY = size.height - dr.strokeWidth / 2;
+    var startY = mainHeight - dr.strokeWidth / 2;
 
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
         borderPaint.color = dr.enteredColor;
+      } else if (decoration.errorText != null &&
+          decoration.errorText.isNotEmpty) {
+        /// only draw error-color as border-color or solid-color
+        /// if errorText is not null
+        if (dr.solidColor == null) {
+          borderPaint.color = decoration.errorTextStyle.color;
+        } else {
+          insidePaint = Paint()
+            ..color = decoration.errorTextStyle.color
+            ..style = PaintingStyle.fill
+            ..isAntiAlias = true;
+        }
       } else {
         borderPaint.color = dr.strokeColor;
       }
@@ -569,7 +711,7 @@ class _PinPaint extends CustomPainter {
 
       /// No need to compute again
       if (startY == 0.0) {
-        startY = size.height / 2 - textPainter.height / 2;
+        startY = mainHeight / 2 - textPainter.height / 2;
       }
       startX = singleWidth * index +
           singleWidth / 2 -
@@ -583,6 +725,18 @@ class _PinPaint extends CustomPainter {
   }
 
   _drawUnderLine(Canvas canvas, Size size) {
+    /// Calculate the height of paint area for drawing the pin field.
+    /// it should honor the error text (if any) drawn by
+    /// the actual texfield behind.
+    /// but, since we can access the drawn textfield behind from here,
+    /// we use a simple logic to calculate it.
+    double mainHeight;
+    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    } else {
+      mainHeight = size.height;
+    }
+
     /// Force convert to [UnderlineDecoration].
     var dr = decoration as UnderlineDecoration;
     Paint underlinePaint = Paint()
@@ -592,7 +746,7 @@ class _PinPaint extends CustomPainter {
       ..isAntiAlias = true;
 
     var startX = 0.0;
-    var startY = size.height - dr.lineHeight;
+    var startY = mainHeight - dr.lineHeight;
 
     /// Calculate the width of each underline.
     double singleWidth =
@@ -601,6 +755,10 @@ class _PinPaint extends CustomPainter {
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
         underlinePaint.color = dr.enteredColor;
+      } else if (decoration.errorText != null &&
+          decoration.errorText.isNotEmpty) {
+        /// only draw error-color as underline-color if errorText is not null
+        underlinePaint.color = decoration.errorTextStyle.color;
       } else {
         underlinePaint.color = dr.color;
       }
@@ -648,7 +806,7 @@ class _PinPaint extends CustomPainter {
 
       /// No need to compute again
       if (startY == 0.0) {
-        startY = size.height / 2 - textPainter.height / 2;
+        startY = mainHeight / 2 - textPainter.height / 2;
       }
       startX = singleWidth * index +
           singleWidth / 2 -
@@ -678,5 +836,162 @@ class _PinPaint extends CustomPainter {
           break;
         }
     }
+  }
+}
+
+class PinInputTextFormField extends FormField<String> {
+  /// Controls the pin being edited.
+  final TextEditingController controller;
+
+  /// The max length of pin.
+  final int pinLength;
+
+  PinInputTextFormField({
+    Key key,
+    this.controller,
+    String initialValue,
+    this.pinLength = 6,
+    ValueChanged<String> onSubmit,
+    PinDecoration decoration = const BoxLooseDecoration(),
+    List<TextInputFormatter> inputFormatter,
+    TextInputType keyboardType = TextInputType.phone,
+    FocusNode focusNode,
+    bool autoFocus = false,
+    TextInputAction textInputAction = TextInputAction.done,
+    bool enabled = true,
+    FormFieldSetter<String> onSaved,
+    FormFieldValidator<String> validator,
+    bool autovalidate = false,
+  })  : assert(initialValue == null || controller == null),
+        assert(autovalidate != null),
+        assert(pinLength != null && pinLength > 0),
+        super(
+            key: key,
+            initialValue:
+                controller != null ? controller.text : (initialValue ?? ''),
+            onSaved: onSaved,
+            validator: (value) {
+              var result = validator(value);
+              if (result == null) {
+                if (value.isEmpty) {
+                  return 'Input field is empty.';
+                }
+                if (value.length < pinLength) {
+                  if (pinLength - value.length > 1) {
+                    return 'Missing ${pinLength - value.length} digits of input.';
+                  } else {
+                    return 'Missing last digit of input.';
+                  }
+                }
+              }
+              return result;
+            },
+            autovalidate: autovalidate,
+            enabled: enabled,
+            builder: (FormFieldState<String> field) {
+              final _PinInputTextFormFieldState state = field;
+              return PinInputTextField(
+                pinLength: pinLength,
+                onSubmit: onSubmit,
+                decoration: decoration.copyWith(errorText: field.errorText),
+                inputFormatter: inputFormatter,
+                keyboardType: keyboardType,
+                controller: state._effectiveController,
+                focusNode: focusNode,
+                autoFocus: autoFocus,
+                textInputAction: textInputAction,
+                enabled: enabled,
+              );
+            });
+
+  @override
+  _PinInputTextFormFieldState createState() => _PinInputTextFormFieldState();
+}
+
+class _PinInputTextFormFieldState extends FormFieldState<String> {
+  TextEditingController _controller;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? _controller;
+
+  @override
+  PinInputTextFormField get widget => super.widget;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.controller == null) {
+      _controller = TextEditingController(text: widget.initialValue);
+    } else {
+      widget.controller.addListener(_handleControllerChanged);
+    }
+  }
+
+  @override
+  void didUpdateWidget(PinInputTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerChanged);
+      widget.controller?.addListener(_handleControllerChanged);
+
+      if (oldWidget.controller != null && widget.controller == null)
+        _controller = TextEditingController.fromValue(
+          oldWidget.controller.value,
+        );
+      if (widget.controller != null) {
+        _handleControllerChanged();
+        if (oldWidget.controller == null) {
+          _controller = null;
+        }
+      }
+
+      if (oldWidget.pinLength > widget.pinLength &&
+          value.runes.length > widget.pinLength) {
+        setState(() {
+          setValue(value.substring(0, widget.pinLength));
+          _effectiveController.text = value;
+          _effectiveController.selection = TextSelection.collapsed(
+            offset: value.runes.length,
+          );
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_handleControllerChanged);
+    super.dispose();
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    setState(() {
+      _effectiveController.text = widget.initialValue;
+    });
+  }
+
+  @override
+  void didChange(String value) {
+    if (value.runes.length > widget.pinLength) {
+      super.didChange(String.fromCharCodes(
+        value.runes.take(widget.pinLength),
+      ));
+    } else {
+      super.didChange(value);
+    }
+  }
+
+  void _handleControllerChanged() {
+    // Suppress changes that originated from within this class.
+    //
+    // In the case where a controller has been passed in to this widget, we
+    // register this change listener. In these cases, we'll also receive change
+    // notifications for changes originating from within this class -- for
+    // example, the reset() method. In such cases, the FormField value will
+    // already have been set.
+    if (_effectiveController.text != value)
+      didChange(_effectiveController.text);
   }
 }
