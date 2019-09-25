@@ -5,7 +5,7 @@
 # pin_input_text_field
 
 [中文版点我](./README_CN.md)
-PinInputTextField is a TextField widget to help display different style pin.
+PinInputTextField is a TextField widget to help display different style pin. It supports all the platforms [flutter](https://github.com/flutter/flutter) supports.
 
 ## Notice after Version 2.0.0
 Please set the selection when you set the text programmatically, just like [this](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).

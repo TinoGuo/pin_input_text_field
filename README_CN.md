@@ -4,7 +4,7 @@
 
 # pin_input_text_field
 
-PinInputTextField是一个Flutter平台上用来展示不同样式的验证码，简单好用！
+PinInputTextField是一个Flutter平台上用来展示不同样式的验证码，简单好用！支持所有[flutter](https://github.com/flutter/flutter)支持的平台
 
 ## 2.0.0版本注意事项
 如果你在程序中手动设text，请把selection也同时赋值，参考[这个](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
