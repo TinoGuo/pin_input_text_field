@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
@@ -12,35 +10,48 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pin Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ListPage(),
+    );
+  }
+}
+
+enum TextFieldType {
+  NORMAL,
+  FORM,
+}
+
+class ListPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('demo'),
+      ),
+      body: ListView.builder(
+        itemCount: TextFieldType.values.length,
+        itemBuilder: (ctx, index) {
+          return ListTile(
+            title: Text(TextFieldType.values[index].toString()),
+            onTap: () {
+              Navigator.push(
+                  ctx,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MyHomePage(TextFieldType.values[index])));
+            },
+          );
+        },
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage(this.textFieldType, {Key key}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  final TextFieldType textFieldType;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -65,13 +76,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   /// PinInputTextFormField form-key
   final GlobalKey<FormFieldState<String>> _formKey =
       GlobalKey<FormFieldState<String>>(debugLabel: '_formkey');
-
-  final List<Tab> _tabs = <Tab>[
-    Tab(text: 'PinInputTextField'),
-    Tab(text: 'PinInputTextFormField'),
-  ];
-
-  TabController _tabController;
 
   /// Control the input text field.
   TextEditingController _pinEditingController = TextEditingController();
@@ -121,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       debugPrint('changed pin:${_pinEditingController.text}');
     });
     super.initState();
-    _tabController = TabController(vsync: this, length: _tabs.length);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -131,7 +134,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _pinEditingController.dispose();
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -231,22 +233,88 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildExampleBody() {
-    return TabBarView(
-      controller: _tabController,
-      children: <Widget>[
-        _buildPinInputTextFieldExample(),
-        _buildPinInputTextFormFieldExample(),
-      ],
-    );
+    switch (widget.textFieldType) {
+      case TextFieldType.NORMAL:
+        return _buildPinInputTextFieldExample();
+      case TextFieldType.FORM:
+        return _buildPinInputTextFormFieldExample();
+    }
+  }
+
+  _buildConfigWidget() {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'obscureEnabled',
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          Checkbox(
+              value: _obscureEnable,
+              onChanged: (enable) {
+                setState(() {
+                  _obscureEnable = enable;
+                  _selectedMenu(_pinEntryType);
+                });
+              }),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'solidEnabled',
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          Checkbox(
+              value: _solidEnable,
+              onChanged: (enable) {
+                setState(() {
+                  _solidEnable = enable;
+                  _selectedMenu(_pinEntryType);
+                });
+              }),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'enabled',
+            style: TextStyle(fontSize: 18),
+          ),
+          SizedBox(width: 12),
+          Checkbox(
+            value: _enable,
+            onChanged: (enable) {
+              setState(() {
+                _enable = enable;
+              });
+            },
+          )
+        ],
+      ),
+    ];
   }
 
   Widget _buildPinInputTextFieldExample() {
     return Center(
       // Center is a layout widget. It takes a single child and positions it
       // in the middle of the parent.
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: ListView(
         children: <Widget>[
+          ..._buildConfigWidget(),
           PinInputTextField(
             pinLength: _pinLength,
             decoration: _pinDecoration,
@@ -267,9 +335,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Center(
       // Center is a layout widget. It takes a single child and positions it
       // in the middle of the parent.
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: ListView(
         children: <Widget>[
+          ..._buildConfigWidget(),
           PinInputTextFormField(
             key: _formKey,
             pinLength: _pinLength,
@@ -325,54 +393,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
-  _buildCheckGroup(bool initValue, String label, ValueChanged<bool> onChanged) {
-    final backgroundColor = Theme.of(context).accentColor;
-    return Card(
-      color: backgroundColor,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            label,
-            style: TextStyle(fontSize: 18),
-          ),
-          SizedBox(width: 12),
-          Checkbox(
-            value: initValue,
-            onChanged: onChanged,
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<ValueChanged<bool>> checkedListeners = [
-      (enable) {
-        debugPrint('1st');
-        setState(() {
-          _obscureEnable = enable;
-          _selectedMenu(_pinEntryType);
-        });
-      },
-      (enable) {
-        debugPrint('2nd');
-        setState(() {
-          _solidEnable = enable;
-          _selectedMenu(_pinEntryType);
-        });
-      },
-      (enable) {
-        debugPrint('3rd');
-        setState(() {
-          _enable = enable;
-        });
-      }
-    ];
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.textFieldType.toString()),
         actions: <Widget>[
           PopupMenuButton<PinEntryType>(
             icon: Icon(Icons.more_vert),
@@ -395,61 +420,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             },
           ),
         ],
-        bottom: TabBar(
-          tabs: _tabs,
-          controller: _tabController,
-        ),
       ),
       body: _buildExampleBody(),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(3, (int index) {
-          Widget child = Container(
-            height: 70,
-            width: 180,
-            alignment: FractionalOffset.topCenter,
-            child: ScaleTransition(
-              scale: CurvedAnimation(
-                parent: _animationController,
-                curve:
-                    Interval(0.0, 1.0 - index / 3 / 2.0, curve: Curves.easeOut),
-              ),
-              child: _buildCheckGroup(
-                index == 0
-                    ? _obscureEnable
-                    : index == 1 ? _solidEnable : _enable,
-                labels[index],
-                checkedListeners[index],
-              ),
-            ),
-          );
-          return child;
-        }).toList()
-          ..add(
-            FloatingActionButton(
-              heroTag: null,
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (BuildContext context, Widget child) {
-                  return Transform(
-                    transform: Matrix4.rotationZ(
-                        _animationController.value * 0.5 * pi),
-                    alignment: FractionalOffset.center,
-                    child: Icon(_animationController.isDismissed
-                        ? Icons.edit
-                        : Icons.close),
-                  );
-                },
-              ),
-              onPressed: () {
-                if (_animationController.isDismissed) {
-                  _animationController.forward();
-                } else {
-                  _animationController.reverse();
-                }
-              },
-            ),
-          ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        tooltip: 'set new value',
+        onPressed: () {
+          _setPinValue();
+        },
       ),
     );
   }
