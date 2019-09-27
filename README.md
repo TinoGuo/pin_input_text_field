@@ -97,6 +97,9 @@ Customizable attributes for PinInputTextField
     </tr>
 </table>
 
+### FormField
+Instead of using PinInputTextField, using PinInputTextFormField to control validate.
+
 ### ObscureStyle
 
 ```

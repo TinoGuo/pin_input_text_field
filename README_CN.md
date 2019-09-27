@@ -96,6 +96,10 @@ PinInputTextField的自定义属性
     </tr>
 </table>
 
+### 表单验证
+
+请使用PinInputTextFormField来做表单验证.
+
 ### 密码模式
 
 ```
