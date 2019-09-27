@@ -1,3 +1,6 @@
+## [2.0.1] - 2019/08/27
+* New: add 'PinInputTextFormField' to support form validate. Thanks to [rajajain08](https://github.com/rajajain08).
+
 ## [2.0.0] - 2019/08/12
 * **Update: parameter `pinEditingController` renamed to `controller`.**
 * **Remove: remove the `PinEditingController` class, just simply use `TextEditingController`.**

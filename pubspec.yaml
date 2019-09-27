@@ -1,6 +1,6 @@
 name: pin_input_text_field
 description: A textField widget to help display different style pin written in pure dart, no extra dependency.
-version: 2.0.0
+version: 2.0.1
 author: Tino <guochenghaha@gmail.com>
 homepage: https://github.com/TinoGuo/pin_input_text_field
 
