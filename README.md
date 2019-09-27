@@ -16,6 +16,8 @@ I can't set the selection in lib code, because if I did it will cause dead loop 
 
 ## Example
 
+Now you can visit [website](https://tinoguo.github.io/pin_input_text_field/) via browser to preview without any installation. 
+
 ### Decoration
 
 UnderlineDecoration

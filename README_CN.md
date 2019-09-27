@@ -15,6 +15,8 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 
 ## 例子🌰
 
+现在你可以通过浏览器直接访问这个[网址](https://tinoguo.github.io/pin_input_text_field/)来预览效果，而不需要任何安装。
+
 ### 装饰器
 
 UnderlineDecoration
