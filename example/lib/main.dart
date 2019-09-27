@@ -57,7 +57,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> {
   /// Default max pin length.
   static final int _pinLength = 4;
 
@@ -67,21 +67,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     fontSize: 24,
   );
 
-  static const List<String> labels = const [
-    'obscure',
-    'solid  ',
-    'enabled',
-  ];
-
   /// PinInputTextFormField form-key
   final GlobalKey<FormFieldState<String>> _formKey =
       GlobalKey<FormFieldState<String>>(debugLabel: '_formkey');
 
   /// Control the input text field.
   TextEditingController _pinEditingController = TextEditingController();
-
-  /// Control the floatingActionButton animation.
-  AnimationController _animationController;
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
@@ -125,10 +116,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       debugPrint('changed pin:${_pinEditingController.text}');
     });
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
   }
 
   @override
@@ -180,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     }
   }
 
+  // ignore: unused_element
   Widget _buildInListView() {
     return ListView(
       children: <Widget>[
@@ -232,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildExampleBody() {
+  _buildExampleBody() {
     switch (widget.textFieldType) {
       case TextFieldType.NORMAL:
         return _buildPinInputTextFieldExample();
