@@ -340,6 +340,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       _controller = TextEditingController();
     }
     _effectiveController.addListener(_pinChanged);
+    _text = _effectiveController.text;
   }
 
   @override
