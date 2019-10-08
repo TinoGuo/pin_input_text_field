@@ -1,4 +1,7 @@
-## [2.0.1] - 2019/08/27
+## [2.0.2] - 2019/10/08
+* Fix: fix missing first build initial value. Thanks to [daniel-v](https://github.com/daniel-v)
+
+## [2.0.1] - 2019/09/27
 * New: add 'PinInputTextFormField' to support form validate. Thanks to [rajajain08](https://github.com/rajajain08).
 
 ## [2.0.0] - 2019/08/12
