@@ -72,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
       GlobalKey<FormFieldState<String>>(debugLabel: '_formkey');
 
   /// Control the input text field.
-  TextEditingController _pinEditingController = TextEditingController();
+  TextEditingController _pinEditingController =
+      TextEditingController(text: '123');
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
@@ -307,7 +308,6 @@ class _MyHomePageState extends State<MyHomePage> {
             pinLength: _pinLength,
             decoration: _pinDecoration,
             controller: _pinEditingController,
-            autoFocus: true,
             textInputAction: TextInputAction.go,
             enabled: _enable,
             onSubmit: (pin) {
@@ -331,7 +331,6 @@ class _MyHomePageState extends State<MyHomePage> {
             pinLength: _pinLength,
             decoration: _pinDecoration,
             controller: _pinEditingController,
-            autoFocus: true,
             textInputAction: TextInputAction.go,
             enabled: _enable,
             onSubmit: (pin) {
