@@ -343,6 +343,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       _controller = TextEditingController();
     }
     _effectiveController.addListener(_pinChanged);
+
+    //Ensure the initial value will be displayed when the field didn't get the focus.
     _updateText();
   }
 
