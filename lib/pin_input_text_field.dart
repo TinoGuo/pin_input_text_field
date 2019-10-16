@@ -320,6 +320,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   void _pinChanged() {
     setState(() {
       _updateText();
+
       /// This below code will cause dead loop in iOS,
       /// you should assign selection when you set text.
 //      _effectiveController.selection = TextSelection.collapsed(
@@ -928,45 +929,49 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     super.initState();
     if (widget.controller == null) {
       _controller = TextEditingController(text: widget.initialValue);
-    } else {
-      widget.controller.addListener(_handleControllerChanged);
     }
+    _effectiveController.addListener(_handleControllerChanged);
   }
 
   @override
   void didUpdateWidget(PinInputTextFormField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
-      oldWidget.controller?.removeListener(_handleControllerChanged);
-      widget.controller?.addListener(_handleControllerChanged);
 
-      if (oldWidget.controller != null && widget.controller == null)
-        _controller = TextEditingController.fromValue(
-          oldWidget.controller.value,
-        );
-      if (widget.controller != null) {
+    if (widget.controller == null && oldWidget.controller != null) {
+      oldWidget.controller.removeListener(_handleControllerChanged);
+      _controller = TextEditingController.fromValue(oldWidget.controller.value);
+      _controller.addListener(_handleControllerChanged);
+    } else if (widget.controller != null && oldWidget.controller == null) {
+      _controller.removeListener(_handleControllerChanged);
+      _controller = null;
+      widget.controller.addListener(_handleControllerChanged);
+      // Invalidate the text when controller hold different old text.
+      if (value != widget.controller.text) {
         _handleControllerChanged();
-        if (oldWidget.controller == null) {
-          _controller = null;
-        }
       }
+    } else if (widget.controller != oldWidget.controller) {
+      // The old controller and current controller is not null and not the same.
+      oldWidget.controller.removeListener(_handleControllerChanged);
+      widget.controller.addListener(_handleControllerChanged);
+    }
 
-      if (oldWidget.pinLength > widget.pinLength &&
-          value.runes.length > widget.pinLength) {
-        setState(() {
-          setValue(value.substring(0, widget.pinLength));
-          _effectiveController.text = value;
-          _effectiveController.selection = TextSelection.collapsed(
-            offset: value.runes.length,
-          );
-        });
-      }
+    /// If the newLength is shorter than now and the current text length longer
+    /// than [pinLength], So we should cut the superfluous subString.
+    if (oldWidget.pinLength > widget.pinLength &&
+        value.runes.length > widget.pinLength) {
+      setState(() {
+        setValue(value.substring(0, widget.pinLength));
+        _effectiveController.text = value;
+        _effectiveController.selection = TextSelection.collapsed(
+          offset: value.runes.length,
+        );
+      });
     }
   }
 
   @override
   void dispose() {
-    widget.controller?.removeListener(_handleControllerChanged);
+    _effectiveController.removeListener(_handleControllerChanged);
     super.dispose();
   }
 
