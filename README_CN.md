@@ -92,8 +92,13 @@ PinInputTextField的自定义属性
     <tr>
         <td>enabled</td>
         <td>true</td>
-        <td>跟TextField的enabled, 默认是true</td>
+        <td>跟TextField的enabled一样, 默认是true</td>
     </tr>
+    <tr>
+        <td>onChanged</td>
+        <td>(String pin){}</td>
+        <td>跟TextField的onChanged一样</td>
+     </tr>
 </table>
 
 ### 表单验证

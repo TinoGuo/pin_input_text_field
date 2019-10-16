@@ -88,12 +88,17 @@ Customizable attributes for PinInputTextField
     <tr>
         <td>textInputAction</td>
         <td>TextInputAction.done</td>
-        <td>Same as TextField's textInputAction, not working in digit mode.</td>
+        <td>Same as TextField's textInputAction, not working in digit mode</td>
     </tr>
     <tr>
         <td>enabled</td>
         <td>true</td>
         <td>Same as TextField's enabled, the default is true</td>
+    </tr>
+    <tr>
+        <td>onChanged</td>
+        <td>(String pin){}</td>
+        <td>Same as TextField's onChanged</td>
     </tr>
 </table>
 
