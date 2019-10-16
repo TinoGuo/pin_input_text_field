@@ -1,3 +1,7 @@
+## [2.0.3] - 2019/10/16
+* New: add `onChanged` parameter.
+* Fix: fix null controller will not work in `PinInputTextFormField`.
+
 ## [2.0.2] - 2019/10/08
 * Fix: fix missing first build initial value. Thanks to [daniel-v](https://github.com/daniel-v)
 
