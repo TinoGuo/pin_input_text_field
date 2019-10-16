@@ -122,6 +122,8 @@ This project exists thanks to all the people who contribute.
 
 [alyyasser](https://github.com/alyyasser)
 
+[daniel-v](https://github.com/daniel-v)
+
 ## Known Issue
 
 The `PinEditingController` listener will execute more than once when programmatically set text, you can filter some duplicate values in your code. 

@@ -122,6 +122,8 @@ final String obscureText;
 
 [alyyasser](https://github.com/alyyasser)
 
+[daniel-v](https://github.com/daniel-v)
+
 ## 已知问题
 
 目前`PinEditingController`的Listener会在手动设置text值时执行多次，可以在应用层的代码上过滤下
