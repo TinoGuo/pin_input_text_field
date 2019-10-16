@@ -273,8 +273,11 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s textInputAction.
   final TextInputAction textInputAction;
 
-  ///Just like [TextField]'s enabled.
+  /// Same as [TextField]'s enabled.
   final bool enabled;
+
+  /// Same as [TextField]'s onChanged.
+  final ValueChanged<String> onChanged;
 
   PinInputTextField({
     Key key,
@@ -288,6 +291,7 @@ class PinInputTextField extends StatefulWidget {
     this.autoFocus = false,
     this.textInputAction = TextInputAction.done,
     this.enabled = true,
+    this.onChanged,
   })  :
 
         ///pinLength must larger than 0.
@@ -453,6 +457,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         /// {@macro flutter.widgets.editableText.obscureText}
         /// Default value of the obscureText is false. Make
         obscureText: true,
+
+        onChanged: widget.onChanged,
 
         /// Clear default text decoration.
         decoration: InputDecoration(
@@ -869,6 +875,7 @@ class PinInputTextFormField extends FormField<String> {
     FormFieldSetter<String> onSaved,
     FormFieldValidator<String> validator,
     bool autovalidate = false,
+    ValueChanged<String> onChanged,
   })  : assert(initialValue == null || controller == null),
         assert(autovalidate != null),
         assert(pinLength != null && pinLength > 0),
@@ -908,6 +915,7 @@ class PinInputTextFormField extends FormField<String> {
                 autoFocus: autoFocus,
                 textInputAction: textInputAction,
                 enabled: enabled,
+                onChanged: onChanged,
               );
             });
 

@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _pinEditingController.addListener(() {
-      debugPrint('changed pin:${_pinEditingController.text}');
+      debugPrint('controller execute. pin:${_pinEditingController.text}');
     });
     super.initState();
   }
@@ -313,6 +313,9 @@ class _MyHomePageState extends State<MyHomePage> {
             onSubmit: (pin) {
               debugPrint('submit pin:$pin');
             },
+            onChanged: (pin) {
+              debugPrint('onChanged execute. pin:$pin');
+            },
           ),
         ],
       ),
@@ -337,6 +340,9 @@ class _MyHomePageState extends State<MyHomePage> {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
               }
+            },
+            onChanged: (pin) {
+              debugPrint('onChanged execute. pin:$pin');
             },
             onSaved: (pin) {
               debugPrint('submit pin:$pin');
