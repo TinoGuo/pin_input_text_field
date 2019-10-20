@@ -61,12 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Default max pin length.
   static final int _pinLength = 4;
 
-  /// Default Text style.
-  static const TextStyle _textStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 24,
-  );
-
   /// PinInputTextFormField form-key
   final GlobalKey<FormFieldState<String>> _formKey =
       GlobalKey<FormFieldState<String>>(debugLabel: '_formkey');
@@ -77,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
-    textStyle: _textStyle,
     enteredColor: Colors.green,
+    hintText: 'abcd',
   );
 
   /// Control whether show the obscureCode.
@@ -131,37 +125,37 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.underline:
         setState(() {
           _pinDecoration = UnderlineDecoration(
-            textStyle: _textStyle,
             enteredColor: Colors.green,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '😂',
             ),
+            hintText: 'abcd',
           );
         });
         break;
       case PinEntryType.boxTight:
         setState(() {
           _pinDecoration = BoxTightDecoration(
-            textStyle: _textStyle,
             solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '👿',
             ),
+            hintText: 'abcd',
           );
         });
         break;
       case PinEntryType.boxLoose:
         setState(() {
           _pinDecoration = BoxLooseDecoration(
-            textStyle: _textStyle,
             enteredColor: Colors.green,
             solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '☺️',
             ),
+            hintText: 'abcd',
           );
         });
         break;

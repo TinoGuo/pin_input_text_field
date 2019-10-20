@@ -6,15 +6,6 @@ import 'package:flutter/services.dart';
 
 enum PinEntryType { underline, boxTight, boxLoose }
 
-/// Default text style of displaying pin
-const TextStyle _kDefaultStyle = TextStyle(
-  /// Default text color.
-  color: Colors.white,
-
-  /// Default text size.
-  fontSize: 24.0,
-);
-
 abstract class PinDecoration {
   /// The style of painting text.
   final TextStyle textStyle;
@@ -28,6 +19,10 @@ abstract class PinDecoration {
   /// The style of error text.
   final TextStyle errorTextStyle;
 
+  final String hintText;
+
+  final TextStyle hintTextStyle;
+
   PinEntryType get pinEntryType;
 
   const PinDecoration({
@@ -35,6 +30,8 @@ abstract class PinDecoration {
     this.obscureStyle,
     this.errorText,
     this.errorTextStyle,
+    this.hintText,
+    this.hintTextStyle,
   });
 
   /// Creates a copy of this pin decoration with the given fields replaced
@@ -44,6 +41,8 @@ abstract class PinDecoration {
     ObscureStyle obscureStyle,
     String errorText,
     TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
   });
 }
 
@@ -62,9 +61,11 @@ class ObscureStyle {
   ObscureStyle({
     this.isTextObscure: false,
     this.obscureText: '*',
-  }) : assert(obscureText.length > 0 &&
-            obscureText.indexOf(_wrapLine) ==
-                -1); // Not allowed empty string and multiline string.
+  })  :
+
+        /// Not allowed empty string and multiline string.
+        assert(obscureText.length > 0),
+        assert(obscureText.indexOf(_wrapLine) == -1);
 }
 
 /// The object determine the underline color etc.
@@ -85,10 +86,9 @@ class UnderlineDecoration extends PinDecoration {
     TextStyle textStyle,
     ObscureStyle obscureStyle,
     String errorText,
-    TextStyle errorTextStyle: const TextStyle(
-      color: Colors.red,
-      fontSize: 12,
-    ),
+    TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
     this.enteredColor,
     this.gapSpace: 16.0,
     this.color: Colors.cyan,
@@ -98,6 +98,8 @@ class UnderlineDecoration extends PinDecoration {
           obscureStyle: obscureStyle,
           errorText: errorText,
           errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
         );
 
   @override
@@ -109,12 +111,16 @@ class UnderlineDecoration extends PinDecoration {
     ObscureStyle obscureStyle,
     String errorText,
     TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
   }) {
     return UnderlineDecoration(
       textStyle: textStyle ?? this.textStyle,
       obscureStyle: obscureStyle ?? this.obscureStyle,
       errorText: errorText ?? this.errorText,
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      hintText: hintText ?? this.hintText,
+      hintTextStyle: hintTextStyle ?? this.hintTextStyle,
       enteredColor: this.enteredColor,
       color: this.color,
       gapSpace: this.gapSpace,
@@ -141,10 +147,9 @@ class BoxTightDecoration extends PinDecoration {
     TextStyle textStyle,
     ObscureStyle obscureStyle,
     String errorText,
-    TextStyle errorTextStyle: const TextStyle(
-      color: Colors.red,
-      fontSize: 12,
-    ),
+    TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
     this.solidColor,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
@@ -154,6 +159,8 @@ class BoxTightDecoration extends PinDecoration {
           obscureStyle: obscureStyle,
           errorText: errorText,
           errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
         );
 
   @override
@@ -165,12 +172,16 @@ class BoxTightDecoration extends PinDecoration {
     ObscureStyle obscureStyle,
     String errorText,
     TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
   }) {
     return BoxTightDecoration(
       textStyle: textStyle ?? this.textStyle,
       obscureStyle: obscureStyle ?? this.obscureStyle,
       errorText: errorText ?? this.errorText,
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      hintText: hintText ?? this.hintText,
+      hintTextStyle: hintTextStyle ?? this.hintTextStyle,
       solidColor: this.solidColor,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
@@ -203,10 +214,9 @@ class BoxLooseDecoration extends PinDecoration {
     TextStyle textStyle,
     ObscureStyle obscureStyle,
     String errorText,
-    TextStyle errorTextStyle: const TextStyle(
-      color: Colors.red,
-      fontSize: 12,
-    ),
+    TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
     this.enteredColor,
     this.solidColor,
     this.radius: const Radius.circular(8.0),
@@ -218,6 +228,8 @@ class BoxLooseDecoration extends PinDecoration {
           obscureStyle: obscureStyle,
           errorText: errorText,
           errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
         );
 
   @override
@@ -229,12 +241,16 @@ class BoxLooseDecoration extends PinDecoration {
     ObscureStyle obscureStyle,
     String errorText,
     TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
   }) {
     return BoxLooseDecoration(
       textStyle: textStyle ?? this.textStyle,
       obscureStyle: obscureStyle ?? this.obscureStyle,
       errorText: errorText ?? this.errorText,
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      hintText: hintText ?? this.hintText,
+      hintTextStyle: hintTextStyle ?? this.hintTextStyle,
       solidColor: this.solidColor,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
@@ -294,9 +310,13 @@ class PinInputTextField extends StatefulWidget {
     this.onChanged,
   })  :
 
-        ///pinLength must larger than 0.
-        ///If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
+        /// pinLength must larger than 0.
+        /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
         assert(pinLength != null && pinLength > 0),
+
+        /// Hint length must equal to the [pinLength].
+        assert(decoration.hintText == null ||
+            decoration.hintText.length == pinLength),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly,
@@ -400,10 +420,10 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     return CustomPaint(
       /// The foreground paint to display pin.
       foregroundPainter: _PinPaint(
-        text: _text,
-        pinLength: widget.pinLength,
-        decoration: widget.decoration,
-      ),
+          text: _text ?? _text.trim(),
+          pinLength: widget.pinLength,
+          decoration: widget.decoration,
+          themeData: Theme.of(context)),
       child: TextField(
         /// Actual textEditingController.
         controller: _effectiveController,
@@ -412,7 +432,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         style: TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
-          fontSize: widget.decoration.textStyle.fontSize,
+          fontSize: 1,
         ),
 
         /// Hide the Cursor.
@@ -484,22 +504,27 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 }
 
 class _PinPaint extends CustomPainter {
-  String text;
+  final String text;
   final int pinLength;
   final double space;
   final PinEntryType type;
   final PinDecoration decoration;
+  final ThemeData themeData;
 
   _PinPaint({
-    @required String text,
+    @required this.text,
     @required this.pinLength,
-    this.decoration,
+    PinDecoration decoration,
     this.space: 4.0,
     this.type: PinEntryType.boxTight,
-  }) {
-    text ??= "";
-    this.text = text.trim();
-  }
+    this.themeData,
+  }) : this.decoration = decoration.copyWith(
+          textStyle: decoration.textStyle ?? themeData.textTheme.headline,
+          errorTextStyle: decoration.errorTextStyle ??
+              themeData.textTheme.caption.copyWith(color: themeData.errorColor),
+          hintTextStyle: decoration.hintTextStyle ??
+              themeData.textTheme.headline.copyWith(color: themeData.hintColor),
+        );
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
@@ -569,17 +594,8 @@ class _PinPaint extends CustomPainter {
     var startX = 0.0;
 
     /// Determine whether display obscureText.
-    bool obscureOn;
-    obscureOn = decoration.obscureStyle != null &&
+    bool obscureOn = decoration.obscureStyle != null &&
         decoration.obscureStyle.isTextObscure;
-
-    /// The text style of pin.
-    TextStyle textStyle;
-    if (decoration.textStyle == null) {
-      textStyle = _kDefaultStyle;
-    } else {
-      textStyle = decoration.textStyle;
-    }
 
     text.runes.forEach((rune) {
       String code;
@@ -590,7 +606,7 @@ class _PinPaint extends CustomPainter {
       }
       TextPainter textPainter = TextPainter(
         text: TextSpan(
-          style: textStyle,
+          style: decoration.textStyle,
           text: code,
         ),
         textAlign: TextAlign.center,
@@ -611,6 +627,31 @@ class _PinPaint extends CustomPainter {
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
+
+    if (decoration.hintText != null) {
+      decoration.hintText.substring(index).runes.forEach((rune) {
+        String code = String.fromCharCode(rune);
+        TextPainter textPainter = TextPainter(
+          text: TextSpan(
+            style: decoration.hintTextStyle,
+            text: code,
+          ),
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+        );
+
+        /// Layout the text.
+        textPainter.layout();
+
+        startY = mainHeight / 2 - textPainter.height / 2;
+        startX = dr.strokeWidth * (index + 1) +
+            singleWidth * index +
+            singleWidth / 2 -
+            textPainter.width / 2;
+        textPainter.paint(canvas, Offset(startX, startY));
+        index++;
+      });
+    }
   }
 
   _drawBoxLoose(Canvas canvas, Size size) {
@@ -691,17 +732,8 @@ class _PinPaint extends CustomPainter {
     startY = 0.0;
 
     /// Determine whether display obscureText.
-    bool obscureOn;
-    obscureOn = decoration.obscureStyle != null &&
+    bool obscureOn = decoration.obscureStyle != null &&
         decoration.obscureStyle.isTextObscure;
-
-    /// The text style of pin.
-    TextStyle textStyle;
-    if (decoration.textStyle == null) {
-      textStyle = _kDefaultStyle;
-    } else {
-      textStyle = decoration.textStyle;
-    }
 
     text.runes.forEach((rune) {
       String code;
@@ -712,7 +744,7 @@ class _PinPaint extends CustomPainter {
       }
       TextPainter textPainter = TextPainter(
         text: TextSpan(
-          style: textStyle,
+          style: decoration.textStyle,
           text: code,
         ),
         textAlign: TextAlign.center,
@@ -735,6 +767,33 @@ class _PinPaint extends CustomPainter {
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
+
+    if (decoration.hintText != null) {
+      decoration.hintText.substring(index).runes.forEach((rune) {
+        String code = String.fromCharCode(rune);
+        TextPainter textPainter = TextPainter(
+          text: TextSpan(
+            style: decoration.hintTextStyle,
+            text: code,
+          ),
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+        );
+
+        /// Layout the text.
+        textPainter.layout();
+
+        startY = mainHeight / 2 - textPainter.height / 2;
+        startX = singleWidth * index +
+            singleWidth / 2 -
+            textPainter.width / 2 +
+            dr.gapSpace * index +
+            dr.strokeWidth * index * 2 +
+            dr.strokeWidth;
+        textPainter.paint(canvas, Offset(startX, startY));
+        index++;
+      });
+    }
   }
 
   _drawUnderLine(Canvas canvas, Size size) {
@@ -786,17 +845,8 @@ class _PinPaint extends CustomPainter {
     startY = 0.0;
 
     /// Determine whether display obscureText.
-    bool obscureOn;
-    obscureOn = decoration.obscureStyle != null &&
+    bool obscureOn = decoration.obscureStyle != null &&
         decoration.obscureStyle.isTextObscure;
-
-    /// The text style of pin.
-    TextStyle textStyle;
-    if (decoration.textStyle == null) {
-      textStyle = _kDefaultStyle;
-    } else {
-      textStyle = decoration.textStyle;
-    }
 
     text.runes.forEach((rune) {
       String code;
@@ -807,7 +857,7 @@ class _PinPaint extends CustomPainter {
       }
       TextPainter textPainter = TextPainter(
         text: TextSpan(
-          style: textStyle,
+          style: decoration.textStyle,
           text: code,
         ),
         textAlign: TextAlign.center,
@@ -828,6 +878,31 @@ class _PinPaint extends CustomPainter {
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
+
+    if (decoration.hintText != null) {
+      decoration.hintText.substring(index).runes.forEach((rune) {
+        String code = String.fromCharCode(rune);
+        TextPainter textPainter = TextPainter(
+          text: TextSpan(
+            style: decoration.hintTextStyle,
+            text: code,
+          ),
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+        );
+
+        /// Layout the text.
+        textPainter.layout();
+
+        startY = mainHeight / 2 - textPainter.height / 2;
+        startX = singleWidth * index +
+            singleWidth / 2 -
+            textPainter.width / 2 +
+            dr.gapSpace * index;
+        textPainter.paint(canvas, Offset(startX, startY));
+        index++;
+      });
+    }
   }
 
   @override
