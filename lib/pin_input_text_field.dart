@@ -73,6 +73,9 @@ class UnderlineDecoration extends PinDecoration {
   /// The space between text and underline.
   final double gapSpace;
 
+  /// The gaps between every two adjacent box.
+  final List<double> gapSpaces;
+
   /// The color of the underline.
   final Color color;
 
@@ -91,6 +94,7 @@ class UnderlineDecoration extends PinDecoration {
     TextStyle hintTextStyle,
     this.enteredColor,
     this.gapSpace: 16.0,
+    this.gapSpaces,
     this.color: Colors.cyan,
     this.lineHeight: 2.0,
   }) : super(
@@ -125,6 +129,7 @@ class UnderlineDecoration extends PinDecoration {
       color: this.color,
       gapSpace: this.gapSpace,
       lineHeight: this.lineHeight,
+      gapSpaces: this.gapSpaces,
     );
   }
 }
@@ -201,6 +206,9 @@ class BoxLooseDecoration extends PinDecoration {
   /// The adjacent box gap.
   final double gapSpace;
 
+  /// The gaps between every two adjacent box.
+  final List<double> gapSpaces;
+
   /// The box border color.
   final Color strokeColor;
 
@@ -222,6 +230,7 @@ class BoxLooseDecoration extends PinDecoration {
     this.radius: const Radius.circular(8.0),
     this.strokeWidth: 1.0,
     this.gapSpace: 16.0,
+    this.gapSpaces,
     this.strokeColor: Colors.cyan,
   }) : super(
           textStyle: textStyle,
@@ -257,6 +266,7 @@ class BoxLooseDecoration extends PinDecoration {
       radius: this.radius,
       enteredColor: this.enteredColor,
       gapSpace: this.gapSpace,
+      gapSpaces: this.gapSpaces,
     );
   }
 }
@@ -317,6 +327,13 @@ class PinInputTextField extends StatefulWidget {
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
             decoration.hintText.length == pinLength),
+        assert(decoration is BoxTightDecoration ||
+            (decoration is UnderlineDecoration &&
+                    pinLength - 1 == decoration.gapSpaces?.length ??
+                (pinLength - 1)) ||
+            (decoration is BoxLooseDecoration &&
+                    pinLength - 1 == decoration.gapSpaces?.length ??
+                (pinLength - 1))),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly,
@@ -684,11 +701,16 @@ class _PinPaint extends CustomPainter {
         ..isAntiAlias = true;
     }
 
+    double gapTotalLength =
+        dr.gapSpaces?.reduce((a, b) => a + b) ?? (pinLength - 1) * dr.gapSpace;
+
+    List<double> gapSpaces =
+        dr.gapSpaces ?? List.filled(pinLength - 1, dr.gapSpace);
+
     /// Calculate the width of each underline.
-    double singleWidth = (size.width -
-            dr.strokeWidth * 2 * pinLength -
-            ((pinLength - 1) * dr.gapSpace)) /
-        pinLength;
+    double singleWidth =
+        (size.width - dr.strokeWidth * 2 * pinLength - gapTotalLength) /
+            pinLength;
 
     var startX = dr.strokeWidth / 2;
     var startY = mainHeight - dr.strokeWidth / 2;
@@ -724,7 +746,9 @@ class _PinPaint extends CustomPainter {
       if (insidePaint != null) {
         canvas.drawRRect(rRect, insidePaint);
       }
-      startX += singleWidth + dr.gapSpace + dr.strokeWidth * 2;
+      startX += singleWidth +
+          dr.strokeWidth * 2 +
+          (i == pinLength - 1 ? 0 : gapSpaces[i]);
     }
 
     /// The char index of the [text]
@@ -761,7 +785,7 @@ class _PinPaint extends CustomPainter {
       startX = singleWidth * index +
           singleWidth / 2 -
           textPainter.width / 2 +
-          dr.gapSpace * index +
+          _sumList(gapSpaces.take(index)) +
           dr.strokeWidth * index * 2 +
           dr.strokeWidth;
       textPainter.paint(canvas, Offset(startX, startY));
@@ -787,7 +811,7 @@ class _PinPaint extends CustomPainter {
         startX = singleWidth * index +
             singleWidth / 2 -
             textPainter.width / 2 +
-            dr.gapSpace * index +
+            _sumList(gapSpaces.take(index)) +
             dr.strokeWidth * index * 2 +
             dr.strokeWidth;
         textPainter.paint(canvas, Offset(startX, startY));
@@ -820,9 +844,14 @@ class _PinPaint extends CustomPainter {
     var startX = 0.0;
     var startY = mainHeight - dr.lineHeight;
 
+    double gapTotalLength =
+        dr.gapSpaces?.reduce((a, b) => a + b) ?? (pinLength - 1) * dr.gapSpace;
+
+    List<double> gapSpaces =
+        dr.gapSpaces ?? List.filled(pinLength - 1, dr.gapSpace);
+
     /// Calculate the width of each underline.
-    double singleWidth =
-        (size.width - (pinLength - 1) * dr.gapSpace) / pinLength;
+    double singleWidth = (size.width - gapTotalLength) / pinLength;
 
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
@@ -836,7 +865,7 @@ class _PinPaint extends CustomPainter {
       }
       canvas.drawLine(Offset(startX, startY),
           Offset(startX + singleWidth, startY), underlinePaint);
-      startX += singleWidth + dr.gapSpace;
+      startX += singleWidth + (i == pinLength - 1 ? 0 : gapSpaces[i]);
     }
 
     /// The char index of the [text]
@@ -874,7 +903,7 @@ class _PinPaint extends CustomPainter {
       startX = singleWidth * index +
           singleWidth / 2 -
           textPainter.width / 2 +
-          dr.gapSpace * index;
+          _sumList(gapSpaces.take(index));
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
@@ -898,11 +927,18 @@ class _PinPaint extends CustomPainter {
         startX = singleWidth * index +
             singleWidth / 2 -
             textPainter.width / 2 +
-            dr.gapSpace * index;
+            _sumList(gapSpaces.take(index));
         textPainter.paint(canvas, Offset(startX, startY));
         index++;
       });
     }
+  }
+
+  /// Return the sum of the [list] even the [list] is empty.
+  T _sumList<T extends num>(Iterable<T> list) {
+    T sum = 0 as T;
+    list.forEach((n) => sum += n);
+    return sum;
   }
 
   @override
