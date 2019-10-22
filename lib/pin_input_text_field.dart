@@ -73,7 +73,7 @@ class UnderlineDecoration extends PinDecoration {
   /// The space between text and underline.
   final double gapSpace;
 
-  /// The gaps between every two adjacent box.
+  /// The gaps between every two adjacent box, higher priority than [gapSpace].
   final List<double> gapSpaces;
 
   /// The color of the underline.
@@ -206,7 +206,7 @@ class BoxLooseDecoration extends PinDecoration {
   /// The adjacent box gap.
   final double gapSpace;
 
-  /// The gaps between every two adjacent box.
+  /// The gaps between every two adjacent box, higher priority than [gapSpace].
   final List<double> gapSpaces;
 
   /// The box border color.
