@@ -327,13 +327,7 @@ class PinInputTextField extends StatefulWidget {
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
             decoration.hintText.length == pinLength),
-        assert(decoration is BoxTightDecoration ||
-            (decoration is UnderlineDecoration &&
-                    pinLength - 1 == decoration.gapSpaces?.length ??
-                (pinLength - 1)) ||
-            (decoration is BoxLooseDecoration &&
-                    pinLength - 1 == decoration.gapSpaces?.length ??
-                (pinLength - 1))),
+        assert(_checkDecoration()),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly,
@@ -342,6 +336,26 @@ class PinInputTextField extends StatefulWidget {
             : inputFormatter
           ..add(LengthLimitingTextInputFormatter(pinLength)),
         super(key: key);
+
+  bool _checkDecoration() {
+    if (decoration == null) {
+      return false;
+    }
+    if (decoration is BoxTightDecoration) {
+      return true;
+    }
+    if (decoration is UnderlineDecoration) {
+      return pinLength - 1 ==
+          ((decoration as UnderlineDecoration).gapSpaces?.length ??
+              (pinLength - 1));
+    }
+    if (decoration is BoxLooseDecoration) {
+      return pinLength - 1 ==
+          ((decoration as BoxLooseDecoration).gapSpaces?.length ??
+              (pinLength - 1));
+    }
+    return false;
+  }
 
   @override
   State createState() {
