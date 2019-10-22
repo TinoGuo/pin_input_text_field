@@ -327,7 +327,14 @@ class PinInputTextField extends StatefulWidget {
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
             decoration.hintText.length == pinLength),
-        assert(_checkDecoration()),
+        assert(decoration != null),
+        assert(decoration is BoxTightDecoration ||
+            (decoration is UnderlineDecoration &&
+                pinLength - 1 ==
+                    (decoration.gapSpaces?.length ?? (pinLength - 1))) ||
+            (decoration is BoxLooseDecoration &&
+                pinLength - 1 ==
+                    (decoration.gapSpaces?.length ?? (pinLength - 1)))),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly,
