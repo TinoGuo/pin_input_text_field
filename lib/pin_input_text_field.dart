@@ -524,7 +524,6 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 class _PinPaint extends CustomPainter {
   final String text;
   final int pinLength;
-  final double space;
   final PinEntryType type;
   final PinDecoration decoration;
   final ThemeData themeData;
@@ -533,7 +532,6 @@ class _PinPaint extends CustomPainter {
     @required this.text,
     @required this.pinLength,
     PinDecoration decoration,
-    this.space: 4.0,
     this.type: PinEntryType.boxTight,
     this.themeData,
   }) : this.decoration = decoration.copyWith(
