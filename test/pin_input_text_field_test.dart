@@ -71,6 +71,4 @@ void main() {
     await tester.tap(find.byKey(key));
     expect(focusNode.hasFocus, true);
   });
-
-
 }
