@@ -1,19 +1,76 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
+
+Future<void> pumpMaterialWidget(WidgetTester tester, Widget child) {
+  return tester.pumpWidget(MaterialApp(
+    home: Material(
+      child: child,
+    ),
+  ));
+}
 
 void main() {
-  group('String rune', () {
-    test('subString from runes', () {
-      String s = 'foo';
-      String newS = String.fromCharCodes(s.runes.take(2));
-      expect(newS, 'fo');
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-      s = '123';
-      newS = String.fromCharCodes(s.runes.take(2));
-      expect(newS, '12');
-
-      s = '你好啊';
-      newS = String.fromCharCodes(s.runes.take(2));
-      expect(newS, '你好');
-    });
+  testWidgets('Create Text Field', (WidgetTester tester) async {
+    await pumpMaterialWidget(tester, PinInputTextField());
   });
+
+  testWidgets('Crash when null decoration', (WidgetTester tester) async {
+    expect(() => PinInputTextField(decoration: null), throwsAssertionError);
+  });
+
+  testWidgets('Get pin text', (WidgetTester tester) async {
+    var controller = TextEditingController();
+    await pumpMaterialWidget(
+        tester,
+        PinInputTextField(
+          controller: controller,
+          decoration: UnderlineDecoration(),
+        ));
+    await tester.enterText(find.byType(TextField), '1234');
+    expect('1234', controller.text);
+  });
+
+  testWidgets('Detect keyboard', (WidgetTester tester) async {
+    FocusNode focusNode = FocusNode();
+    GlobalKey key = GlobalKey();
+
+    await pumpMaterialWidget(
+        tester,
+        Column(
+          children: <Widget>[
+            PinInputTextField(
+              key: key,
+              controller: TextEditingController(text: '123'),
+              focusNode: focusNode,
+              autoFocus: true,
+            ),
+            TextField(),
+          ],
+        ));
+
+    expect(focusNode.hasFocus, true);
+
+    focusNode.nextFocus();
+
+    await pumpMaterialWidget(
+        tester,
+        Column(
+          children: <Widget>[
+            PinInputTextField(
+              key: key,
+              controller: TextEditingController(text: '123'),
+              focusNode: focusNode,
+            ),
+            TextField(),
+          ],
+        ));
+    expect(focusNode.hasFocus, false);
+    await tester.tap(find.byKey(key));
+    expect(focusNode.hasFocus, true);
+  });
+
+
 }
