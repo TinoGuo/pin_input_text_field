@@ -1,3 +1,7 @@
+## [2.1.0] - 2019/10/24
+* New: add `hintText` for all `PinDecoration` .
+* New: custom gapSpace support for `UnderlineDecoration` and `BoxLooseDecoration`.
+
 ## [2.0.3] - 2019/10/16
 * New: add `onChanged` parameter.
 * Fix: fix null controller will not work in `PinInputTextFormField`.
