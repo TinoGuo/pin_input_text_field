@@ -69,6 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _pinEditingController =
       TextEditingController(text: '123');
 
+  GlobalKey<ScaffoldState> _globalKey =
+      GlobalKey<ScaffoldState>(debugLabel: 'home page global key');
+
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
     enteredColor: Colors.green,
@@ -264,6 +267,11 @@ class _MyHomePageState extends State<MyHomePage> {
               value: _solidEnable,
               onChanged: (enable) {
                 setState(() {
+                  if (_pinEntryType == PinEntryType.underline) {
+                    _globalKey.currentState.showSnackBar(SnackBar(
+                        content: Text(
+                            'solid control isn\'t supported in Underline mode')));
+                  }
                   _solidEnable = enable;
                   _selectedMenu(_pinEntryType);
                 });
@@ -383,6 +391,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(widget.textFieldType.toString()),
         actions: <Widget>[
