@@ -4,21 +4,21 @@
 
 # pin_input_text_field
 
-[中文版点我](./README_CN.md)
+[中文版点我](./README_CN.md)   
 PinInputTextField is a TextField widget to help display different style pin. It supports all the platforms [flutter](https://github.com/flutter/flutter) supports.
 
-## Notice after Version 2.0.0
+## Notice after Version 2.0.0 ⚠️
 Please set the selection when you set the text programmatically, just like [this](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
 
-I can't set the selection in lib code, because if I did it will cause dead loop in iOS.
+Don't set the selection in lib code since if it will cause dead loop in iOS. 🤔
 
-**If you have any idea, please make a Pull Request.**
+**If you have any idea, please make a [Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls).**
 
-## Example
+## Example 👌
 
-Now you can visit [website](https://tinoguo.github.io/pin_input_text_field/) via browser to preview without any installation. 
+Thanks to the [Flutter Web](https://flutter.dev/web), you can enjoy the preview by [website](https://tinoguo.github.io/pin_input_text_field/) without any installation. 
 
-### Decoration
+### Decoration 🌌
 
 UnderlineDecoration
 
@@ -34,10 +34,10 @@ BoxTightDecoration
 
 ![](gifs/boxtight.gif)
 
-## Installing
+## Installing 🔧
 Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
 
-## Usage
+## Usage 🚅
 
 ### Attributes
 Customizable attributes for PinInputTextField
@@ -105,7 +105,7 @@ Customizable attributes for PinInputTextField
 ### FormField
 Instead of using PinInputTextField, using PinInputTextFormField to control validate.
 
-### ObscureStyle
+### ObscureStyle 
 
 ```
 /// Determine whether replace [obscureText] with number.
@@ -114,7 +114,7 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## Contributors
+## Contributors 🙏
 
 This project exists thanks to all the people who contribute.
 
@@ -124,6 +124,6 @@ This project exists thanks to all the people who contribute.
 
 [daniel-v](https://github.com/daniel-v)
 
-## Known Issue
+## Known Issue 🥶
 
 The `PinEditingController` listener will execute more than once when programmatically set text, you can filter some duplicate values in your code. 
