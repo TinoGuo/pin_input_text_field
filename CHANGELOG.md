@@ -1,3 +1,8 @@
+## [3.0.0] - 2019/12/30
+* Update: minimum sdk version - 2.7
+* New: add built-in `CircleDecoration` 
+* New: support customized decoration, you can draw anything you want from now!
+
 ## [2.1.0] - 2019/10/24
 * New: add `hintText` for all `PinDecoration` .
 * New: custom gapSpace support for `UnderlineDecoration` and `BoxLooseDecoration`.

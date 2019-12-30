@@ -35,6 +35,10 @@ BoxTightDecoration
 
 ![](gifs/boxtight.gif)
 
+CircleDecoration **新**
+
+![](gifs/circle.gif)
+
 ## 安装
 从[pub](https://pub.dartlang.org/packages/pin_input_text_field)安装最新版.
 

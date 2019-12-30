@@ -36,6 +36,10 @@ BoxTightDecoration
 
 ![](gifs/boxtight.gif)
 
+CircleDecoration **New**
+
+![](gifs/circle.gif)
+
 ## Installing 🔧
 Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
 
