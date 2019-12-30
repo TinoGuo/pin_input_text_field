@@ -7,18 +7,20 @@
 [中文版点我](./README_CN.md)   
 PinInputTextField is a TextField widget to help display different style pin. It supports all the platforms [flutter](https://github.com/flutter/flutter) supports.
 
-## Notice after Version 2.0.0 ⚠️
-Please set the selection when you set the text programmatically, just like [this](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
-
-Don't set the selection in lib code since if it will cause dead loop in iOS. 🤔
-
-**If you have any idea, please make a [Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls).**
+## Feature 👇👇
+* allow you customized the shape, any!
+* built-in 4 commonly used pin styles of shape
+* obscure support
+* solid support
+* enterColor support
+* support all the textField properties support
+* Flutter web support
 
 ## Example 👌
 
 Thanks to the [Flutter Web](https://flutter.dev/web), you can enjoy the preview by [website](https://tinoguo.github.io/pin_input_text_field/) without any installation. 
 
-### Decoration 🌌
+### Decoration 
 
 UnderlineDecoration
 
@@ -123,6 +125,13 @@ This project exists thanks to all the people who contribute.
 [alyyasser](https://github.com/alyyasser)
 
 [daniel-v](https://github.com/daniel-v)
+
+## Notice after Version 2.0.0 ⚠️
+Please set the selection when you set the text programmatically, just like [this](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
+
+Don't set the selection in lib code since if it will cause dead loop in iOS. 🤔
+
+**If you have any idea, please make a [Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls).**
 
 ## Known Issue 🥶
 
