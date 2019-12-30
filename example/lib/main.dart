@@ -3,6 +3,9 @@ import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 void main() => runApp(MyApp());
 
+const _kInputHeight = 64.0;
+const _kDefaultHint = 'abcd';
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -75,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
     enteredColor: Colors.green,
-    hintText: 'abcd',
+    hintText: _kDefaultHint,
   );
 
   /// Control whether show the obscureCode.
@@ -133,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '😂',
             ),
-            hintText: 'abcd',
+            hintText: _kDefaultHint,
           );
         });
         break;
@@ -145,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '👿',
             ),
-            hintText: 'abcd',
+            hintText: _kDefaultHint,
           );
         });
         break;
@@ -158,64 +161,31 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '☺️',
             ),
-            hintText: 'abcd',
+            hintText: _kDefaultHint,
           );
         });
         break;
+      case PinEntryType.circle:
+        setState(() {
+          _pinDecoration = CirclePinDecoration(
+            enteredColor: Colors.green,
+            solidColor: _solidEnable ? _solidColor : null,
+            strokeColor: Colors.black,
+            strokeWidth: 4,
+            obscureStyle: ObscureStyle(
+              isTextObscure: _obscureEnable,
+              obscureText: '🤪',
+            ),
+            hintText: _kDefaultHint,
+          );
+        });
+        break;
+      case PinEntryType.customized:
+        setState(() {
+          _pinDecoration = ExampleDecoration();
+        });
+        break;
     }
-  }
-
-  // ignore: unused_element
-  Widget _buildInListView() {
-    return ListView(
-      children: <Widget>[
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Icon(Icons.edit),
-            Text('1'),
-            Expanded(
-              child: PinInputTextField(
-                decoration: BoxLooseDecoration(
-                    textStyle: TextStyle(color: Colors.black)),
-                autoFocus: false,
-                pinLength: 4,
-                controller: _pinEditingController,
-              ),
-            ),
-          ],
-        ),
-        PinInputTextField(
-          pinLength: 4,
-          autoFocus: false,
-          decoration: BoxLooseDecoration(
-            textStyle: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Container(
-          height: 120,
-          color: Colors.purple,
-        ),
-        Container(
-          height: 120,
-          color: Colors.pink,
-        ),
-        Container(
-          height: 120,
-          color: Colors.deepOrange,
-        ),
-        Container(
-          height: 120,
-          color: Colors.teal,
-        ),
-        Container(
-          height: 120,
-          color: Colors.cyan,
-        ),
-      ],
-    );
   }
 
   _buildExampleBody() {
@@ -306,18 +276,21 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ListView(
         children: <Widget>[
           ..._buildConfigWidget(),
-          PinInputTextField(
-            pinLength: _pinLength,
-            decoration: _pinDecoration,
-            controller: _pinEditingController,
-            textInputAction: TextInputAction.go,
-            enabled: _enable,
-            onSubmit: (pin) {
-              debugPrint('submit pin:$pin');
-            },
-            onChanged: (pin) {
-              debugPrint('onChanged execute. pin:$pin');
-            },
+          SizedBox(
+            height: _kInputHeight,
+            child: PinInputTextField(
+              pinLength: _pinLength,
+              decoration: _pinDecoration,
+              controller: _pinEditingController,
+              textInputAction: TextInputAction.go,
+              enabled: _enable,
+              onSubmit: (pin) {
+                debugPrint('submit pin:$pin');
+              },
+              onChanged: (pin) {
+                debugPrint('onChanged execute. pin:$pin');
+              },
+            ),
           ),
         ],
       ),
@@ -331,36 +304,39 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ListView(
         children: <Widget>[
           ..._buildConfigWidget(),
-          PinInputTextFormField(
-            key: _formKey,
-            pinLength: _pinLength,
-            decoration: _pinDecoration,
-            controller: _pinEditingController,
-            textInputAction: TextInputAction.go,
-            enabled: _enable,
-            onSubmit: (pin) {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-              }
-            },
-            onChanged: (pin) {
-              debugPrint('onChanged execute. pin:$pin');
-            },
-            onSaved: (pin) {
-              debugPrint('submit pin:$pin');
-            },
-            validator: (pin) {
-              if (pin.isEmpty) {
+          SizedBox(
+            height: _kInputHeight,
+            child: PinInputTextFormField(
+              key: _formKey,
+              pinLength: _pinLength,
+              decoration: _pinDecoration,
+              controller: _pinEditingController,
+              textInputAction: TextInputAction.go,
+              enabled: _enable,
+              onSubmit: (pin) {
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                }
+              },
+              onChanged: (pin) {
+                debugPrint('onChanged execute. pin:$pin');
+              },
+              onSaved: (pin) {
+                debugPrint('onSaved pin:$pin');
+              },
+              validator: (pin) {
+                if (pin.isEmpty) {
+                  setState(() {
+                    _hasError = true;
+                  });
+                  return 'Pin cannot empty.';
+                }
                 setState(() {
-                  _hasError = true;
+                  _hasError = false;
                 });
-                return 'Pin cannot empty.';
-              }
-              setState(() {
-                _hasError = false;
-              });
-              return null;
-            },
+                return null;
+              },
+            ),
           ),
           SizedBox(
             height: 16,
@@ -412,6 +388,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('box tight decoration'),
                   value: PinEntryType.boxTight,
                 ),
+                PopupMenuItem(
+                  child: Text('circle decoration'),
+                  value: PinEntryType.circle,
+                ),
+                PopupMenuItem(
+                  child: Text('Customize decorarion'),
+                  value: PinEntryType.customized,
+                )
               ];
             },
           ),
@@ -427,4 +411,64 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class ExampleDecoration extends PinDecoration {
+  ExampleDecoration({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
+  }) : super(
+          textStyle: textStyle,
+          obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
+        );
+
+  @override
+  PinDecoration copyWith({
+    TextStyle textStyle,
+    ObscureStyle obscureStyle,
+    String errorText,
+    TextStyle errorTextStyle,
+    String hintText,
+    TextStyle hintTextStyle,
+  }) {
+    return ExampleDecoration(
+      textStyle: textStyle ?? this.textStyle,
+      obscureStyle: obscureStyle ?? this.obscureStyle,
+      errorText: errorText ?? this.errorText,
+      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      hintText: hintText ?? this.hintText,
+      hintTextStyle: hintTextStyle ?? this.hintTextStyle,
+    );
+  }
+
+  @override
+  void drawPin(
+    Canvas canvas,
+    Size size,
+    String text,
+    pinLength,
+    ThemeData themeData,
+  ) {
+    /// You can draw anything you want here.
+    canvas.drawLine(
+      Offset.zero,
+      Offset(size.width, size.height),
+      Paint()
+        ..color = Colors.red
+        ..strokeWidth = 10
+        ..style = PaintingStyle.stroke
+        ..isAntiAlias = true,
+    );
+  }
+
+  @override
+  PinEntryType get pinEntryType => PinEntryType.customized;
 }
