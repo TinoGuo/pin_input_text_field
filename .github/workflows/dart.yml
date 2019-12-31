@@ -17,12 +17,13 @@ jobs:
     - run: flutter analyze
     # Run our tests
     - run: flutter test
-    # build for example
-    - run: cd example
+    - name: build example
+      working-directory: ./example
+      run: |
     # build application
-    - run: flutter build aot
-      # Analyze our Dart code
-    - run: flutter analyze
-      # Run our tests
-    - run: flutter test
+        flutter build aot
+    # Analyze our Dart code
+        flutter analyze
+    # Run our tests
+        flutter test
 
