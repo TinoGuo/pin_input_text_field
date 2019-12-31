@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pin_input_text_field/decoration/decoration_boxloose.dart';
-import 'package:pin_input_text_field/decoration/pin_decoration.dart';
-import 'package:pin_input_text_field/pin_input_text_field.dart';
+
+import '../decoration/pin_decoration.dart';
 
 const _kDefaultPinLength = 6;
 

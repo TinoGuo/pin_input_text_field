@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pin_input_text_field/style/obscure.dart';
+
+import '../style/obscure.dart';
+import '../util/utils.dart';
+
+part 'decoration_boxloose.dart';
+part 'decoration_boxtight.dart';
+part 'decoration_circle.dart';
+part 'decoration_underline.dart';
 
 enum PinEntryType {
   underline,
@@ -63,4 +70,30 @@ abstract class PinDecoration {
     String hintText,
     TextStyle hintTextStyle,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PinDecoration &&
+          runtimeType == other.runtimeType &&
+          textStyle == other.textStyle &&
+          obscureStyle == other.obscureStyle &&
+          errorText == other.errorText &&
+          errorTextStyle == other.errorTextStyle &&
+          hintText == other.hintText &&
+          hintTextStyle == other.hintTextStyle;
+
+  @override
+  int get hashCode =>
+      textStyle.hashCode ^
+      obscureStyle.hashCode ^
+      errorText.hashCode ^
+      errorTextStyle.hashCode ^
+      hintText.hashCode ^
+      hintTextStyle.hashCode;
+
+  @override
+  String toString() {
+    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle}';
+  }
 }

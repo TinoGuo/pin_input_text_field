@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:pin_input_text_field/decoration/pin_decoration.dart';
-import 'package:pin_input_text_field/pin_input_text_field.dart';
-import 'package:pin_input_text_field/style/obscure.dart';
-import 'package:pin_input_text_field/util/utils.dart';
+part of 'pin_decoration.dart';
 
 /// The object determine the underline color etc.
 class UnderlineDecoration extends PinDecoration implements SupportGap {
@@ -191,4 +187,30 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
 
   @override
   List<double> get getGapWidthList => gapSpaces;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      super == other &&
+          other is UnderlineDecoration &&
+          runtimeType == other.runtimeType &&
+          gapSpace == other.gapSpace &&
+          gapSpaces == other.gapSpaces &&
+          color == other.color &&
+          lineHeight == other.lineHeight &&
+          enteredColor == other.enteredColor;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      gapSpace.hashCode ^
+      gapSpaces.hashCode ^
+      color.hashCode ^
+      lineHeight.hashCode ^
+      enteredColor.hashCode;
+
+  @override
+  String toString() {
+    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $color, lineHeight: $lineHeight, enteredColor: $enteredColor}';
+  }
 }

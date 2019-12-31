@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:pin_input_text_field/decoration/pin_decoration.dart';
-import 'package:pin_input_text_field/style/obscure.dart';
+part of 'pin_decoration.dart';
 
 /// The object determine the box stroke etc.
 class BoxTightDecoration extends PinDecoration {
@@ -188,5 +186,29 @@ class BoxTightDecoration extends PinDecoration {
         index++;
       });
     }
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      super == other &&
+          other is BoxTightDecoration &&
+          runtimeType == other.runtimeType &&
+          strokeWidth == other.strokeWidth &&
+          radius == other.radius &&
+          strokeColor == other.strokeColor &&
+          solidColor == other.solidColor;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      strokeWidth.hashCode ^
+      radius.hashCode ^
+      strokeColor.hashCode ^
+      solidColor.hashCode;
+
+  @override
+  String toString() {
+    return 'BoxTightDecoration{strokeWidth: $strokeWidth, radius: $radius, strokeColor: $strokeColor, solidColor: $solidColor}';
   }
 }
