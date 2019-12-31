@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:pin_input_text_field/decoration/pin_decoration.dart';
-import 'package:pin_input_text_field/pin_input_text_field.dart';
-import 'package:pin_input_text_field/style/obscure.dart';
-import 'package:pin_input_text_field/util/utils.dart';
+part of 'pin_decoration.dart';
 
-class CirclePinDecoration extends PinDecoration implements SupportGap {
+/// The object determine the box stroke etc.
+class BoxLooseDecoration extends PinDecoration implements SupportGap {
+  /// The box border radius.
+  final Radius radius;
+
   /// The box border width.
   final double strokeWidth;
 
@@ -23,19 +23,20 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
   /// The border changed color when user enter pin.
   final Color enteredColor;
 
-  const CirclePinDecoration({
+  const BoxLooseDecoration({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
     String errorText,
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    this.gapSpace: 16,
+    this.enteredColor,
+    this.solidColor,
+    this.radius: const Radius.circular(8.0),
+    this.strokeWidth: 1.0,
+    this.gapSpace: 16.0,
     this.gapSpaces,
     this.strokeColor: Colors.cyan,
-    this.strokeWidth: 1,
-    this.solidColor,
-    this.enteredColor,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -46,6 +47,9 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
         );
 
   @override
+  PinEntryType get pinEntryType => PinEntryType.boxLoose;
+
+  @override
   PinDecoration copyWith({
     TextStyle textStyle,
     ObscureStyle obscureStyle,
@@ -54,7 +58,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     String hintText,
     TextStyle hintTextStyle,
   }) {
-    return CirclePinDecoration(
+    return BoxLooseDecoration(
       textStyle: textStyle ?? this.textStyle,
       obscureStyle: obscureStyle ?? this.obscureStyle,
       errorText: errorText ?? this.errorText,
@@ -64,14 +68,12 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       solidColor: this.solidColor,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
+      radius: this.radius,
       enteredColor: this.enteredColor,
       gapSpace: this.gapSpace,
       gapSpaces: this.gapSpaces,
     );
   }
-
-  @override
-  PinEntryType get pinEntryType => PinEntryType.customized;
 
   @override
   void drawPin(
@@ -108,31 +110,20 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
         ..isAntiAlias = true;
     }
 
-    double gapTotalLength = gapSpaces?.sumList() ?? (pinLength - 1) * gapSpace;
+    double gapTotalLength =
+        gapSpaces?.reduce((a, b) => a + b) ?? (pinLength - 1) * gapSpace;
 
-    /// Calculate the width of each digit include stroke.
+    List<double> actualGapSpaces =
+        gapSpaces ?? List.filled(pinLength - 1, gapSpace);
+
+    /// Calculate the width of each underline.
     double singleWidth =
-        (size.width - strokeWidth - gapTotalLength) / pinLength;
+        (size.width - strokeWidth * 2 * pinLength - gapTotalLength) / pinLength;
 
-    double radius; // include strokeWidth
-    List<double> actualGapSpaces;
-    if (singleWidth / 2 < mainHeight / 2 - strokeWidth / 2) {
-      radius = singleWidth / 2;
-      actualGapSpaces = gapSpaces ?? List.filled(pinLength - 1, gapSpace);
-    } else {
-      radius = mainHeight / 2 - strokeWidth / 2;
-      actualGapSpaces = List.filled(
-          pinLength - 1,
-          (size.width - strokeWidth - radius * 2 * pinLength) /
-              (pinLength - 1));
-    }
+    var startX = strokeWidth / 2;
+    var startY = mainHeight - strokeWidth / 2;
 
-    double startX = strokeWidth / 2;
-    double startY = mainHeight / 2;
-
-    List<double> centerPoints = List(pinLength);
-
-    /// Draw the each shape of pin.
+    /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && enteredColor != null) {
         borderPaint.color = enteredColor;
@@ -150,20 +141,21 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       } else {
         borderPaint.color = strokeColor;
       }
-      centerPoints[i] = startX + radius;
-      canvas.drawCircle(
-        Offset(centerPoints[i], startY),
-        radius,
-        borderPaint,
-      );
+      RRect rRect = RRect.fromRectAndRadius(
+          Rect.fromLTRB(
+            startX,
+            strokeWidth / 2,
+            startX + singleWidth + strokeWidth,
+            startY,
+          ),
+          radius);
+      canvas.drawRRect(rRect, borderPaint);
       if (insidePaint != null) {
-        canvas.drawCircle(
-          Offset(startX + radius, startY),
-          radius - strokeWidth / 2,
-          insidePaint,
-        );
+        canvas.drawRRect(rRect, insidePaint);
       }
-      startX += (radius * 2 + (i == pinLength - 1 ? 0 : actualGapSpaces[i]));
+      startX += singleWidth +
+          strokeWidth * 2 +
+          (i == pinLength - 1 ? 0 : actualGapSpaces[i]);
     }
 
     /// The char index of the [text]
@@ -171,7 +163,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     startY = 0.0;
 
     /// Determine whether display obscureText.
-    bool obscureOn = obscureStyle?.isTextObscure == true;
+    bool obscureOn = obscureStyle != null && obscureStyle.isTextObscure;
 
     text.runes.forEach((rune) {
       String code;
@@ -196,12 +188,13 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       if (startY == 0.0) {
         startY = mainHeight / 2 - textPainter.height / 2;
       }
-      textPainter.paint(
-          canvas,
-          Offset(
-            centerPoints[index] - textPainter.width / 2,
-            startY,
-          ));
+      startX = singleWidth * index +
+          singleWidth / 2 -
+          textPainter.width / 2 +
+          actualGapSpaces.take(index).sumList() +
+          strokeWidth * index * 2 +
+          strokeWidth;
+      textPainter.paint(canvas, Offset(startX, startY));
       index++;
     });
 
@@ -221,8 +214,13 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
         textPainter.layout();
 
         startY = mainHeight / 2 - textPainter.height / 2;
-        textPainter.paint(canvas,
-            Offset(centerPoints[index] - textPainter.width / 2, startY));
+        startX = singleWidth * index +
+            singleWidth / 2 -
+            textPainter.width / 2 +
+            actualGapSpaces.take(index).sumList() +
+            strokeWidth * index * 2 +
+            strokeWidth;
+        textPainter.paint(canvas, Offset(startX, startY));
         index++;
       });
     }
@@ -233,4 +231,34 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
 
   @override
   List<double> get getGapWidthList => gapSpaces;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      super == other &&
+          other is BoxLooseDecoration &&
+          runtimeType == other.runtimeType &&
+          radius == other.radius &&
+          strokeWidth == other.strokeWidth &&
+          gapSpace == other.gapSpace &&
+          gapSpaces == other.gapSpaces &&
+          strokeColor == other.strokeColor &&
+          solidColor == other.solidColor &&
+          enteredColor == other.enteredColor;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      radius.hashCode ^
+      strokeWidth.hashCode ^
+      gapSpace.hashCode ^
+      gapSpaces.hashCode ^
+      strokeColor.hashCode ^
+      solidColor.hashCode ^
+      enteredColor.hashCode;
+
+  @override
+  String toString() {
+    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, solidColor: $solidColor, enteredColor: $enteredColor}';
+  }
 }

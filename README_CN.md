@@ -35,7 +35,7 @@ BoxTightDecoration
 
 ![](gifs/boxtight.gif)
 
-CircleDecoration **新**
+CircleDecoration
 
 ![](gifs/circle.gif)
 

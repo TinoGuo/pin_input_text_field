@@ -1,3 +1,6 @@
+## [3.0.1] - 2019/12/31
+* Update: optimise directory
+
 ## [3.0.0] - 2019/12/30
 * Update: minimum sdk version - 2.7
 * New: add built-in `CircleDecoration` 

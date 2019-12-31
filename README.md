@@ -16,7 +16,7 @@ PinInputTextField is a TextField widget to help display different style pin. It 
 * support all the textField properties support
 * Flutter web support
 
-## Example 👌
+## Example 💎
 
 Thanks to the [Flutter Web](https://flutter.dev/web), you can enjoy the preview by [website](https://tinoguo.github.io/pin_input_text_field/) without any installation. 
 
@@ -36,7 +36,7 @@ BoxTightDecoration
 
 ![](gifs/boxtight.gif)
 
-CircleDecoration **New**
+CircleDecoration
 
 ![](gifs/circle.gif)
 
