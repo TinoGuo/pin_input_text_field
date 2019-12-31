@@ -1,6 +1,6 @@
-name: Dart CI
+name: Flutter Build Test CI
 
-on: push
+on: [push, pull_request]
 jobs: 
   build-and-test: 
     runs-on: ubuntu-latest
