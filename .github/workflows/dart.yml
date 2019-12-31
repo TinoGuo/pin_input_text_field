@@ -20,10 +20,7 @@ jobs:
     - name: build example
       working-directory: ./example
       run: |
-    # build application
         flutter build aot
-    # Analyze our Dart code
         flutter analyze
-    # Run our tests
         flutter test
 
