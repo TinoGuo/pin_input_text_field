@@ -13,8 +13,16 @@ jobs:
       with:
         channel: 'beta' 
     - run: flutter pub get
-    - run: flutter build aot
     # Analyze our Dart code
     - run: flutter analyze
     # Run our tests
     - run: flutter test
+    # build for example
+    - run: cd example
+    # build application
+    - run: flutter build aot
+      # Analyze our Dart code
+    - run: flutter analyze
+      # Run our tests
+    - run: flutter test
+
