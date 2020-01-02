@@ -1,3 +1,4 @@
+![CI](https://github.com/Tino/pin_input_text_field/workflows/Flutter%20Build%20Test%20CI/badge.svg)
 [![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field)
 ![GitHub](https://img.shields.io/github/license/TinoGuo/pin_input_text_field)
 ![GitHub top language](https://img.shields.io/github/languages/top/TinoGuo/pin_input_text_field)
@@ -22,21 +23,19 @@ Thanks to the [Flutter Web](https://flutter.dev/web), you can enjoy the preview 
 
 ### Decoration 
 
-UnderlineDecoration
+**UnderlineDecoration**
 
 ![](gifs/underline.gif)
 
-
-BoxLooseDecoration
+**BoxLooseDecoration**
 
 ![](gifs/boxloose.gif)
 
-
-BoxTightDecoration
+**BoxTightDecoration**
 
 ![](gifs/boxtight.gif)
 
-CircleDecoration
+**CircleDecoration**
 
 ![](gifs/circle.gif)
 
