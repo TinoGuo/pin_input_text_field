@@ -1,4 +1,4 @@
-![CI](https://github.com/TinoGuo/pin_input_text_field/workflows/Flutter%20Build%20Test%20CI/badge.svg)
+![](https://github.com/TinoGuo/pin_input_text_field/workflows/Flutter%20Build%20Test%20CI/badge.svg?branch=master)
 [![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field)
 ![GitHub](https://img.shields.io/github/license/TinoGuo/pin_input_text_field)
 ![GitHub top language](https://img.shields.io/github/languages/top/TinoGuo/pin_input_text_field)
