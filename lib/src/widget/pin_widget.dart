@@ -40,6 +40,9 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s onChanged.
   final ValueChanged<String> onChanged;
 
+  /// Same as [TextField]'s textCapitalization
+  final TextCapitalization textCapitalization;
+
   PinInputTextField({
     Key key,
     this.pinLength: _kDefaultPinLength,
@@ -53,6 +56,7 @@ class PinInputTextField extends StatefulWidget {
     this.textInputAction = TextInputAction.done,
     this.enabled = true,
     this.onChanged,
+    this.textCapitalization,
   })  :
 
         /// pinLength must larger than 0.
@@ -70,7 +74,6 @@ class PinInputTextField extends StatefulWidget {
                     pinLength - 1)),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(pinLength),
               ]
             : inputFormatter
@@ -93,14 +96,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       widget.controller ?? _controller;
 
   void _pinChanged() {
-    setState(() {
-      _updateText();
-
-      /// This below code will cause dead loop in iOS,
-      /// you should assign selection when you set text.
-//      _effectiveController.selection = TextSelection.collapsed(
-//          offset: _effectiveController.text.runes.length);
-    });
+    setState(() => _updateText());
   }
 
   void _updateText() {
@@ -171,7 +167,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     return CustomPaint(
       /// The foreground paint to display pin.
       foregroundPainter: _PinPaint(
-        text: _text ?? _text.trim(),
+        text: _text,
         pinLength: widget.pinLength,
         decoration: widget.decoration,
         themeData: Theme.of(context),
@@ -226,13 +222,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         /// Defaults to [TextInputAction.done]
         textInputAction: widget.textInputAction,
 
-        /// {@macro flutter.widgets.editableText.obscureText}
-        /// Default value of the obscureText is false. Make
-        obscureText: true,
-
         onChanged: widget.onChanged,
 
         enabled: widget.enabled,
+
+        textCapitalization: widget.textCapitalization,
 
         /// Clear default text decoration.
         decoration: InputDecoration(
@@ -253,38 +247,6 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         ),
       ),
     );
-  }
-}
-
-class _PinPaint extends CustomPainter {
-  final String text;
-  final int pinLength;
-  final PinEntryType type;
-  final PinDecoration decoration;
-  final ThemeData themeData;
-
-  _PinPaint({
-    @required this.text,
-    @required this.pinLength,
-    PinDecoration decoration,
-    this.type: PinEntryType.boxTight,
-    this.themeData,
-  }) : this.decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
-          errorTextStyle: decoration.errorTextStyle ??
-              themeData.textTheme.caption.copyWith(color: themeData.errorColor),
-          hintTextStyle: decoration.hintTextStyle ??
-              themeData.textTheme.headline5
-                  .copyWith(color: themeData.hintColor),
-        );
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) =>
-      !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    decoration.drawPin(canvas, size, text, pinLength, themeData);
   }
 }
 
@@ -315,6 +277,7 @@ class PinInputTextFormField extends FormField<String> {
     FormFieldValidator<String> validator,
     bool autovalidate = false,
     ValueChanged<String> onChanged,
+    TextCapitalization textCapitalization,
   })  : assert(initialValue == null || controller == null),
         assert(autovalidate != null),
         assert(pinLength != null && pinLength > 0),
@@ -334,7 +297,6 @@ class PinInputTextFormField extends FormField<String> {
                     pinLength - 1)),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(pinLength),
               ]
             : inputFormatter
@@ -376,6 +338,7 @@ class PinInputTextFormField extends FormField<String> {
                 textInputAction: textInputAction,
                 enabled: enabled,
                 onChanged: onChanged,
+                textCapitalization: textCapitalization,
               );
             });
 
@@ -472,5 +435,37 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     // already have been set.
     if (_effectiveController.text != value)
       didChange(_effectiveController.text);
+  }
+}
+
+class _PinPaint extends CustomPainter {
+  final String text;
+  final int pinLength;
+  final PinEntryType type;
+  final PinDecoration decoration;
+  final ThemeData themeData;
+
+  _PinPaint({
+    @required this.text,
+    @required this.pinLength,
+    PinDecoration decoration,
+    this.type: PinEntryType.boxTight,
+    this.themeData,
+  }) : this.decoration = decoration.copyWith(
+          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
+          errorTextStyle: decoration.errorTextStyle ??
+              themeData.textTheme.caption.copyWith(color: themeData.errorColor),
+          hintTextStyle: decoration.hintTextStyle ??
+              themeData.textTheme.headline5
+                  .copyWith(color: themeData.hintColor),
+        );
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) =>
+      !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    decoration.drawPin(canvas, size, text, pinLength, themeData);
   }
 }

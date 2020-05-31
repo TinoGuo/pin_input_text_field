@@ -97,18 +97,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Set a pin to the textField.
   void _setPinValue() {
-    var text = _generatePin();
     _pinEditingController
-      ..text = text
-      ..selection = TextSelection.collapsed(offset: text.runes.length);
-  }
-
-  String _generatePin() {
-    StringBuffer sb = StringBuffer();
-    for (int i = 1; i <= _pinLength; i++) {
-      sb.write("$i");
-    }
-    return sb.toString();
+      ..text = "0000"
+      ..selection = TextSelection.collapsed(offset: 4);
   }
 
   @override
@@ -284,6 +275,8 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _pinEditingController,
               textInputAction: TextInputAction.go,
               enabled: _enable,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.characters,
               onSubmit: (pin) {
                 debugPrint('submit pin:$pin');
               },
@@ -313,6 +306,8 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _pinEditingController,
               textInputAction: TextInputAction.go,
               enabled: _enable,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.characters,
               onSubmit: (pin) {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
