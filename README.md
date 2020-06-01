@@ -105,6 +105,11 @@ Customizable attributes for PinInputTextField
         <td>(String pin){}</td>
         <td>Same as TextField's onChanged</td>
     </tr>
+    <tr>
+        <td>textCapitalization</td>
+        <td>TextCapitalization.words</td>
+        <td>Same as TextField's textCapitalization</td>
+    </tr>
 </table>
 
 ### FormField
