@@ -1,3 +1,6 @@
+## [3.0.2] - 2020/06/01
+* New: support `TextCapitalization`
+
 ## [3.0.1] - 2019/12/31
 * Update: optimise directory
 
