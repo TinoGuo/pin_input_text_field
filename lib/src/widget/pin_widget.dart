@@ -56,7 +56,7 @@ class PinInputTextField extends StatefulWidget {
     this.textInputAction = TextInputAction.done,
     this.enabled = true,
     this.onChanged,
-    this.textCapitalization,
+    textCapitalization,
   })  :
 
         /// pinLength must larger than 0.
@@ -78,6 +78,7 @@ class PinInputTextField extends StatefulWidget {
               ]
             : inputFormatter
           ..add(LengthLimitingTextInputFormatter(pinLength)),
+        textCapitalization = textCapitalization ?? TextCapitalization.none,
         super(key: key);
 
   @override
