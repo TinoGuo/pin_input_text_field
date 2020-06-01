@@ -106,6 +106,11 @@ PinInputTextField的自定义属性
         <td>(String pin){}</td>
         <td>跟TextField的onChanged一样</td>
      </tr>
+    <tr>
+        <td>textCapitalization</td>
+        <td>TextCapitalization.words</td>
+        <td>跟TextField的textCapitalization一样</td>
+    </tr>
 </table>
 
 ### 表单验证
