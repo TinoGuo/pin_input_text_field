@@ -1,3 +1,8 @@
+## [3.0.3] - 2020/06/14
+* New: support copy-past pin
+* New: support control `autocorrect`
+* Update: Default obscureText `•`
+
 ## [3.0.2] - 2020/06/01
 * New: support `TextCapitalization`
 

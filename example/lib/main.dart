@@ -283,6 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onChanged: (pin) {
                 debugPrint('onChanged execute. pin:$pin');
               },
+              enableInteractiveSelection: true,
             ),
           ),
         ],

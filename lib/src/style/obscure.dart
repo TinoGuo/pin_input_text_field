@@ -12,7 +12,7 @@ class ObscureStyle {
 
   ObscureStyle({
     this.isTextObscure: false,
-    this.obscureText: '*',
+    this.obscureText: '•',
   })  :
 
         /// Not allowed empty string and multiline string.
