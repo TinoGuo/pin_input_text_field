@@ -43,6 +43,15 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s textCapitalization
   final TextCapitalization textCapitalization;
 
+  /// Same as [TextField]'s autocorrect
+  final bool autocorrect;
+
+  /// Same as [TextField]'s enableInteractiveSelection
+  final bool enableInteractiveSelection;
+
+  /// Same as [TextField]'s toolbarOptions
+  final ToolbarOptions toolbarOptions;
+
   PinInputTextField({
     Key key,
     this.pinLength: _kDefaultPinLength,
@@ -57,6 +66,9 @@ class PinInputTextField extends StatefulWidget {
     this.enabled = true,
     this.onChanged,
     textCapitalization,
+    this.autocorrect = false,
+    this.enableInteractiveSelection = false,
+    this.toolbarOptions,
   })  :
 
         /// pinLength must larger than 0.
@@ -181,23 +193,23 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         style: TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
-          fontSize: 1,
+          fontSize: 0, // To hide the cursor when in select mode
         ),
 
-        /// Hide the Cursor.
-        cursorColor: Colors.transparent,
+        /// Hide the Cursor
+        showCursor: false,
 
-        /// Hide the cursor.
-        cursorWidth: 0.0,
-
-        /// No need to correct the user input.
-        autocorrect: false,
+        /// Whether to correct the user input.
+        autocorrect: widget.autocorrect,
 
         /// Center the input to make more natural.
         textAlign: TextAlign.center,
 
+        /// Options of the edit menu
+        toolbarOptions: widget.toolbarOptions,
+
         /// Disable the actual textField selection.
-        enableInteractiveSelection: false,
+        enableInteractiveSelection: widget.enableInteractiveSelection,
 
         /// The maxLength of the pin input, the default value is 6.
         maxLength: widget.pinLength,
@@ -279,6 +291,9 @@ class PinInputTextFormField extends FormField<String> {
     bool autovalidate = false,
     ValueChanged<String> onChanged,
     TextCapitalization textCapitalization,
+    bool autocorrect = false,
+    bool enableInteractiveSelection = false,
+    ToolbarOptions toolbarOptions,
   })  : assert(initialValue == null || controller == null),
         assert(autovalidate != null),
         assert(pinLength != null && pinLength > 0),
@@ -340,6 +355,9 @@ class PinInputTextFormField extends FormField<String> {
                 enabled: enabled,
                 onChanged: onChanged,
                 textCapitalization: textCapitalization,
+                enableInteractiveSelection: enableInteractiveSelection,
+                autocorrect: autocorrect,
+                toolbarOptions: toolbarOptions,
               );
             });
 
