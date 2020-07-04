@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _obscureEnable = false;
 
   PinEntryType _pinEntryType = PinEntryType.underline;
-  Color _solidColor = Colors.purpleAccent;
+  Color _solidColor = Colors.black12;
   bool _solidEnable = false;
 
   /// Control whether textField is enable.
@@ -123,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = UnderlineDecoration(
             enteredColor: Colors.green,
+            solidColor: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '😂',
@@ -228,11 +229,6 @@ class _MyHomePageState extends State<MyHomePage> {
               value: _solidEnable,
               onChanged: (enable) {
                 setState(() {
-                  if (_pinEntryType == PinEntryType.underline) {
-                    _globalKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                            'solid control isn\'t supported in Underline mode')));
-                  }
                   _solidEnable = enable;
                   _selectedMenu(_pinEntryType);
                 });
@@ -434,6 +430,7 @@ class ExampleDecoration extends PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
+    Color solidColor,
   }) {
     return ExampleDecoration(
       textStyle: textStyle ?? this.textStyle,
