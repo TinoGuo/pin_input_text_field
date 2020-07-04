@@ -44,6 +44,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
+          solidColor: solidColor,
         );
 
   @override
@@ -57,6 +58,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
+    Color solidColor,
   }) {
     return BoxLooseDecoration(
       textStyle: textStyle ?? this.textStyle,

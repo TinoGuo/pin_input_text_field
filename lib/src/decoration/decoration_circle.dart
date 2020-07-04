@@ -39,6 +39,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
+          solidColor: solidColor,
         );
 
   @override
@@ -49,6 +50,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
+    Color solidColor,
   }) {
     return CirclePinDecoration(
       textStyle: textStyle ?? this.textStyle,

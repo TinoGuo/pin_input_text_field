@@ -1,3 +1,6 @@
+## [3.0.4] - 2020/07/04
+* New: support `solidColor` in `underlineDecoration`
+
 ## [3.0.3] - 2020/06/14
 * New: support copy-past pin
 * New: support control `autocorrect`

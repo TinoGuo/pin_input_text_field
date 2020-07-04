@@ -41,6 +41,9 @@ abstract class PinDecoration {
 
   final TextStyle hintTextStyle;
 
+  /// The box inside solid color, sometimes it equals to the box background.
+  final Color solidColor;
+
   PinEntryType get pinEntryType;
 
   const PinDecoration({
@@ -50,6 +53,7 @@ abstract class PinDecoration {
     this.errorTextStyle,
     this.hintText,
     this.hintTextStyle,
+    this.solidColor,
   });
 
   void drawPin(
@@ -69,6 +73,7 @@ abstract class PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
+    Color solidColor,
   });
 
   @override
@@ -81,7 +86,8 @@ abstract class PinDecoration {
           errorText == other.errorText &&
           errorTextStyle == other.errorTextStyle &&
           hintText == other.hintText &&
-          hintTextStyle == other.hintTextStyle;
+          hintTextStyle == other.hintTextStyle &&
+          solidColor == other.solidColor;
 
   @override
   int get hashCode =>
@@ -90,10 +96,11 @@ abstract class PinDecoration {
       errorText.hashCode ^
       errorTextStyle.hashCode ^
       hintText.hashCode ^
-      hintTextStyle.hashCode;
+      hintTextStyle.hashCode ^
+      solidColor.hashCode;
 
   @override
   String toString() {
-    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle}';
+    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, solidColor: $solidColor}';
   }
 }

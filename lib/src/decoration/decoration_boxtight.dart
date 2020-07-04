@@ -32,6 +32,7 @@ class BoxTightDecoration extends PinDecoration {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
+          solidColor: solidColor,
         );
 
   @override
@@ -45,6 +46,7 @@ class BoxTightDecoration extends PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
+    Color solidColor,
   }) {
     return BoxTightDecoration(
       textStyle: textStyle ?? this.textStyle,
