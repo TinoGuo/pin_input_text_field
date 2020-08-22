@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -193,7 +195,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         style: TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
-          fontSize: 0, // To hide the cursor when in select mode
+          // To hide the cursor when in select mode
+          fontSize: Platform
+                  .isAndroid // Android Platform is not allowed 0 font size when selectAll
+              ? double.minPositive
+              : 0,
         ),
 
         /// Hide the Cursor

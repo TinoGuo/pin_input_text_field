@@ -1,3 +1,6 @@
+## [3.0.5] - 2020/08/22
+* Fix: the interaction issue in Android Platform
+
 ## [3.0.4] - 2020/07/04
 * New: support `solidColor` in `underlineDecoration`
 
