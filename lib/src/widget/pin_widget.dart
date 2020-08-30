@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../decoration/pin_decoration.dart';
+import 'package:pin_input_text_field/src/decoration/pin_decoration.dart';
+import 'package:pin_input_text_field/src/util/utils.dart';
 
 const _kDefaultPinLength = 6;
 
@@ -196,10 +194,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           /// Hide the editing text.
           color: Colors.transparent,
           // To hide the cursor when in select mode
-          fontSize: Platform
-                  .isAndroid // Android Platform is not allowed 0 font size when selectAll
-              ? double.minPositive
-              : 0,
+          fontSize: platformMiniFontSize(),
         ),
 
         /// Hide the Cursor
@@ -252,17 +247,23 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           /// Hide the counterText
           counterText: '',
 
-          /// Hide the outline border.
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-
           /// Bind the error text from pin decoration to this input decoration.
           errorText: widget.decoration.errorText,
 
           /// Bind the style of error text from pin decoration to
           /// this input decoration.
           errorStyle: widget.decoration.errorTextStyle,
+
+          // Disabled this as it doesn't show error or
+          enabled: false,
+
+          /// Hide the all border.
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          focusedErrorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
         ),
       ),
     );
