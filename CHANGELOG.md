@@ -1,3 +1,6 @@
+## [3.0.7] - 2020/08/30
+* Fix: All minimize font size is the double.minPositive
+
 ## [3.0.6] - 2020/08/30
 * Fix: Disabled inputDecoration theme in widget
 * Fix: add minimize font size 1 in web
