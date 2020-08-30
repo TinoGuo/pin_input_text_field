@@ -1,3 +1,7 @@
+## [3.0.6] - 2020/08/30
+* Fix: Disabled inputDecoration theme in widget
+* Fix: add minimize font size 1 in web
+
 ## [3.0.5] - 2020/08/22
 * Fix: the interaction issue in Android Platform
 
