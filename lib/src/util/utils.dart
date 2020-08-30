@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 extension NumListExtension<T extends num> on Iterable<T> {
   /// Return the sum of the list even the list is empty.
@@ -27,11 +25,7 @@ double platformMiniFontSize() {
     if (isWeb()) {
       return 1; // Web is not allowed font size less than 1
     }
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      // Android Platform is not allowed 0 font size when selectAll
-      return double.minPositive;
-    }
-    return 0;
+    return double.minPositive;
   } catch (_) {
     return 1;
   }
