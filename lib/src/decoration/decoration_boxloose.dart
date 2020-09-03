@@ -17,11 +17,11 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
   /// The box border color.
   final Color strokeColor;
 
-  /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
-
   /// The border changed color when user enter pin.
   final Color enteredColor;
+
+  /// The background color of index character
+  final ColorBuilder bgColorBuilder;
 
   const BoxLooseDecoration({
     TextStyle textStyle,
@@ -31,12 +31,12 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     String hintText,
     TextStyle hintTextStyle,
     this.enteredColor,
-    this.solidColor,
     this.radius: const Radius.circular(8.0),
     this.strokeWidth: 1.0,
     this.gapSpace: 16.0,
     this.gapSpaces,
     this.strokeColor: Colors.cyan,
+    this.bgColorBuilder,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -44,7 +44,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
-          solidColor: solidColor,
+          bgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -58,7 +58,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   }) {
     return BoxLooseDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -67,13 +67,13 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      solidColor: this.solidColor,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
       radius: this.radius,
       enteredColor: this.enteredColor,
       gapSpace: this.gapSpace,
       gapSpaces: this.gapSpaces,
+      bgColorBuilder: this.bgColorBuilder,
     );
   }
 
@@ -103,15 +103,6 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
 
-    /// Assign paint if [solidColor] is not null
-    Paint insidePaint;
-    if (solidColor != null) {
-      insidePaint = Paint()
-        ..color = solidColor
-        ..style = PaintingStyle.fill
-        ..isAntiAlias = true;
-    }
-
     double gapTotalLength =
         gapSpaces?.reduce((a, b) => a + b) ?? (pinLength - 1) * gapSpace;
 
@@ -125,6 +116,9 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     var startX = strokeWidth / 2;
     var startY = mainHeight - strokeWidth / 2;
 
+    /// Assign paint if [bgColorBuilder] is not null
+    Paint insidePaint;
+
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && enteredColor != null) {
@@ -132,11 +126,11 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       } else if (errorText != null && errorText.isNotEmpty) {
         /// only draw error-color as border-color or solid-color
         /// if errorText is not null
-        if (solidColor == null) {
+        if (bgColorBuilder == null) {
           borderPaint.color = errorTextStyle.color;
         } else {
           insidePaint = Paint()
-            ..color = errorTextStyle.color
+            ..color = bgColorBuilder.indexColor(i)
             ..style = PaintingStyle.fill
             ..isAntiAlias = true;
         }
@@ -237,30 +231,28 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      super == other &&
-          other is BoxLooseDecoration &&
+      other is BoxLooseDecoration &&
           runtimeType == other.runtimeType &&
           radius == other.radius &&
           strokeWidth == other.strokeWidth &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
           strokeColor == other.strokeColor &&
-          solidColor == other.solidColor &&
-          enteredColor == other.enteredColor;
+          enteredColor == other.enteredColor &&
+          bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
-      super.hashCode ^
       radius.hashCode ^
       strokeWidth.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
       strokeColor.hashCode ^
-      solidColor.hashCode ^
-      enteredColor.hashCode;
+      enteredColor.hashCode ^
+      bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, solidColor: $solidColor, enteredColor: $enteredColor}';
+    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, enteredColor: $enteredColor, solidColorDelegate: $bgColorBuilder}';
   }
 }

@@ -119,6 +119,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     } else {
       _text = _effectiveController.text;
     }
+
+    widget.decoration.bgColorBuilder?.notifyChange(_text.length);
   }
 
   @override

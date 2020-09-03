@@ -17,8 +17,8 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   /// The underline changed color when user enter pin.
   final Color enteredColor;
 
-  /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  /// The background color of index character
+  final ColorBuilder bgColorBuilder;
 
   const UnderlineDecoration({
     TextStyle textStyle,
@@ -32,7 +32,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     this.gapSpaces,
     this.color: Colors.cyan,
     this.lineHeight: 2.0,
-    this.solidColor,
+    this.bgColorBuilder,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -40,6 +40,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
+          bgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -53,7 +54,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   }) {
     return UnderlineDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -67,7 +68,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
       gapSpace: this.gapSpace,
       lineHeight: this.lineHeight,
       gapSpaces: this.gapSpaces,
-      solidColor: this.solidColor,
+      bgColorBuilder: this.bgColorBuilder,
     );
   }
 
@@ -97,11 +98,10 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
 
-    /// Assign paint if [solidColor] is not null
+    /// Assign paint if [bgColorBuilder] is not null
     Paint insidePaint;
-    if (solidColor != null) {
+    if (bgColorBuilder != null) {
       insidePaint = Paint()
-        ..color = solidColor
         ..style = PaintingStyle.fill
         ..isAntiAlias = true;
     }
@@ -131,7 +131,8 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
           Offset(startX + singleWidth, startY), underlinePaint);
       if (insidePaint != null) {
         canvas.drawRect(
-            Rect.fromLTWH(startX, 0, singleWidth, startY), insidePaint);
+            Rect.fromLTWH(startX, 0, singleWidth, startY - lineHeight / 2),
+            insidePaint..color = bgColorBuilder.indexColor(i));
       }
       startX += singleWidth + (i == pinLength - 1 ? 0 : actualGapSpaces[i]);
     }
@@ -210,28 +211,26 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      super == other &&
-          other is UnderlineDecoration &&
+      other is UnderlineDecoration &&
           runtimeType == other.runtimeType &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
           color == other.color &&
           lineHeight == other.lineHeight &&
           enteredColor == other.enteredColor &&
-          solidColor == other.solidColor;
+          bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
-      super.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
       color.hashCode ^
       lineHeight.hashCode ^
       enteredColor.hashCode ^
-      solidColor.hashCode;
+      bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $color, lineHeight: $lineHeight, enteredColor: $enteredColor, solidColor: $solidColor}';
+    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $color, lineHeight: $lineHeight, enteredColor: $enteredColor, solidColorDelegate: $bgColorBuilder}';
   }
 }

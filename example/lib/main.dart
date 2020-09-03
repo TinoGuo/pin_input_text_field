@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _obscureEnable = false;
 
   PinEntryType _pinEntryType = PinEntryType.underline;
-  Color _solidColor = Colors.black12;
+  ColorBuilder _solidColor = EnteredColorBuilder(Colors.amber, Colors.black54);
   bool _solidEnable = false;
 
   /// Control whether textField is enable.
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = UnderlineDecoration(
             enteredColor: Colors.green,
-            solidColor: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '😂',
@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.boxTight:
         setState(() {
           _pinDecoration = BoxTightDecoration(
-            solidColor: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '👿',
@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = BoxLooseDecoration(
             enteredColor: Colors.green,
-            solidColor: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '☺️',
@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = CirclePinDecoration(
             enteredColor: Colors.green,
-            solidColor: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable ? _solidColor : null,
             strokeColor: Colors.black,
             strokeWidth: 4,
             obscureStyle: ObscureStyle(
@@ -279,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onChanged: (pin) {
                 debugPrint('onChanged execute. pin:$pin');
               },
-              enableInteractiveSelection: true,
+              enableInteractiveSelection: false,
             ),
           ),
         ],
@@ -413,6 +413,7 @@ class ExampleDecoration extends PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
+    ColorBuilder bgColorBuilder,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -430,16 +431,16 @@ class ExampleDecoration extends PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   }) {
     return ExampleDecoration(
-      textStyle: textStyle ?? this.textStyle,
-      obscureStyle: obscureStyle ?? this.obscureStyle,
-      errorText: errorText ?? this.errorText,
-      errorTextStyle: errorTextStyle ?? this.errorTextStyle,
-      hintText: hintText ?? this.hintText,
-      hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-    );
+        textStyle: textStyle ?? this.textStyle,
+        obscureStyle: obscureStyle ?? this.obscureStyle,
+        errorText: errorText ?? this.errorText,
+        errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+        hintText: hintText ?? this.hintText,
+        hintTextStyle: hintTextStyle ?? this.hintTextStyle,
+        bgColorBuilder: bgColorBuilder);
   }
 
   @override

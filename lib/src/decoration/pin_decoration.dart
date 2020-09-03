@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
+import 'package:pin_input_text_field/src/builder/color_builder.dart';
 
 import '../style/obscure.dart';
 import '../util/utils.dart';
@@ -41,8 +43,8 @@ abstract class PinDecoration {
 
   final TextStyle hintTextStyle;
 
-  /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  // The background color of index character
+  final ColorBuilder bgColorBuilder;
 
   PinEntryType get pinEntryType;
 
@@ -53,7 +55,7 @@ abstract class PinDecoration {
     this.errorTextStyle,
     this.hintText,
     this.hintTextStyle,
-    this.solidColor,
+    this.bgColorBuilder,
   });
 
   void drawPin(
@@ -73,34 +75,6 @@ abstract class PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PinDecoration &&
-          runtimeType == other.runtimeType &&
-          textStyle == other.textStyle &&
-          obscureStyle == other.obscureStyle &&
-          errorText == other.errorText &&
-          errorTextStyle == other.errorTextStyle &&
-          hintText == other.hintText &&
-          hintTextStyle == other.hintTextStyle &&
-          solidColor == other.solidColor;
-
-  @override
-  int get hashCode =>
-      textStyle.hashCode ^
-      obscureStyle.hashCode ^
-      errorText.hashCode ^
-      errorTextStyle.hashCode ^
-      hintText.hashCode ^
-      hintTextStyle.hashCode ^
-      solidColor.hashCode;
-
-  @override
-  String toString() {
-    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, solidColor: $solidColor}';
-  }
 }
