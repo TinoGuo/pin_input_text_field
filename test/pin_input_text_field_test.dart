@@ -27,7 +27,8 @@ void main() {
         tester,
         PinInputTextField(
           controller: controller,
-          decoration: UnderlineDecoration(),
+          decoration:
+              UnderlineDecoration(colorBuilder: FixedColorBuilder(Colors.cyan)),
         ));
     await tester.enterText(find.byType(TextField), '1234');
     expect('1234', controller.text);

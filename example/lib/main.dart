@@ -77,8 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Decorate the outside of the Pin.
   PinDecoration _pinDecoration = UnderlineDecoration(
-    enteredColor: Colors.green,
     hintText: _kDefaultHint,
+    colorBuilder: EnteredColorBuilder(Colors.cyan, Colors.green),
+    bgColorBuilder: EnteredColorBuilder(Colors.amber, Colors.black54),
   );
 
   /// Control whether show the obscureCode.
@@ -122,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.underline:
         setState(() {
           _pinDecoration = UnderlineDecoration(
-            enteredColor: Colors.green,
+            colorBuilder: EnteredColorBuilder(Colors.cyan, Colors.green),
             bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
@@ -147,7 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.boxLoose:
         setState(() {
           _pinDecoration = BoxLooseDecoration(
-            enteredColor: Colors.green,
+            strokeWidth: 10,
+            strokeColorBuilder: EnteredColorBuilder(Colors.cyan, Colors.green),
             bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
@@ -163,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
             enteredColor: Colors.green,
             bgColorBuilder: _solidEnable ? _solidColor : null,
             strokeColor: Colors.black,
-            strokeWidth: 4,
+            strokeWidth: 1,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '🤪',
@@ -444,11 +446,14 @@ class ExampleDecoration extends PinDecoration {
   }
 
   @override
+  void notifyChange(String pin) {}
+
+  @override
   void drawPin(
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// You can draw anything you want here.

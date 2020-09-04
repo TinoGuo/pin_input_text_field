@@ -69,14 +69,19 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
   }
 
   @override
-  PinEntryType get pinEntryType => PinEntryType.customized;
+  PinEntryType get pinEntryType => PinEntryType.circle;
+
+  @override
+  void notifyChange(String pin) {
+    bgColorBuilder?.notifyChange(pin);
+  }
 
   @override
   void drawPin(
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -237,6 +242,12 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
           gapSpaces == other.gapSpaces &&
           strokeColor == other.strokeColor &&
           enteredColor == other.enteredColor &&
+          textStyle == other.textStyle &&
+          obscureStyle == other.obscureStyle &&
+          errorText == other.errorText &&
+          errorTextStyle == other.errorTextStyle &&
+          hintText == other.hintText &&
+          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
@@ -246,10 +257,16 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       gapSpaces.hashCode ^
       strokeColor.hashCode ^
       enteredColor.hashCode ^
+      textStyle.hashCode ^
+      obscureStyle.hashCode ^
+      errorText.hashCode ^
+      errorTextStyle.hashCode ^
+      hintText.hashCode ^
+      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'CirclePinDecoration{strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, enteredColor: $enteredColor, solidColorDelegate: $bgColorBuilder}';
+    return 'CirclePinDecoration{strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, enteredColor: $enteredColor, bgColorBuilder: $bgColorBuilder}';
   }
 }

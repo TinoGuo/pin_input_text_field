@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:pin_input_text_field/src/builder/color_builder.dart';
@@ -23,7 +25,7 @@ class SupportGap {
   double get getGapWidth => 0;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  List<double> get getGapWidthList => Iterable.empty();
+  List<double> get getGapWidthList => List.empty();
 }
 
 abstract class PinDecoration {
@@ -62,9 +64,11 @@ abstract class PinDecoration {
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   );
+
+  void notifyChange(String pin);
 
   /// Creates a copy of this pin decoration with the given fields replaced
   /// by the new values.
@@ -77,4 +81,32 @@ abstract class PinDecoration {
     TextStyle hintTextStyle,
     ColorBuilder bgColorBuilder,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PinDecoration &&
+          runtimeType == other.runtimeType &&
+          textStyle == other.textStyle &&
+          obscureStyle == other.obscureStyle &&
+          errorText == other.errorText &&
+          errorTextStyle == other.errorTextStyle &&
+          hintText == other.hintText &&
+          hintTextStyle == other.hintTextStyle &&
+          bgColorBuilder == other.bgColorBuilder;
+
+  @override
+  int get hashCode =>
+      textStyle.hashCode ^
+      obscureStyle.hashCode ^
+      errorText.hashCode ^
+      errorTextStyle.hashCode ^
+      hintText.hashCode ^
+      hintTextStyle.hashCode ^
+      bgColorBuilder.hashCode;
+
+  @override
+  String toString() {
+    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, bgColorBuilder: $bgColorBuilder}';
+  }
 }

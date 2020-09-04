@@ -15,10 +15,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
   final List<double> gapSpaces;
 
   /// The box border color.
-  final Color strokeColor;
-
-  /// The border changed color when user enter pin.
-  final Color enteredColor;
+  final ColorBuilder strokeColorBuilder;
 
   /// The background color of index character
   final ColorBuilder bgColorBuilder;
@@ -30,14 +27,14 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    this.enteredColor,
     this.radius: const Radius.circular(8.0),
     this.strokeWidth: 1.0,
     this.gapSpace: 16.0,
     this.gapSpaces,
-    this.strokeColor: Colors.cyan,
+    @required this.strokeColorBuilder,
     this.bgColorBuilder,
-  }) : super(
+  })  : assert(strokeColorBuilder != null),
+        super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
@@ -67,10 +64,9 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      strokeColor: this.strokeColor,
+      strokeColorBuilder: this.strokeColorBuilder,
       strokeWidth: this.strokeWidth,
       radius: this.radius,
-      enteredColor: this.enteredColor,
       gapSpace: this.gapSpace,
       gapSpaces: this.gapSpaces,
       bgColorBuilder: this.bgColorBuilder,
@@ -78,11 +74,17 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
   }
 
   @override
+  void notifyChange(String pin) {
+    strokeColorBuilder.notifyChange(pin);
+    bgColorBuilder?.notifyChange(pin);
+  }
+
+  @override
   void drawPin(
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -98,7 +100,6 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     }
 
     Paint borderPaint = Paint()
-      ..color = strokeColor
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
@@ -118,24 +119,20 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
 
     /// Assign paint if [bgColorBuilder] is not null
     Paint insidePaint;
+    if (bgColorBuilder != null) {
+      insidePaint = Paint()
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true;
+    }
 
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
-      if (i < text.length && enteredColor != null) {
-        borderPaint.color = enteredColor;
-      } else if (errorText != null && errorText.isNotEmpty) {
+      if (errorText != null && errorText.isNotEmpty) {
         /// only draw error-color as border-color or solid-color
         /// if errorText is not null
-        if (bgColorBuilder == null) {
-          borderPaint.color = errorTextStyle.color;
-        } else {
-          insidePaint = Paint()
-            ..color = bgColorBuilder.indexColor(i)
-            ..style = PaintingStyle.fill
-            ..isAntiAlias = true;
-        }
+        borderPaint.color = errorTextStyle.color;
       } else {
-        borderPaint.color = strokeColor;
+        borderPaint.color = strokeColorBuilder.indexColor(i);
       }
       RRect rRect = RRect.fromRectAndRadius(
           Rect.fromLTRB(
@@ -147,7 +144,16 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
           radius);
       canvas.drawRRect(rRect, borderPaint);
       if (insidePaint != null) {
-        canvas.drawRRect(rRect, insidePaint);
+        canvas.drawRRect(
+            RRect.fromRectAndRadius(
+                Rect.fromLTRB(
+                  startX + strokeWidth / 2,
+                  strokeWidth,
+                  startX + singleWidth + strokeWidth / 2,
+                  startY - strokeWidth / 2,
+                ),
+                radius),
+            insidePaint..color = bgColorBuilder.indexColor(i));
       }
       startX += singleWidth +
           strokeWidth * 2 +
@@ -237,8 +243,13 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
           strokeWidth == other.strokeWidth &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
-          strokeColor == other.strokeColor &&
-          enteredColor == other.enteredColor &&
+          strokeColorBuilder == other.strokeColorBuilder &&
+          textStyle == other.textStyle &&
+          obscureStyle == other.obscureStyle &&
+          errorText == other.errorText &&
+          errorTextStyle == other.errorTextStyle &&
+          hintText == other.hintText &&
+          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
@@ -247,12 +258,17 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       strokeWidth.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
-      strokeColor.hashCode ^
-      enteredColor.hashCode ^
+      strokeColorBuilder.hashCode ^
+      textStyle.hashCode ^
+      obscureStyle.hashCode ^
+      errorText.hashCode ^
+      errorTextStyle.hashCode ^
+      hintText.hashCode ^
+      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, enteredColor: $enteredColor, solidColorDelegate: $bgColorBuilder}';
+    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColorBuilder, solidColorDelegate: $bgColorBuilder}';
   }
 }

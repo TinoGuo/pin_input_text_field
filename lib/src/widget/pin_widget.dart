@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:pin_input_text_field/src/decoration/pin_decoration.dart';
 import 'package:pin_input_text_field/src/util/utils.dart';
 
 const _kDefaultPinLength = 6;
+const _kDefaultDecoration = const BoxLooseDecoration(
+    strokeColorBuilder: FixedColorBuilder(Colors.cyan));
 
 class PinInputTextField extends StatefulWidget {
   /// The max length of pin.
@@ -56,7 +59,7 @@ class PinInputTextField extends StatefulWidget {
     Key key,
     this.pinLength: _kDefaultPinLength,
     this.onSubmit,
-    this.decoration: const BoxLooseDecoration(),
+    this.decoration: _kDefaultDecoration,
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
     this.controller,
@@ -120,7 +123,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       _text = _effectiveController.text;
     }
 
-    widget.decoration.bgColorBuilder?.notifyChange(_text.length);
+    widget.decoration.notifyChange(_text);
   }
 
   @override
@@ -175,6 +178,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
             TextSelection.collapsed(offset: _text.runes.length);
       });
     }
+
+    widget.decoration.notifyChange(_text);
   }
 
   @override
@@ -288,7 +293,7 @@ class PinInputTextFormField extends FormField<String> {
     String initialValue,
     this.pinLength = _kDefaultPinLength,
     ValueChanged<String> onSubmit,
-    PinDecoration decoration = const BoxLooseDecoration(),
+    PinDecoration decoration = _kDefaultDecoration,
     List<TextInputFormatter> inputFormatter,
     TextInputType keyboardType = TextInputType.phone,
     FocusNode focusNode,
@@ -489,11 +494,29 @@ class _PinPaint extends CustomPainter {
         );
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) =>
-      !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
+  bool shouldRepaint(CustomPainter oldDelegate) => oldDelegate != this;
 
   @override
   void paint(Canvas canvas, Size size) {
     decoration.drawPin(canvas, size, text, pinLength, themeData);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _PinPaint &&
+          runtimeType == other.runtimeType &&
+          text == other.text &&
+          pinLength == other.pinLength &&
+          type == other.type &&
+          decoration == other.decoration &&
+          themeData == other.themeData;
+
+  @override
+  int get hashCode =>
+      text.hashCode ^
+      pinLength.hashCode ^
+      type.hashCode ^
+      decoration.hashCode ^
+      themeData.hashCode;
 }

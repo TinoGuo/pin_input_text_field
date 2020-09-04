@@ -63,11 +63,16 @@ class BoxTightDecoration extends PinDecoration {
   }
 
   @override
+  void notifyChange(String pin) {
+    bgColorBuilder?.notifyChange(pin);
+  }
+
+  @override
   void drawPin(
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -222,6 +227,12 @@ class BoxTightDecoration extends PinDecoration {
           strokeWidth == other.strokeWidth &&
           radius == other.radius &&
           strokeColor == other.strokeColor &&
+          textStyle == other.textStyle &&
+          obscureStyle == other.obscureStyle &&
+          errorText == other.errorText &&
+          errorTextStyle == other.errorTextStyle &&
+          hintText == other.hintText &&
+          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
@@ -229,6 +240,12 @@ class BoxTightDecoration extends PinDecoration {
       strokeWidth.hashCode ^
       radius.hashCode ^
       strokeColor.hashCode ^
+      textStyle.hashCode ^
+      obscureStyle.hashCode ^
+      errorText.hashCode ^
+      errorTextStyle.hashCode ^
+      hintText.hashCode ^
+      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override

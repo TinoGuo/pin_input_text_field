@@ -7,7 +7,7 @@ abstract class ColorBuilder {
   // query the index of color
   Color indexColor(int index);
 
-  void notifyChange(int enteredLength) {}
+  void notifyChange(String enteredPin) {}
 }
 
 // Provide fixed color list to query, it would throw [RangeError] if index out of bound.
@@ -44,7 +44,7 @@ class EnteredColorBuilder extends ColorBuilder {
   }
 
   @override
-  void notifyChange(int enteredLength) {
-    maxIndex = enteredLength;
+  void notifyChange(String enteredPin) {
+    maxIndex = enteredPin.length;
   }
 }

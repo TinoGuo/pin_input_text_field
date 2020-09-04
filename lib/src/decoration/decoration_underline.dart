@@ -9,13 +9,10 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   final List<double> gapSpaces;
 
   /// The color of the underline.
-  final Color color;
+  final ColorBuilder colorBuilder;
 
   /// The height of the underline.
   final double lineHeight;
-
-  /// The underline changed color when user enter pin.
-  final Color enteredColor;
 
   /// The background color of index character
   final ColorBuilder bgColorBuilder;
@@ -27,13 +24,13 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    this.enteredColor,
     this.gapSpace: 16.0,
     this.gapSpaces,
-    this.color: Colors.cyan,
+    @required this.colorBuilder,
     this.lineHeight: 2.0,
     this.bgColorBuilder,
-  }) : super(
+  })  : assert(colorBuilder != null),
+        super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
@@ -63,8 +60,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      enteredColor: this.enteredColor,
-      color: this.color,
+      colorBuilder: this.colorBuilder,
       gapSpace: this.gapSpace,
       lineHeight: this.lineHeight,
       gapSpaces: this.gapSpaces,
@@ -73,11 +69,17 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   }
 
   @override
+  void notifyChange(String pin) {
+    colorBuilder.notifyChange(pin);
+    bgColorBuilder?.notifyChange(pin);
+  }
+
+  @override
   void drawPin(
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -93,7 +95,6 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     }
 
     Paint underlinePaint = Paint()
-      ..color = color
       ..strokeWidth = lineHeight
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
@@ -119,13 +120,11 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     double singleWidth = (size.width - gapTotalLength) / pinLength;
 
     for (int i = 0; i < pinLength; i++) {
-      if (i < text.length && enteredColor != null) {
-        underlinePaint.color = enteredColor;
-      } else if (errorText != null && errorText.isNotEmpty) {
+      if (errorText != null && errorText.isNotEmpty) {
         /// only draw error-color as underline-color if errorText is not null
         underlinePaint.color = errorTextStyle.color;
       } else {
-        underlinePaint.color = color;
+        underlinePaint.color = colorBuilder.indexColor(i);
       }
       canvas.drawLine(Offset(startX, startY),
           Offset(startX + singleWidth, startY), underlinePaint);
@@ -211,26 +210,37 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UnderlineDecoration &&
+      super == other &&
+          other is UnderlineDecoration &&
           runtimeType == other.runtimeType &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
-          color == other.color &&
+          colorBuilder == other.colorBuilder &&
           lineHeight == other.lineHeight &&
-          enteredColor == other.enteredColor &&
+          textStyle == other.textStyle &&
+          obscureStyle == other.obscureStyle &&
+          errorText == other.errorText &&
+          errorTextStyle == other.errorTextStyle &&
+          hintText == other.hintText &&
+          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
-      color.hashCode ^
+      colorBuilder.hashCode ^
       lineHeight.hashCode ^
-      enteredColor.hashCode ^
+      textStyle.hashCode ^
+      obscureStyle.hashCode ^
+      errorText.hashCode ^
+      errorTextStyle.hashCode ^
+      hintText.hashCode ^
+      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $color, lineHeight: $lineHeight, enteredColor: $enteredColor, solidColorDelegate: $bgColorBuilder}';
+    return 'UnderlineDecoration{super: ${super.toString()}, gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $colorBuilder, lineHeight: $lineHeight, solidColorDelegate: $bgColorBuilder}';
   }
 }
