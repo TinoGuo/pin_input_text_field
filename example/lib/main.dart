@@ -162,10 +162,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.circle:
         setState(() {
           _pinDecoration = CirclePinDecoration(
-            enteredColor: Colors.green,
             bgColorBuilder: _solidEnable ? _solidColor : null,
-            strokeColor: Colors.black,
-            strokeWidth: 1,
+            strokeColorBuilder:
+                PinListenColorBuilder(Colors.cyan, Colors.green),
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
               obscureText: '🤪',

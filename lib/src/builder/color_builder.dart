@@ -1,13 +1,10 @@
 import 'dart:ui';
 
+import 'package:pin_input_text_field/src/builder/property_builder.dart';
+
 /// This class is abstract for query index of color.
-abstract class ColorBuilder {
+abstract class ColorBuilder extends PropertyIndexBuilder<Color> {
   const ColorBuilder();
-
-  // query the index of color
-  Color indexColor(int index);
-
-  void notifyChange(String enteredPin) {}
 }
 
 // Provide fixed color list to query, it would throw [RangeError] if index out of bound.
@@ -17,7 +14,7 @@ class FixedColorListBuilder extends ColorBuilder {
   const FixedColorListBuilder(this.colorList);
 
   @override
-  Color indexColor(int index) => colorList[index];
+  Color indexProperty(int index) => colorList[index];
 
   @override
   bool operator ==(Object other) =>
@@ -37,7 +34,7 @@ class FixedColorBuilder extends ColorBuilder {
   const FixedColorBuilder(this.color);
 
   @override
-  Color indexColor(int index) => color;
+  Color indexProperty(int index) => color;
 
   @override
   bool operator ==(Object other) =>
@@ -59,7 +56,7 @@ class PinListenColorBuilder extends ColorBuilder {
   PinListenColorBuilder(this.enteredColor, this.notEnteredColor);
 
   @override
-  Color indexColor(int index) {
+  Color indexProperty(int index) {
     return index >= maxIndex ? notEnteredColor : enteredColor;
   }
 

@@ -178,6 +178,9 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
             TextSelection.collapsed(offset: _text.runes.length);
       });
     }
+
+    // make sure the the first time the decoration would take effective
+    widget.decoration.notifyChange(_text);
   }
 
   @override

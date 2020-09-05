@@ -132,7 +132,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
         /// if errorText is not null
         borderPaint.color = errorTextStyle.color;
       } else {
-        borderPaint.color = strokeColorBuilder.indexColor(i);
+        borderPaint.color = strokeColorBuilder.indexProperty(i);
       }
       RRect rRect = RRect.fromRectAndRadius(
           Rect.fromLTRB(
@@ -153,7 +153,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
                   startY - strokeWidth / 2,
                 ),
                 getInnerRadius(radius, strokeWidth)),
-            insidePaint..color = bgColorBuilder.indexColor(i));
+            insidePaint..color = bgColorBuilder.indexProperty(i));
       }
       startX += singleWidth +
           strokeWidth * 2 +

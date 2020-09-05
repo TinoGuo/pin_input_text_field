@@ -132,7 +132,7 @@ class BoxTightDecoration extends PinDecoration {
             bottomRight: corners[2],
             bottomLeft: corners[3],
           ),
-          insidePaint..color = bgColorBuilder.indexColor(i),
+          insidePaint..color = bgColorBuilder.indexProperty(i),
         );
       }
       if (i == 0) continue;

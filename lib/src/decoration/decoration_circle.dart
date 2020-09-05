@@ -11,10 +11,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
   final List<double> gapSpaces;
 
   /// The box border color.
-  final Color strokeColor;
-
-  /// The border changed color when user enter pin.
-  final Color enteredColor;
+  final ColorBuilder strokeColorBuilder;
 
   // The background color of index character
   final ColorBuilder bgColorBuilder;
@@ -28,11 +25,11 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     TextStyle hintTextStyle,
     this.gapSpace: 16,
     this.gapSpaces,
-    this.strokeColor: Colors.cyan,
+    @required this.strokeColorBuilder,
     this.strokeWidth: 1,
-    this.enteredColor,
     this.bgColorBuilder,
-  }) : super(
+  })  : assert(strokeColorBuilder != null),
+        super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
@@ -59,9 +56,8 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      strokeColor: this.strokeColor,
+      strokeColorBuilder: this.strokeColorBuilder,
       strokeWidth: this.strokeWidth,
-      enteredColor: this.enteredColor,
       gapSpace: this.gapSpace,
       gapSpaces: this.gapSpaces,
       bgColorBuilder: this.bgColorBuilder,
@@ -73,6 +69,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
 
   @override
   void notifyChange(String pin) {
+    strokeColorBuilder.notifyChange(pin);
     bgColorBuilder?.notifyChange(pin);
   }
 
@@ -97,7 +94,6 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     }
 
     Paint borderPaint = Paint()
-      ..color = strokeColor
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
@@ -138,14 +134,12 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
 
     /// Draw the each shape of pin.
     for (int i = 0; i < pinLength; i++) {
-      if (i < text.length && enteredColor != null) {
-        borderPaint.color = enteredColor;
-      } else if (errorText != null && errorText.isNotEmpty) {
+      if (errorText != null && errorText.isNotEmpty) {
         /// only draw error-color as border-color or solid-color
         /// if errorText is not null
         borderPaint.color = errorTextStyle.color;
       } else {
-        borderPaint.color = strokeColor;
+        borderPaint.color = strokeColorBuilder.indexProperty(i);
       }
       centerPoints[i] = startX + radius;
       canvas.drawCircle(
@@ -154,7 +148,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
         borderPaint,
       );
       if (insidePaint != null) {
-        insidePaint..color = bgColorBuilder.indexColor(i);
+        insidePaint..color = bgColorBuilder.indexProperty(i);
         canvas.drawCircle(
           Offset(startX + radius, startY),
           radius - strokeWidth / 2,
@@ -240,8 +234,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
           strokeWidth == other.strokeWidth &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
-          strokeColor == other.strokeColor &&
-          enteredColor == other.enteredColor &&
+          strokeColorBuilder == other.strokeColorBuilder &&
           textStyle == other.textStyle &&
           obscureStyle == other.obscureStyle &&
           errorText == other.errorText &&
@@ -255,8 +248,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       strokeWidth.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
-      strokeColor.hashCode ^
-      enteredColor.hashCode ^
+      strokeColorBuilder.hashCode ^
       textStyle.hashCode ^
       obscureStyle.hashCode ^
       errorText.hashCode ^
@@ -267,6 +259,6 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
 
   @override
   String toString() {
-    return 'CirclePinDecoration{strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColor, enteredColor: $enteredColor, bgColorBuilder: $bgColorBuilder}';
+    return 'CirclePinDecoration{strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColorBuilder, bgColorBuilder: $bgColorBuilder}';
   }
 }

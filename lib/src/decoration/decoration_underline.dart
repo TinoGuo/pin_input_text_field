@@ -124,14 +124,14 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
         /// only draw error-color as underline-color if errorText is not null
         underlinePaint.color = errorTextStyle.color;
       } else {
-        underlinePaint.color = colorBuilder.indexColor(i);
+        underlinePaint.color = colorBuilder.indexProperty(i);
       }
       canvas.drawLine(Offset(startX, startY),
           Offset(startX + singleWidth, startY), underlinePaint);
       if (insidePaint != null) {
         canvas.drawRect(
             Rect.fromLTWH(startX, 0, singleWidth, startY - lineHeight / 2),
-            insidePaint..color = bgColorBuilder.indexColor(i));
+            insidePaint..color = bgColorBuilder.indexProperty(i));
       }
       startX += singleWidth + (i == pinLength - 1 ? 0 : actualGapSpaces[i]);
     }
