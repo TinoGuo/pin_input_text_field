@@ -237,38 +237,28 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BoxLooseDecoration &&
+      super == other &&
+          other is BoxLooseDecoration &&
           runtimeType == other.runtimeType &&
           radius == other.radius &&
           strokeWidth == other.strokeWidth &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
           strokeColorBuilder == other.strokeColorBuilder &&
-          textStyle == other.textStyle &&
-          obscureStyle == other.obscureStyle &&
-          errorText == other.errorText &&
-          errorTextStyle == other.errorTextStyle &&
-          hintText == other.hintText &&
-          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
+      super.hashCode ^
       radius.hashCode ^
       strokeWidth.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
       strokeColorBuilder.hashCode ^
-      textStyle.hashCode ^
-      obscureStyle.hashCode ^
-      errorText.hashCode ^
-      errorTextStyle.hashCode ^
-      hintText.hashCode ^
-      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColorBuilder, solidColorDelegate: $bgColorBuilder}';
+    return 'BoxLooseDecoration{radius: $radius, strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColorBuilder: $strokeColorBuilder, bgColorBuilder: $bgColorBuilder}';
   }
 }

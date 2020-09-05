@@ -217,30 +217,19 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
           gapSpaces == other.gapSpaces &&
           colorBuilder == other.colorBuilder &&
           lineHeight == other.lineHeight &&
-          textStyle == other.textStyle &&
-          obscureStyle == other.obscureStyle &&
-          errorText == other.errorText &&
-          errorTextStyle == other.errorTextStyle &&
-          hintText == other.hintText &&
-          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
+      super.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
       colorBuilder.hashCode ^
       lineHeight.hashCode ^
-      textStyle.hashCode ^
-      obscureStyle.hashCode ^
-      errorText.hashCode ^
-      errorTextStyle.hashCode ^
-      hintText.hashCode ^
-      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'UnderlineDecoration{super: ${super.toString()}, gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $colorBuilder, lineHeight: $lineHeight, solidColorDelegate: $bgColorBuilder}';
+    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, colorBuilder: $colorBuilder, lineHeight: $lineHeight, bgColorBuilder: $bgColorBuilder}';
   }
 }

@@ -224,34 +224,24 @@ class BoxTightDecoration extends PinDecoration {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BoxTightDecoration &&
+      super == other &&
+          other is BoxTightDecoration &&
           runtimeType == other.runtimeType &&
           strokeWidth == other.strokeWidth &&
           radius == other.radius &&
           strokeColor == other.strokeColor &&
-          textStyle == other.textStyle &&
-          obscureStyle == other.obscureStyle &&
-          errorText == other.errorText &&
-          errorTextStyle == other.errorTextStyle &&
-          hintText == other.hintText &&
-          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
+      super.hashCode ^
       strokeWidth.hashCode ^
       radius.hashCode ^
       strokeColor.hashCode ^
-      textStyle.hashCode ^
-      obscureStyle.hashCode ^
-      errorText.hashCode ^
-      errorTextStyle.hashCode ^
-      hintText.hashCode ^
-      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'BoxTightDecoration{strokeWidth: $strokeWidth, radius: $radius, strokeColor: $strokeColor, solidColorDelegate: $bgColorBuilder}';
+    return 'BoxTightDecoration{strokeWidth: $strokeWidth, radius: $radius, strokeColor: $strokeColor, bgColorBuilder: $bgColorBuilder}';
   }
 }

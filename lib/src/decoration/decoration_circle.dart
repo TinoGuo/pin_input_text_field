@@ -229,36 +229,26 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CirclePinDecoration &&
+      super == other &&
+          other is CirclePinDecoration &&
           runtimeType == other.runtimeType &&
           strokeWidth == other.strokeWidth &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
           strokeColorBuilder == other.strokeColorBuilder &&
-          textStyle == other.textStyle &&
-          obscureStyle == other.obscureStyle &&
-          errorText == other.errorText &&
-          errorTextStyle == other.errorTextStyle &&
-          hintText == other.hintText &&
-          hintTextStyle == other.hintTextStyle &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
+      super.hashCode ^
       strokeWidth.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
       strokeColorBuilder.hashCode ^
-      textStyle.hashCode ^
-      obscureStyle.hashCode ^
-      errorText.hashCode ^
-      errorTextStyle.hashCode ^
-      hintText.hashCode ^
-      hintTextStyle.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'CirclePinDecoration{strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColor: $strokeColorBuilder, bgColorBuilder: $bgColorBuilder}';
+    return 'CirclePinDecoration{strokeWidth: $strokeWidth, gapSpace: $gapSpace, gapSpaces: $gapSpaces, strokeColorBuilder: $strokeColorBuilder, bgColorBuilder: $bgColorBuilder}';
   }
 }
