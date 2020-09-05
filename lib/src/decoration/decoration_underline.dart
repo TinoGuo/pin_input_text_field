@@ -8,13 +8,13 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
   final List<double> gapSpaces;
 
-  /// The color of the underline.
+  /// The color of the underline of index character.
   final ColorBuilder colorBuilder;
 
   /// The height of the underline.
   final double lineHeight;
 
-  /// The background color of index character
+  /// The background color of index character.
   final ColorBuilder bgColorBuilder;
 
   const UnderlineDecoration({

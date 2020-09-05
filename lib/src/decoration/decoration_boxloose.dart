@@ -14,10 +14,10 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
   final List<double> gapSpaces;
 
-  /// The box border color.
+  /// The box border color of index character.
   final ColorBuilder strokeColorBuilder;
 
-  /// The background color of index character
+  /// The background color of index character.
   final ColorBuilder bgColorBuilder;
 
   const BoxLooseDecoration({
