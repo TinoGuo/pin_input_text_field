@@ -1,4 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
+import 'package:pin_input_text_field/src/builder/color_builder.dart';
+import 'package:pin_input_text_field/src/util/radius_util.dart';
 
 import '../style/obscure.dart';
 import '../util/utils.dart';
@@ -21,7 +26,7 @@ class SupportGap {
   double get getGapWidth => 0;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  List<double> get getGapWidthList => Iterable.empty();
+  List<double> get getGapWidthList => List.empty();
 }
 
 abstract class PinDecoration {
@@ -41,8 +46,8 @@ abstract class PinDecoration {
 
   final TextStyle hintTextStyle;
 
-  /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  // The background color of index character
+  final ColorBuilder bgColorBuilder;
 
   PinEntryType get pinEntryType;
 
@@ -53,16 +58,18 @@ abstract class PinDecoration {
     this.errorTextStyle,
     this.hintText,
     this.hintTextStyle,
-    this.solidColor,
+    this.bgColorBuilder,
   });
 
   void drawPin(
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   );
+
+  void notifyChange(String pin);
 
   /// Creates a copy of this pin decoration with the given fields replaced
   /// by the new values.
@@ -73,7 +80,7 @@ abstract class PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   });
 
   @override
@@ -87,7 +94,7 @@ abstract class PinDecoration {
           errorTextStyle == other.errorTextStyle &&
           hintText == other.hintText &&
           hintTextStyle == other.hintTextStyle &&
-          solidColor == other.solidColor;
+          bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
@@ -97,10 +104,10 @@ abstract class PinDecoration {
       errorTextStyle.hashCode ^
       hintText.hashCode ^
       hintTextStyle.hashCode ^
-      solidColor.hashCode;
+      bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, solidColor: $solidColor}';
+    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, bgColorBuilder: $bgColorBuilder}';
   }
 }

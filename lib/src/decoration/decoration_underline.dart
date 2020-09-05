@@ -8,17 +8,14 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
   final List<double> gapSpaces;
 
-  /// The color of the underline.
-  final Color color;
+  /// The color of the underline of index character.
+  final ColorBuilder colorBuilder;
 
   /// The height of the underline.
   final double lineHeight;
 
-  /// The underline changed color when user enter pin.
-  final Color enteredColor;
-
-  /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  /// The background color of index character.
+  final ColorBuilder bgColorBuilder;
 
   const UnderlineDecoration({
     TextStyle textStyle,
@@ -27,19 +24,20 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    this.enteredColor,
     this.gapSpace: 16.0,
     this.gapSpaces,
-    this.color: Colors.cyan,
+    @required this.colorBuilder,
     this.lineHeight: 2.0,
-    this.solidColor,
-  }) : super(
+    this.bgColorBuilder,
+  })  : assert(colorBuilder != null),
+        super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
+          bgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -53,7 +51,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   }) {
     return UnderlineDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -62,13 +60,18 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      enteredColor: this.enteredColor,
-      color: this.color,
+      colorBuilder: this.colorBuilder,
       gapSpace: this.gapSpace,
       lineHeight: this.lineHeight,
       gapSpaces: this.gapSpaces,
-      solidColor: this.solidColor,
+      bgColorBuilder: this.bgColorBuilder,
     );
+  }
+
+  @override
+  void notifyChange(String pin) {
+    colorBuilder.notifyChange(pin);
+    bgColorBuilder?.notifyChange(pin);
   }
 
   @override
@@ -76,7 +79,7 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -92,16 +95,14 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     }
 
     Paint underlinePaint = Paint()
-      ..color = color
       ..strokeWidth = lineHeight
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
 
-    /// Assign paint if [solidColor] is not null
+    /// Assign paint if [bgColorBuilder] is not null
     Paint insidePaint;
-    if (solidColor != null) {
+    if (bgColorBuilder != null) {
       insidePaint = Paint()
-        ..color = solidColor
         ..style = PaintingStyle.fill
         ..isAntiAlias = true;
     }
@@ -119,19 +120,18 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
     double singleWidth = (size.width - gapTotalLength) / pinLength;
 
     for (int i = 0; i < pinLength; i++) {
-      if (i < text.length && enteredColor != null) {
-        underlinePaint.color = enteredColor;
-      } else if (errorText != null && errorText.isNotEmpty) {
+      if (errorText != null && errorText.isNotEmpty) {
         /// only draw error-color as underline-color if errorText is not null
         underlinePaint.color = errorTextStyle.color;
       } else {
-        underlinePaint.color = color;
+        underlinePaint.color = colorBuilder.indexProperty(i);
       }
       canvas.drawLine(Offset(startX, startY),
           Offset(startX + singleWidth, startY), underlinePaint);
       if (insidePaint != null) {
         canvas.drawRect(
-            Rect.fromLTWH(startX, 0, singleWidth, startY), insidePaint);
+            Rect.fromLTWH(startX, 0, singleWidth, startY - lineHeight / 2),
+            insidePaint..color = bgColorBuilder.indexProperty(i));
       }
       startX += singleWidth + (i == pinLength - 1 ? 0 : actualGapSpaces[i]);
     }
@@ -215,23 +215,21 @@ class UnderlineDecoration extends PinDecoration implements SupportGap {
           runtimeType == other.runtimeType &&
           gapSpace == other.gapSpace &&
           gapSpaces == other.gapSpaces &&
-          color == other.color &&
+          colorBuilder == other.colorBuilder &&
           lineHeight == other.lineHeight &&
-          enteredColor == other.enteredColor &&
-          solidColor == other.solidColor;
+          bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
       super.hashCode ^
       gapSpace.hashCode ^
       gapSpaces.hashCode ^
-      color.hashCode ^
+      colorBuilder.hashCode ^
       lineHeight.hashCode ^
-      enteredColor.hashCode ^
-      solidColor.hashCode;
+      bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, color: $color, lineHeight: $lineHeight, enteredColor: $enteredColor, solidColor: $solidColor}';
+    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, colorBuilder: $colorBuilder, lineHeight: $lineHeight, bgColorBuilder: $bgColorBuilder}';
   }
 }

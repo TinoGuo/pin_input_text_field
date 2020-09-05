@@ -11,8 +11,8 @@ class BoxTightDecoration extends PinDecoration {
   /// The box border color.
   final Color strokeColor;
 
-  /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  /// The background color of index character
+  final ColorBuilder bgColorBuilder;
 
   const BoxTightDecoration({
     TextStyle textStyle,
@@ -21,10 +21,10 @@ class BoxTightDecoration extends PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    this.solidColor,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
     this.strokeColor: Colors.cyan,
+    this.bgColorBuilder,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -32,7 +32,7 @@ class BoxTightDecoration extends PinDecoration {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
-          solidColor: solidColor,
+          bgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -46,7 +46,7 @@ class BoxTightDecoration extends PinDecoration {
     TextStyle errorTextStyle,
     String hintText,
     TextStyle hintTextStyle,
-    Color solidColor,
+    ColorBuilder bgColorBuilder,
   }) {
     return BoxTightDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -55,11 +55,16 @@ class BoxTightDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      solidColor: this.solidColor,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
       radius: this.radius,
+      bgColorBuilder: this.bgColorBuilder,
     );
+  }
+
+  @override
+  void notifyChange(String pin) {
+    bgColorBuilder?.notifyChange(pin);
   }
 
   @override
@@ -67,7 +72,7 @@ class BoxTightDecoration extends PinDecoration {
     Canvas canvas,
     Size size,
     String text,
-    pinLength,
+    int pinLength,
     ThemeData themeData,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -90,9 +95,8 @@ class BoxTightDecoration extends PinDecoration {
 
     /// Assign paint if [solidColor] is not null
     Paint insidePaint;
-    if (solidColor != null) {
+    if (bgColorBuilder != null) {
       insidePaint = Paint()
-        ..color = solidColor
         ..strokeWidth = strokeWidth
         ..style = PaintingStyle.fill
         ..isAntiAlias = true;
@@ -105,10 +109,6 @@ class BoxTightDecoration extends PinDecoration {
       mainHeight - strokeWidth / 2,
     );
 
-    if (insidePaint != null) {
-      canvas.drawRRect(RRect.fromRectAndRadius(rect, radius), insidePaint);
-    }
-
     /// Draw the whole rect.
     canvas.drawRRect(RRect.fromRectAndRadius(rect, radius), borderPaint);
 
@@ -116,7 +116,26 @@ class BoxTightDecoration extends PinDecoration {
     double singleWidth =
         (size.width - strokeWidth * (pinLength + 1)) / pinLength;
 
-    for (int i = 1; i < pinLength; i++) {
+    for (int i = 0; i < pinLength; i++) {
+      if (insidePaint != null) {
+        var corners = _getCorner(i, pinLength);
+        canvas.drawRRect(
+          RRect.fromRectAndCorners(
+            Rect.fromLTWH(
+              singleWidth * i + strokeWidth * (i + 1),
+              strokeWidth,
+              singleWidth,
+              mainHeight - strokeWidth * 2,
+            ),
+            topLeft: corners[0],
+            topRight: corners[1],
+            bottomRight: corners[2],
+            bottomLeft: corners[3],
+          ),
+          insidePaint..color = bgColorBuilder.indexProperty(i),
+        );
+      }
+      if (i == 0) continue;
       double offsetX = singleWidth +
           strokeWidth * i +
           strokeWidth / 2 +
@@ -190,6 +209,18 @@ class BoxTightDecoration extends PinDecoration {
     }
   }
 
+  List<Radius> _getCorner(int index, int pinLength) {
+    if (index == 0) {
+      var innerRadius = getInnerRadius(radius, strokeWidth);
+      return [innerRadius, Radius.zero, Radius.zero, innerRadius];
+    } else if (index == pinLength - 1) {
+      var innerRadius = getInnerRadius(radius, strokeWidth);
+      return [Radius.zero, innerRadius, innerRadius, Radius.zero];
+    } else {
+      return List.filled(4, Radius.zero);
+    }
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -199,7 +230,7 @@ class BoxTightDecoration extends PinDecoration {
           strokeWidth == other.strokeWidth &&
           radius == other.radius &&
           strokeColor == other.strokeColor &&
-          solidColor == other.solidColor;
+          bgColorBuilder == other.bgColorBuilder;
 
   @override
   int get hashCode =>
@@ -207,10 +238,10 @@ class BoxTightDecoration extends PinDecoration {
       strokeWidth.hashCode ^
       radius.hashCode ^
       strokeColor.hashCode ^
-      solidColor.hashCode;
+      bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'BoxTightDecoration{strokeWidth: $strokeWidth, radius: $radius, strokeColor: $strokeColor, solidColor: $solidColor}';
+    return 'BoxTightDecoration{strokeWidth: $strokeWidth, radius: $radius, strokeColor: $strokeColor, bgColorBuilder: $bgColorBuilder}';
   }
 }

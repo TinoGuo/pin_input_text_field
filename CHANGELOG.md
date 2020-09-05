@@ -1,3 +1,9 @@
+## [3.1.0] - 2020/09/05
+* **Breaking Change, the `color` is renamed to `colorBuilder` as well as enterColor, the `solidColor` is renamed to `bgColorBuilder`
+* New: Support stroke color and background color change when enter new pin
+* Fix: InnerRadius overlap the stroke
+* Fix: Some scenarios not update the paint
+
 ## [3.0.7] - 2020/08/30
 * Fix: All minimize font size is the double.minPositive
 
