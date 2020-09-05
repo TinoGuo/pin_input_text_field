@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
@@ -76,17 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
       GlobalKey<ScaffoldState>(debugLabel: 'home page global key');
 
   /// Decorate the outside of the Pin.
-  PinDecoration _pinDecoration = UnderlineDecoration(
-    hintText: _kDefaultHint,
-    colorBuilder: EnteredColorBuilder(Colors.cyan, Colors.green),
-    bgColorBuilder: EnteredColorBuilder(Colors.amber, Colors.black54),
-  );
+  PinDecoration _pinDecoration;
 
   /// Control whether show the obscureCode.
   bool _obscureEnable = false;
 
   PinEntryType _pinEntryType = PinEntryType.underline;
-  ColorBuilder _solidColor = EnteredColorBuilder(Colors.amber, Colors.black54);
+  ColorBuilder _solidColor =
+      PinListenColorBuilder(Colors.grey, Colors.grey[400]);
   bool _solidEnable = false;
 
   /// Control whether textField is enable.
@@ -109,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint('controller execute. pin:${_pinEditingController.text}');
     });
     super.initState();
+    _selectedMenu(PinEntryType.underline);
   }
 
   @override
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.underline:
         setState(() {
           _pinDecoration = UnderlineDecoration(
-            colorBuilder: EnteredColorBuilder(Colors.cyan, Colors.green),
+            colorBuilder: PinListenColorBuilder(Colors.cyan, Colors.green),
             bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,
@@ -148,8 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.boxLoose:
         setState(() {
           _pinDecoration = BoxLooseDecoration(
-            strokeWidth: 10,
-            strokeColorBuilder: EnteredColorBuilder(Colors.cyan, Colors.green),
+            strokeColorBuilder:
+                PinListenColorBuilder(Colors.cyan, Colors.green),
             bgColorBuilder: _solidEnable ? _solidColor : null,
             obscureStyle: ObscureStyle(
               isTextObscure: _obscureEnable,

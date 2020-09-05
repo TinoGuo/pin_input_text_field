@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:pin_input_text_field/src/builder/color_builder.dart';
+import 'package:pin_input_text_field/src/util/radius_util.dart';
 
 import '../style/obscure.dart';
 import '../util/utils.dart';

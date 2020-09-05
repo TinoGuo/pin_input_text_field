@@ -18,6 +18,16 @@ class FixedColorListBuilder extends ColorBuilder {
 
   @override
   Color indexColor(int index) => colorList[index];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FixedColorListBuilder &&
+          runtimeType == other.runtimeType &&
+          colorList == other.colorList;
+
+  @override
+  int get hashCode => colorList.hashCode;
 }
 
 // Provide fixed color for all index.
@@ -28,15 +38,25 @@ class FixedColorBuilder extends ColorBuilder {
 
   @override
   Color indexColor(int index) => color;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FixedColorBuilder &&
+          runtimeType == other.runtimeType &&
+          color == other.color;
+
+  @override
+  int get hashCode => color.hashCode;
 }
 
 // Provide the basic way to differ entered color and not entered color.
-class EnteredColorBuilder extends ColorBuilder {
+class PinListenColorBuilder extends ColorBuilder {
   final Color enteredColor;
   final Color notEnteredColor;
   var maxIndex = 0;
 
-  EnteredColorBuilder(this.enteredColor, this.notEnteredColor);
+  PinListenColorBuilder(this.enteredColor, this.notEnteredColor);
 
   @override
   Color indexColor(int index) {
@@ -47,4 +67,17 @@ class EnteredColorBuilder extends ColorBuilder {
   void notifyChange(String enteredPin) {
     maxIndex = enteredPin.length;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PinListenColorBuilder &&
+          runtimeType == other.runtimeType &&
+          enteredColor == other.enteredColor &&
+          notEnteredColor == other.notEnteredColor &&
+          maxIndex == other.maxIndex;
+
+  @override
+  int get hashCode =>
+      enteredColor.hashCode ^ notEnteredColor.hashCode ^ maxIndex.hashCode;
 }

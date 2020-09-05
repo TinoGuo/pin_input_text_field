@@ -118,7 +118,7 @@ class BoxTightDecoration extends PinDecoration {
 
     for (int i = 0; i < pinLength; i++) {
       if (insidePaint != null) {
-        var corners = getCorner(i, pinLength);
+        var corners = _getCorner(i, pinLength);
         canvas.drawRRect(
           RRect.fromRectAndCorners(
             Rect.fromLTWH(
@@ -209,11 +209,13 @@ class BoxTightDecoration extends PinDecoration {
     }
   }
 
-  List<Radius> getCorner(int index, int pinLength) {
+  List<Radius> _getCorner(int index, int pinLength) {
     if (index == 0) {
-      return [radius, Radius.zero, Radius.zero, radius];
+      var innerRadius = getInnerRadius(radius, strokeWidth);
+      return [innerRadius, Radius.zero, Radius.zero, innerRadius];
     } else if (index == pinLength - 1) {
-      return [Radius.zero, radius, radius, Radius.zero];
+      var innerRadius = getInnerRadius(radius, strokeWidth);
+      return [Radius.zero, innerRadius, innerRadius, Radius.zero];
     } else {
       return List.filled(4, Radius.zero);
     }

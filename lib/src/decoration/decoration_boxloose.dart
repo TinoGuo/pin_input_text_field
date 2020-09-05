@@ -152,7 +152,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
                   startX + singleWidth + strokeWidth / 2,
                   startY - strokeWidth / 2,
                 ),
-                radius),
+                getInnerRadius(radius, strokeWidth)),
             insidePaint..color = bgColorBuilder.indexColor(i));
       }
       startX += singleWidth +
