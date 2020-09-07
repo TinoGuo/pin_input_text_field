@@ -26,7 +26,7 @@ class SupportGap {
   double get getGapWidth => 0;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  List<double> get getGapWidthList => List.empty();
+  List<double> get getGapWidthList => const [];
 }
 
 abstract class PinDecoration {
