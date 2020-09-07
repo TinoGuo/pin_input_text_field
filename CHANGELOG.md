@@ -1,5 +1,8 @@
+## [3.1.1] - 2020/09/08
+* Fix: [#46](https://github.com/TinoGuo/pin_input_text_field/issues/46)
+
 ## [3.1.0] - 2020/09/05
-* **Breaking Change, the `color` is renamed to `colorBuilder` as well as enterColor, the `solidColor` is renamed to `bgColorBuilder`
+* **Breaking Change, the `color` is renamed to `colorBuilder` as well as enterColor, the `solidColor` is renamed to `bgColorBuilder`**
 * New: Support stroke color and background color change when enter new pin
 * Fix: InnerRadius overlap the stroke
 * Fix: Some scenarios not update the paint
