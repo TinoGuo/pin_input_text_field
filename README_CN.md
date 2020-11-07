@@ -7,7 +7,7 @@
 
 PinInputTextField是一个Flutter平台上用来展示不同样式的验证码，简单好用！支持所有[flutter](https://github.com/flutter/flutter)支持的平台
 
-## 特点
+## 特点 🌟
 * 允许你最大化自由的定制任意Shape!
 * 内置4种常用验证码风格
 * 支持隐藏明文
@@ -16,7 +16,7 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 * 支持所有TextField的属性
 * 支持Flutter web
 
-## 例子🌰
+## 例子 🌰
 
 现在你可以通过浏览器直接访问这个[网址](https://tinoguo.github.io/pin_input_text_field/)来预览效果，而不需要任何安装。
 
@@ -40,7 +40,7 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 
 ![](gifs/circle.gif)
 
-## 安装
+## 安装 ✍️
 从[pub](https://pub.dartlang.org/packages/pin_input_text_field)安装最新版.
 
 ## 使用
@@ -126,23 +126,13 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## 贡献者
-
-这个项目的存在要感谢所有贡献者
-
-[rajajain08](https://github.com/rajajain08)
-
-[alyyasser](https://github.com/alyyasser)
-
-[daniel-v](https://github.com/daniel-v)
-
-## 2.0.0版本注意事项
+## 2.0.0版本注意事项 ⚠️
 如果你在程序中手动设text，请把selection也同时赋值，参考[这个](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
 
 不能在里面设置选中点，如果这么做会导致iOS设备死循环.
 
 **如果你有什么好的建议，请提PR，谢谢.**
 
-## 已知问题
+## 已知问题 🥶
 
 目前`PinEditingController`的Listener会在手动设置text值时执行多次，可以在应用层的代码上过滤下
