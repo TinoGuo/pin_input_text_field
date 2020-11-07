@@ -353,6 +353,8 @@ class PinInputTextFormField extends FormField<String> {
               }
               return result;
             },
+            // FIXME: remove deprecated field in near future
+            // ignore: deprecated_member_use
             autovalidate: autovalidate,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
