@@ -55,6 +55,9 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s toolbarOptions
   final ToolbarOptions toolbarOptions;
 
+  /// Same as [TextField]'s autofillHints
+  final Iterable<String> autofillHints;
+
   PinInputTextField({
     Key key,
     this.pinLength: _kDefaultPinLength,
@@ -72,6 +75,7 @@ class PinInputTextField extends StatefulWidget {
     this.autocorrect = false,
     this.enableInteractiveSelection = false,
     this.toolbarOptions,
+    this.autofillHints,
   })  :
 
         /// pinLength must larger than 0.
@@ -208,6 +212,9 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         /// Hide the Cursor
         showCursor: false,
 
+        /// Autofill hints for the underlying platform.
+        autofillHints: widget.autofillHints,
+
         /// Whether to correct the user input.
         autocorrect: widget.autocorrect,
 
@@ -303,14 +310,17 @@ class PinInputTextFormField extends FormField<String> {
     bool enabled = true,
     FormFieldSetter<String> onSaved,
     FormFieldValidator<String> validator,
-    bool autovalidate = false,
+    @Deprecated("'autovalidate' is deprecated and shouldn't be used, use 'autovalidateMode' instead")
+        bool autovalidate = false,
+    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
     ValueChanged<String> onChanged,
     TextCapitalization textCapitalization,
     bool autocorrect = false,
     bool enableInteractiveSelection = false,
     ToolbarOptions toolbarOptions,
+    Iterable<String> autofillHints,
   })  : assert(initialValue == null || controller == null),
-        assert(autovalidate != null),
+        assert(autovalidateMode != null),
         assert(pinLength != null && pinLength > 0),
 
         /// pinLength must larger than 0.
@@ -354,8 +364,9 @@ class PinInputTextFormField extends FormField<String> {
               return result;
             },
             // FIXME: remove deprecated field in near future
-            // ignore: deprecated_member_use
+            // ignore: deprecated_member_use, deprecated_member_use_from_same_package
             autovalidate: autovalidate,
+            autovalidateMode: autovalidateMode,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
               final _PinInputTextFormFieldState state = field;
@@ -375,6 +386,7 @@ class PinInputTextFormField extends FormField<String> {
                 enableInteractiveSelection: enableInteractiveSelection,
                 autocorrect: autocorrect,
                 toolbarOptions: toolbarOptions,
+                autofillHints: autofillHints,
               );
             });
 
