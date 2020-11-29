@@ -68,7 +68,7 @@ jobs:
     # build example
     - name: build android example
       working-directory: ./example
-      run: flutter build appbundle
+      run: flutter build apk
     - if: matrix.os == 'macos-latest'
       name: build ios example
       working-directory: ./example
