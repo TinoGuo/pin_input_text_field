@@ -6,26 +6,74 @@ on:
       - master
   pull_request:
 
-jobs: 
-  build-and-test: 
-    runs-on: ubuntu-latest
+jobs:
+  # Set up Flutter for all other tasks.
+  setup:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
+          - os: macos-latest
+            flutter_path: /Users/runner/hostedtoolcache/flutter
+      fail-fast: false
+
     steps:
-    - uses: actions/checkout@v1 
+      - uses: actions/checkout@v1
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ matrix.flutter_path }}
+          key: ${{ runner.os }}-flutter
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta'
+
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    needs: setup
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
+          - os: macos-latest
+            flutter_path: /Users/runner/hostedtoolcache/flutter
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
+    - name: Cache Flutter
+      id: cache-flutter
+      uses: actions/cache@v2
+      with:
+        path: ${{ matrix.flutter_path }}
+        key: ${{ runner.os }}-flutter
     - uses: subosito/flutter-action@v1
       with:
-        channel: 'beta' 
-    - run: flutter pub get
-    # Analyze our Dart code
-    - run: flutter analyze
-    # Run our tests
-    - run: flutter test
-    - name: build example
-      working-directory: ./example
+        channel: 'beta'
+    - name: flutter hotbake
       run: |
-        flutter build aot
+        flutter pub get
         flutter analyze
         flutter test
+    - name: build platform directory
+      working-directory: ./example
+      run: flutter create .
+    # build example
+    - name: build android example
+      working-directory: ./example
+      run: flutter build appbundle
+    - if: matrix.os == 'macos-latest'
+      name: build ios example
+      working-directory: ./example
+      run: flutter build ios --release --no-codesign
 
