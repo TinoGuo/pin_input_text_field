@@ -60,16 +60,11 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: 'beta'
-    - name: enable exp platform
+    - name: flutter hotbake
       run: |
-        flutter config --enable-windows-desktop
-        flutter config --enable-macos-desktop
-        flutter config --enable-linux-desktop
-    - run: flutter pub get
-    # Run dart analyze
-    - run: flutter analyze
-    # Run tests
-    - run: flutter test
+        flutter pub get
+        flutter analyze
+        flutter test
     - name: build platform directory
       working-directory: ./example
       run: flutter create .
@@ -81,8 +76,4 @@ jobs:
       name: build ios example
       working-directory: ./example
       run: flutter build ios --release --no-codesign
-    - if: matrix.os == 'ubuntu-latest'
-      name: build linux example
-      working-directory: ./example
-      run: flutter build linux
 
