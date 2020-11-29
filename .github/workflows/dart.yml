@@ -65,8 +65,6 @@ jobs:
     - run: flutter analyze
     # Run tests
     - run: flutter test
-    - name: build android artifact
-      run: flutter build aar --no-profile --no-release
     # build example
     - name: build android example
       working-directory: ./example
