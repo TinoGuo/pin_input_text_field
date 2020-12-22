@@ -130,7 +130,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     double startX = strokeWidth / 2;
     double startY = mainHeight / 2;
 
-    List<double> centerPoints = List(pinLength);
+    List<double> centerPoints = List.filled(pinLength, 0.0);
 
     /// Draw the each shape of pin.
     for (int i = 0; i < pinLength; i++) {
