@@ -1,3 +1,6 @@
+## [3.1.2] - 2020/12/22
+* `autofillHints` Support #51
+
 ## [3.1.1] - 2020/09/08
 * Fix: [#46](https://github.com/TinoGuo/pin_input_text_field/issues/46)
 
