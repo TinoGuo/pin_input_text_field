@@ -1,6 +1,8 @@
 part of 'pin_decoration.dart';
 
-class CirclePinDecoration extends PinDecoration implements SupportGap {
+class CirclePinDecoration extends PinDecoration
+    with CursorPaint
+    implements SupportGap {
   /// The box border width.
   final double strokeWidth;
 
@@ -79,7 +81,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
     Size size,
     String text,
     int pinLength,
-    ThemeData themeData,
+    Cursor cursor,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -164,6 +166,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
 
     /// Determine whether display obscureText.
     bool obscureOn = obscureStyle?.isTextObscure == true;
+    TextPainter textPainter;
 
     text.runes.forEach((rune) {
       String code;
@@ -172,7 +175,7 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       } else {
         code = String.fromCharCode(rune);
       }
-      TextPainter textPainter = TextPainter(
+      textPainter = TextPainter(
         text: TextSpan(
           style: textStyle,
           text: code,
@@ -197,10 +200,22 @@ class CirclePinDecoration extends PinDecoration implements SupportGap {
       index++;
     });
 
-    if (hintText != null) {
+    if (cursor.enabled && index < pinLength) {
+      drawCursor(
+        canvas,
+        size,
+        Rect.fromLTWH(
+          radius * index * 2 + actualGapSpaces.take(index).sumList(),
+          0,
+          radius * 2,
+          size.height,
+        ),
+        cursor,
+      );
+    } else if (hintText != null) {
       hintText.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
-        TextPainter textPainter = TextPainter(
+        textPainter = TextPainter(
           text: TextSpan(
             style: hintTextStyle,
             text: code,

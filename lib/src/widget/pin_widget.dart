@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
+import 'package:pin_input_text_field/src/cursor/pin_cursor.dart';
 import 'package:pin_input_text_field/src/decoration/pin_decoration.dart';
 import 'package:pin_input_text_field/src/util/utils.dart';
 
@@ -58,11 +62,13 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s autofillHints
   final Iterable<String> autofillHints;
 
+  final Cursor cursor;
+
   PinInputTextField({
     Key key,
     this.pinLength: _kDefaultPinLength,
     this.onSubmit,
-    this.decoration: _kDefaultDecoration,
+    this.decoration = _kDefaultDecoration,
     List<TextInputFormatter> inputFormatter,
     this.keyboardType: TextInputType.phone,
     this.controller,
@@ -76,6 +82,7 @@ class PinInputTextField extends StatefulWidget {
     this.enableInteractiveSelection = false,
     this.toolbarOptions,
     this.autofillHints,
+    Cursor cursor,
   })  :
 
         /// pinLength must larger than 0.
@@ -98,6 +105,7 @@ class PinInputTextField extends StatefulWidget {
             : inputFormatter
           ..add(LengthLimitingTextInputFormatter(pinLength)),
         textCapitalization = textCapitalization ?? TextCapitalization.none,
+        cursor = cursor ?? Cursor.disabled(),
         super(key: key);
 
   @override
@@ -106,11 +114,22 @@ class PinInputTextField extends StatefulWidget {
   }
 }
 
-class _PinInputTextFieldState extends State<PinInputTextField> {
+class _PinInputTextFieldState extends State<PinInputTextField>
+    with SingleTickerProviderStateMixin {
   /// The display text to the user.
   String _text;
 
   TextEditingController _controller;
+
+  AnimationController _cursorBlinkOpacityController;
+  final ValueNotifier<bool> _cursorVisibilityNotifier =
+      ValueNotifier<bool>(true);
+  _PinPaint _pinPaint;
+  Timer _cursorTimer;
+  bool _targetCursorVisibility = false;
+
+  /// The current cursor color, the default one should be transparent if the TextField does not have focus.
+  Color _cursorColor = Colors.transparent;
 
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller;
@@ -118,6 +137,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   void _pinChanged() {
     setState(() => _updateText());
   }
+
+  FocusNode _focusNode;
+
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_focusNode ??= FocusNode());
 
   void _updateText() {
     if (_effectiveController.text.runes.length > widget.pinLength) {
@@ -133,6 +157,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   @override
   void initState() {
     super.initState();
+    _cursorBlinkOpacityController =
+        AnimationController(vsync: this, duration: widget.cursor.fadeDuration);
+    _cursorBlinkOpacityController.addListener(_onCursorColorTick);
+    _cursorVisibilityNotifier.value = widget.cursor.enabled;
+    _effectiveFocusNode.addListener(_handleFocusChanged);
     if (widget.controller == null) {
       _controller = TextEditingController();
     }
@@ -140,12 +169,25 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
     //Ensure the initial value will be displayed when the field didn't get the focus.
     _updateText();
+    _startOrStopCursorTimerIfNeeded();
+  }
+
+  void _onCursorColorTick() {
+    if (widget.cursor.enabled) {
+      _cursorColor =
+          widget.cursor.color.withOpacity(_cursorBlinkOpacityController.value);
+      _cursorVisibilityNotifier.value = _cursorBlinkOpacityController.value > 0;
+      setState(() {});
+    }
   }
 
   @override
   void dispose() {
     // Ensure no listener will execute after dispose.
     _effectiveController.removeListener(_pinChanged);
+    _cursorBlinkOpacityController.removeListener(_onCursorColorTick);
+    _stopCursorTimer();
+    _effectiveFocusNode.removeListener(_handleFocusChanged);
     super.dispose();
   }
 
@@ -171,6 +213,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       widget.controller.addListener(_pinChanged);
     }
 
+    if (_effectiveFocusNode != oldWidget.focusNode) {
+      oldWidget.focusNode?.removeListener(_handleFocusChanged);
+      _effectiveFocusNode.addListener(_handleFocusChanged);
+    }
+
     /// If the newLength is shorter than now and the current text length longer
     /// than [pinLength], So we should cut the superfluous subString.
     if (oldWidget.pinLength > widget.pinLength &&
@@ -189,14 +236,17 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
   @override
   Widget build(BuildContext context) {
+    // final Cursor cursor = _pinPaint?.cursor ?? widget.cursor;
+    _pinPaint = _PinPaint(
+      text: _text,
+      pinLength: widget.pinLength,
+      decoration: widget.decoration,
+      themeData: Theme.of(context),
+      cursor: widget.cursor.copyWith(color: _cursorColor),
+    );
     return CustomPaint(
       /// The foreground paint to display pin.
-      foregroundPainter: _PinPaint(
-        text: _text,
-        pinLength: widget.pinLength,
-        decoration: widget.decoration,
-        themeData: Theme.of(context),
-      ),
+      foregroundPainter: _pinPaint,
       child: TextField(
         /// Actual textEditingController.
         controller: _effectiveController,
@@ -241,7 +291,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         inputFormatters: widget.inputFormatters,
 
         /// Defines the keyboard focus for this widget.
-        focusNode: widget.focusNode,
+        focusNode: _effectiveFocusNode,
 
         /// {@macro flutter.widgets.editableText.autofocus}
         autofocus: widget.autoFocus,
@@ -283,6 +333,51 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       ),
     );
   }
+
+  void _cursorTick(Timer timer) {
+    _targetCursorVisibility = !_targetCursorVisibility;
+    final double targetOpacity = _targetCursorVisibility ? 1.0 : 0.0;
+    _cursorBlinkOpacityController.animateTo(targetOpacity,
+        curve: Curves.easeOut);
+  }
+
+  void _cursorWaitForStart(Timer timer) {
+    assert(widget.cursor.blinkHalfPeriod > widget.cursor.fadeDuration);
+    _cursorTimer?.cancel();
+    _cursorTimer = Timer.periodic(widget.cursor.blinkHalfPeriod, _cursorTick);
+  }
+
+  void _startCursorTimer() {
+    _targetCursorVisibility = true;
+    _cursorBlinkOpacityController.value = 1.0;
+    _cursorTimer =
+        Timer.periodic(widget.cursor.blinkWaitForStart, _cursorWaitForStart);
+  }
+
+  void _stopCursorTimer() {
+    _cursorTimer?.cancel();
+    _cursorTimer = null;
+    _targetCursorVisibility = false;
+    _cursorBlinkOpacityController.value = 0.0;
+    if (EditableText.debugDeterministicCursor) return;
+    _cursorBlinkOpacityController.stop();
+    _cursorBlinkOpacityController.value = 0.0;
+  }
+
+  void _startOrStopCursorTimerIfNeeded() {
+    if (_cursorTimer == null && _hasFocus && _value.selection.isCollapsed) {
+      _startCursorTimer();
+    } else if (_cursorTimer != null &&
+        (!_hasFocus || !_value.selection.isCollapsed)) _stopCursorTimer();
+  }
+
+  bool get _hasFocus => _effectiveFocusNode.hasFocus;
+
+  TextEditingValue get _value => _effectiveController.value;
+
+  void _handleFocusChanged() {
+    _startOrStopCursorTimerIfNeeded();
+  }
 }
 
 class PinInputTextFormField extends FormField<String> {
@@ -319,6 +414,7 @@ class PinInputTextFormField extends FormField<String> {
     bool enableInteractiveSelection = false,
     ToolbarOptions toolbarOptions,
     Iterable<String> autofillHints,
+    Cursor cursor,
   })  : assert(initialValue == null || controller == null),
         assert(autovalidateMode != null),
         assert(pinLength != null && pinLength > 0),
@@ -387,6 +483,7 @@ class PinInputTextFormField extends FormField<String> {
                 autocorrect: autocorrect,
                 toolbarOptions: toolbarOptions,
                 autofillHints: autofillHints,
+                cursor: cursor,
               );
             });
 
@@ -492,6 +589,7 @@ class _PinPaint extends CustomPainter {
   final PinEntryType type;
   final PinDecoration decoration;
   final ThemeData themeData;
+  Cursor cursor;
 
   _PinPaint({
     @required this.text,
@@ -499,22 +597,42 @@ class _PinPaint extends CustomPainter {
     PinDecoration decoration,
     this.type: PinEntryType.boxTight,
     this.themeData,
+    this.cursor,
   }) : this.decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
+          textStyle: decoration.textStyle ?? themeData?.textTheme?.headline5,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData.textTheme.caption.copyWith(color: themeData.errorColor),
+              themeData?.textTheme?.caption
+                  ?.copyWith(color: themeData?.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData.textTheme.headline5
-                  .copyWith(color: themeData.hintColor),
+              themeData?.textTheme?.headline5
+                  ?.copyWith(color: themeData?.hintColor),
         );
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => oldDelegate != this;
+  bool shouldRepaint(_PinPaint oldDelegate) => oldDelegate != this;
 
   @override
   void paint(Canvas canvas, Size size) {
-    decoration.drawPin(canvas, size, text, pinLength, themeData);
+    // print('color: ${cursor.color} ${this.cursor.color}');
+    decoration.drawPin(canvas, size, text, pinLength, cursor);
   }
+
+  _PinPaint copyWith({
+    String text,
+    int pinLength,
+    PinDecoration decoration,
+    PinEntryType type,
+    ThemeData themeData,
+    Cursor cursor,
+  }) =>
+      _PinPaint(
+        text: text ?? this.text,
+        pinLength: pinLength ?? this.pinLength,
+        decoration: decoration ?? this.decoration,
+        type: type ?? this.type,
+        themeData: themeData ?? this.themeData,
+        cursor: cursor ?? this.cursor,
+      );
 
   @override
   bool operator ==(Object other) =>
@@ -525,7 +643,8 @@ class _PinPaint extends CustomPainter {
           pinLength == other.pinLength &&
           type == other.type &&
           decoration == other.decoration &&
-          themeData == other.themeData;
+          themeData == other.themeData &&
+          cursor == other.cursor;
 
   @override
   int get hashCode =>
@@ -533,5 +652,6 @@ class _PinPaint extends CustomPainter {
       pinLength.hashCode ^
       type.hashCode ^
       decoration.hashCode ^
-      themeData.hashCode;
+      themeData.hashCode ^
+      cursor.hashCode;
 }

@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pin Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -94,6 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Indicate whether the PinInputTextFormField has error or not
   /// after being validated.
   bool _hasError = false;
+
+  bool _cursorEnable = true;
 
   /// Set a pin to the textField.
   void _setPinValue() {
@@ -254,6 +257,24 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'cursor enabled',
+            style: TextStyle(fontSize: 18),
+          ),
+          SizedBox(width: 12),
+          Checkbox(
+            value: _cursorEnable,
+            onChanged: (enable) {
+              setState(() {
+                _cursorEnable = enable;
+              });
+            },
+          )
+        ],
+      ),
     ];
   }
 
@@ -281,6 +302,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 debugPrint('onChanged execute. pin:$pin');
               },
               enableInteractiveSelection: false,
+              cursor: Cursor(
+                width: 2,
+                color: Colors.lightBlue,
+                radius: Radius.circular(1),
+                enabled: _cursorEnable,
+              ),
             ),
           ),
         ],
@@ -329,6 +356,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
                 return null;
               },
+              cursor: Cursor(
+                width: 2,
+                color: Colors.lightBlue,
+                radius: Radius.circular(1),
+                enabled: _cursorEnable,
+              ),
             ),
           ),
           SizedBox(
@@ -453,7 +486,7 @@ class ExampleDecoration extends PinDecoration {
     Size size,
     String text,
     int pinLength,
-    ThemeData themeData,
+    Cursor cursor,
   ) {
     /// You can draw anything you want here.
     canvas.drawLine(
