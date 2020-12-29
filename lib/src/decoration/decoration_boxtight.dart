@@ -1,7 +1,7 @@
 part of 'pin_decoration.dart';
 
 /// The object determine the box stroke etc.
-class BoxTightDecoration extends PinDecoration {
+class BoxTightDecoration extends PinDecoration with CursorPaint {
   /// The box border width.
   final double strokeWidth;
 
@@ -73,7 +73,7 @@ class BoxTightDecoration extends PinDecoration {
     Size size,
     String text,
     int pinLength,
-    ThemeData themeData,
+    Cursor cursor,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -151,6 +151,7 @@ class BoxTightDecoration extends PinDecoration {
 
     /// Determine whether display obscureText.
     bool obscureOn = obscureStyle != null && obscureStyle.isTextObscure;
+    TextPainter textPainter;
 
     text.runes.forEach((rune) {
       String code;
@@ -159,7 +160,7 @@ class BoxTightDecoration extends PinDecoration {
       } else {
         code = String.fromCharCode(rune);
       }
-      TextPainter textPainter = TextPainter(
+      textPainter = TextPainter(
         text: TextSpan(
           style: textStyle,
           text: code,
@@ -183,10 +184,22 @@ class BoxTightDecoration extends PinDecoration {
       index++;
     });
 
-    if (hintText != null) {
+    if (cursor.enabled && index < pinLength) {
+      drawCursor(
+        canvas,
+        size,
+        Rect.fromLTWH(
+          singleWidth * index + strokeWidth * index,
+          0,
+          singleWidth,
+          size.height,
+        ),
+        cursor,
+      );
+    } else if (hintText != null) {
       hintText.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
-        TextPainter textPainter = TextPainter(
+        textPainter = TextPainter(
           text: TextSpan(
             style: hintTextStyle,
             text: code,

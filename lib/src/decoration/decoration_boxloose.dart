@@ -1,7 +1,9 @@
 part of 'pin_decoration.dart';
 
 /// The object determine the box stroke etc.
-class BoxLooseDecoration extends PinDecoration implements SupportGap {
+class BoxLooseDecoration extends PinDecoration
+    with CursorPaint
+    implements SupportGap {
   /// The box border radius.
   final Radius radius;
 
@@ -85,7 +87,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
     Size size,
     String text,
     int pinLength,
-    ThemeData themeData,
+    Cursor cursor,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -166,6 +168,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
 
     /// Determine whether display obscureText.
     bool obscureOn = obscureStyle != null && obscureStyle.isTextObscure;
+    TextPainter textPainter;
 
     text.runes.forEach((rune) {
       String code;
@@ -174,7 +177,7 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       } else {
         code = String.fromCharCode(rune);
       }
-      TextPainter textPainter = TextPainter(
+      textPainter = TextPainter(
         text: TextSpan(
           style: textStyle,
           text: code,
@@ -200,10 +203,24 @@ class BoxLooseDecoration extends PinDecoration implements SupportGap {
       index++;
     });
 
-    if (hintText != null) {
+    if (cursor.enabled && index < pinLength) {
+      drawCursor(
+        canvas,
+        size,
+        Rect.fromLTWH(
+          singleWidth * index +
+              actualGapSpaces.take(index).sumList() +
+              strokeWidth * (index * 2 + 1),
+          0,
+          singleWidth,
+          size.height,
+        ),
+        cursor,
+      );
+    } else if (hintText != null) {
       hintText.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
-        TextPainter textPainter = TextPainter(
+        textPainter = TextPainter(
           text: TextSpan(
             style: hintTextStyle,
             text: code,
