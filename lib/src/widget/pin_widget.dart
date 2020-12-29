@@ -62,6 +62,7 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s autofillHints
   final Iterable<String> autofillHints;
 
+  /// The cursor of the pin widget, the default is disabled.
   final Cursor cursor;
 
   PinInputTextField({

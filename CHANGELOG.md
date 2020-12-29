@@ -1,3 +1,7 @@
+## [3.2.0] - 2020/12/29
+* New: Cursor display #56
+* Hint: Cursor would override hintText is enabled.
+
 ## [3.1.2] - 2020/12/22
 * `autofillHints` Support #51
 

@@ -111,6 +111,11 @@ PinInputTextField的自定义属性
         <td>TextCapitalization.words</td>
         <td>跟TextField的textCapitalization一样</td>
     </tr>
+    <tr>
+        <td>cursor</td>
+        <td>Cursor.disabled()</td>
+        <td>验证码的游标，默认不开启</td>
+     </tr>
 </table>
 
 ### 表单验证
