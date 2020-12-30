@@ -70,7 +70,7 @@ class PinInputTextField extends StatefulWidget {
     this.pinLength: _kDefaultPinLength,
     this.onSubmit,
     this.decoration = _kDefaultDecoration,
-    List<TextInputFormatter> inputFormatter,
+    List<TextInputFormatter> inputFormatters,
     this.keyboardType: TextInputType.phone,
     this.controller,
     this.focusNode,
@@ -99,11 +99,11 @@ class PinInputTextField extends StatefulWidget {
                     (decoration as SupportGap).getGapWidthList == null ||
                 (decoration as SupportGap).getGapWidthList.length ==
                     pinLength - 1)),
-        inputFormatters = inputFormatter == null
+        inputFormatters = inputFormatters == null
             ? <TextInputFormatter>[
                 LengthLimitingTextInputFormatter(pinLength),
               ]
-            : inputFormatter
+            : inputFormatters
           ..add(LengthLimitingTextInputFormatter(pinLength)),
         textCapitalization = textCapitalization ?? TextCapitalization.none,
         cursor = cursor ?? Cursor.disabled(),
@@ -398,7 +398,7 @@ class PinInputTextFormField extends FormField<String> {
     this.pinLength = _kDefaultPinLength,
     ValueChanged<String> onSubmit,
     PinDecoration decoration = _kDefaultDecoration,
-    List<TextInputFormatter> inputFormatter,
+    List<TextInputFormatter> inputFormatters,
     TextInputType keyboardType = TextInputType.phone,
     FocusNode focusNode,
     bool autoFocus = false,
@@ -433,11 +433,11 @@ class PinInputTextFormField extends FormField<String> {
                     (decoration as SupportGap).getGapWidthList == null ||
                 (decoration as SupportGap).getGapWidthList.length ==
                     pinLength - 1)),
-        inputFormatters = inputFormatter == null
+        inputFormatters = inputFormatters == null
             ? <TextInputFormatter>[
                 LengthLimitingTextInputFormatter(pinLength),
               ]
-            : inputFormatter
+            : inputFormatters
           ..add(LengthLimitingTextInputFormatter(pinLength)),
         super(
             key: key,
@@ -471,7 +471,7 @@ class PinInputTextFormField extends FormField<String> {
                 pinLength: pinLength,
                 onSubmit: onSubmit,
                 decoration: decoration.copyWith(errorText: field.errorText),
-                inputFormatter: inputFormatter,
+                inputFormatters: inputFormatters,
                 keyboardType: keyboardType,
                 controller: state._effectiveController,
                 focusNode: focusNode,
