@@ -1,3 +1,6 @@
+## [3.3.0] - 2020/12/30
+* Update: `inputFormatter` replace with `inputFormatters` to keep same as TextField.
+
 ## [3.2.0] - 2020/12/29
 * New: Cursor display #56
 * Hint: Cursor would override hintText is enabled.
