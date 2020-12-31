@@ -13,8 +13,9 @@ PinInputTextField是一个Flutter平台上用来展示不同样式的验证码�
 * 支持隐藏明文
 * 支持填充色
 * 支持输入色
-* 支持所有TextField的属性
-* 支持Flutter web
+* 支持光标
+* 理论上支持所有TextField的属性
+* 支持Flutter所有平台
 
 ## 例子 🌰
 

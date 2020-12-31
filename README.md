@@ -14,8 +14,9 @@ PinInputTextField is a TextField widget to help display different style pin. It 
 * obscure support
 * solid support
 * enterColor support
-* support all the textField properties support
-* Flutter web support
+* cursor support
+* support all the textField properties theoretically
+* Flutter all platform support
 
 ## Example 🦀
 
@@ -25,19 +26,19 @@ Thanks to the [Flutter Web](https://flutter.dev/web), you can enjoy the preview 
 
 **UnderlineDecoration**
 
-![](gifs/underline.gif)
+<img src="gifs/underline.gif" width="375" />
 
 **BoxLooseDecoration**
 
-![](gifs/boxloose.gif)
+<img src="gifs/boxloose.gif" width="375" />
 
 **BoxTightDecoration**
 
-![](gifs/boxtight.gif)
+<img src="gifs/boxtight.gif" width="375" />
 
 **CircleDecoration**
 
-![](gifs/circle.gif)
+<img src="gifs/circle.gif" width="375" />
 
 ## Installing 🔧
 Install the latest version from [pub](https://pub.dartlang.org/packages/pin_input_text_field).
