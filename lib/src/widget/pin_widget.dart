@@ -70,7 +70,7 @@ class PinInputTextField extends StatefulWidget {
     this.pinLength: _kDefaultPinLength,
     this.onSubmit,
     this.decoration = _kDefaultDecoration,
-    List<TextInputFormatter> inputFormatters,
+    this.inputFormatters,
     this.keyboardType: TextInputType.phone,
     this.controller,
     this.focusNode,
@@ -99,12 +99,6 @@ class PinInputTextField extends StatefulWidget {
                     (decoration as SupportGap).getGapWidthList == null ||
                 (decoration as SupportGap).getGapWidthList.length ==
                     pinLength - 1)),
-        inputFormatters = inputFormatters == null
-            ? <TextInputFormatter>[
-                LengthLimitingTextInputFormatter(pinLength),
-              ]
-            : inputFormatters
-          ..add(LengthLimitingTextInputFormatter(pinLength)),
         textCapitalization = textCapitalization ?? TextCapitalization.none,
         cursor = cursor ?? Cursor.disabled(),
         super(key: key);
@@ -388,9 +382,6 @@ class PinInputTextFormField extends FormField<String> {
   /// The max length of pin.
   final int pinLength;
 
-  /// Just like [TextField]'s inputFormatter.
-  final List<TextInputFormatter> inputFormatters;
-
   PinInputTextFormField({
     Key key,
     this.controller,
@@ -418,27 +409,6 @@ class PinInputTextFormField extends FormField<String> {
     Cursor cursor,
   })  : assert(initialValue == null || controller == null),
         assert(autovalidateMode != null),
-        assert(pinLength != null && pinLength > 0),
-
-        /// pinLength must larger than 0.
-        /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
-        assert(pinLength != null && pinLength > 0),
-        assert(decoration != null),
-
-        /// Hint length must equal to the [pinLength].
-        assert(decoration.hintText == null ||
-            decoration.hintText.length == pinLength),
-        assert(!(decoration is SupportGap) ||
-            (decoration is SupportGap &&
-                    (decoration as SupportGap).getGapWidthList == null ||
-                (decoration as SupportGap).getGapWidthList.length ==
-                    pinLength - 1)),
-        inputFormatters = inputFormatters == null
-            ? <TextInputFormatter>[
-                LengthLimitingTextInputFormatter(pinLength),
-              ]
-            : inputFormatters
-          ..add(LengthLimitingTextInputFormatter(pinLength)),
         super(
             key: key,
             initialValue:
