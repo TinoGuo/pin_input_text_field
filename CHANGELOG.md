@@ -1,5 +1,6 @@
 ## [3.3.0] - 2020/12/30
 * Update: `inputFormatter` replace with `inputFormatters` to keep same as TextField.
+* Remove: Unused assert, Default inputFormatters.
 
 ## [3.2.0] - 2020/12/29
 * New: Cursor display #56
