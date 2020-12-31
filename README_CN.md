@@ -131,12 +131,12 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## 2.0.0版本注意事项 ⚠️
-如果你在程序中手动设text，请把selection也同时赋值，参考[这个](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
+## 注意点 ⚠️
 
-不能在里面设置选中点，如果这么做会导致iOS设备死循环.
+### 3.2.0
+`Cursor`会覆盖`HintText`设置，因为`Cursor`和`HintText`在同一个位置上.
 
-**如果你有什么好的建议，请提PR，谢谢.**
+**如果你有什么好的建议，请提[Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls)，谢谢.**
 
 ## 已知问题 🥶
 

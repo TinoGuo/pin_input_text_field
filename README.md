@@ -132,12 +132,7 @@ final String obscureText;
 ## Notice ⚠️
 
 ### Version 3.2.0
-`Cursor` property would override `HintText` due to the conflict display in same paint bound.
-
-### Version 2.0.0
-Please set the selection when you set the text programmatically, just like [this](https://github.com/TinoGuo/pin_input_text_field/blob/77dee70a8da25b11eae96f5a03842e5a67174a80/example/lib/main.dart#L81).
-
-Don't set the selection in lib code since if it will cause dead loop in iOS. 🤔
+`Cursor` property would override `HintText` due to the conflict display in same paint position.
 
 **If you have any idea, please make a [Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls).**
 
