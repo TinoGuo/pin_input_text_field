@@ -1,3 +1,5 @@
+[NullSafety Changelog](./NULL_SAFETY_CHANGELOG.md)
+
 ## [3.3.0] - 2020/12/30
 * Update: `inputFormatter` replace with `inputFormatters` to keep same as TextField.
 * Remove: Unused assert, Default inputFormatters.
