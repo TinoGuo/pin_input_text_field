@@ -14,29 +14,28 @@ class BoxLooseDecoration extends PinDecoration
   final double gapSpace;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  final List<double> gapSpaces;
+  final List<double>? gapSpaces;
 
   /// The box border color of index character.
   final ColorBuilder strokeColorBuilder;
 
   /// The background color of index character.
-  final ColorBuilder bgColorBuilder;
+  final ColorBuilder? bgColorBuilder;
 
   const BoxLooseDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
     this.radius: const Radius.circular(8.0),
     this.strokeWidth: 1.0,
     this.gapSpace: 16.0,
     this.gapSpaces,
-    @required this.strokeColorBuilder,
+    required this.strokeColorBuilder,
     this.bgColorBuilder,
-  })  : assert(strokeColorBuilder != null),
-        super(
+  }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
@@ -51,13 +50,13 @@ class BoxLooseDecoration extends PinDecoration
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
-    ColorBuilder bgColorBuilder,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
+    ColorBuilder? bgColorBuilder,
   }) {
     return BoxLooseDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -87,7 +86,7 @@ class BoxLooseDecoration extends PinDecoration
     Size size,
     String text,
     int pinLength,
-    Cursor cursor,
+    Cursor? cursor,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -95,8 +94,8 @@ class BoxLooseDecoration extends PinDecoration
     /// but, since we can access the drawn textfield behind from here,
     /// we use a simple logic to calculate it.
     double mainHeight;
-    if (errorText != null && errorText.isNotEmpty) {
-      mainHeight = size.height - (errorTextStyle.fontSize + 8.0);
+    if (errorText != null && errorText!.isNotEmpty) {
+      mainHeight = size.height - (errorTextStyle?.fontSize ?? 0 + 8.0);
     } else {
       mainHeight = size.height;
     }
@@ -120,7 +119,7 @@ class BoxLooseDecoration extends PinDecoration
     var startY = mainHeight - strokeWidth / 2;
 
     /// Assign paint if [bgColorBuilder] is not null
-    Paint insidePaint;
+    Paint? insidePaint;
     if (bgColorBuilder != null) {
       insidePaint = Paint()
         ..style = PaintingStyle.fill
@@ -129,10 +128,11 @@ class BoxLooseDecoration extends PinDecoration
 
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
-      if (errorText != null && errorText.isNotEmpty) {
+      if (errorText != null && errorText!.isNotEmpty) {
         /// only draw error-color as border-color or solid-color
         /// if errorText is not null
-        borderPaint.color = errorTextStyle.color;
+        borderPaint.color =
+            errorTextStyle?.color ?? strokeColorBuilder.indexProperty(i);
       } else {
         borderPaint.color = strokeColorBuilder.indexProperty(i);
       }
@@ -155,7 +155,7 @@ class BoxLooseDecoration extends PinDecoration
                   startY - strokeWidth / 2,
                 ),
                 getInnerRadius(radius, strokeWidth)),
-            insidePaint..color = bgColorBuilder.indexProperty(i));
+            insidePaint..color = bgColorBuilder!.indexProperty(i));
       }
       startX += singleWidth +
           strokeWidth * 2 +
@@ -167,13 +167,13 @@ class BoxLooseDecoration extends PinDecoration
     startY = 0.0;
 
     /// Determine whether display obscureText.
-    bool obscureOn = obscureStyle != null && obscureStyle.isTextObscure;
+    bool obscureOn = obscureStyle != null && obscureStyle!.isTextObscure;
     TextPainter textPainter;
 
     text.runes.forEach((rune) {
       String code;
       if (obscureOn) {
-        code = obscureStyle.obscureText;
+        code = obscureStyle!.obscureText;
       } else {
         code = String.fromCharCode(rune);
       }
@@ -203,7 +203,7 @@ class BoxLooseDecoration extends PinDecoration
       index++;
     });
 
-    if (cursor.enabled && index < pinLength) {
+    if (cursor != null && cursor.enabled && index < pinLength) {
       drawCursor(
         canvas,
         size,
@@ -218,7 +218,7 @@ class BoxLooseDecoration extends PinDecoration
         cursor,
       );
     } else if (hintText != null) {
-      hintText.substring(index).runes.forEach((rune) {
+      hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         textPainter = TextPainter(
           text: TextSpan(
@@ -249,7 +249,7 @@ class BoxLooseDecoration extends PinDecoration
   double get getGapWidth => gapSpace;
 
   @override
-  List<double> get getGapWidthList => gapSpaces;
+  List<double>? get getGapWidthList => gapSpaces;
 
   @override
   bool operator ==(Object other) =>

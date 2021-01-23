@@ -17,10 +17,6 @@ void main() {
     await pumpMaterialWidget(tester, PinInputTextField());
   });
 
-  testWidgets('Crash when null decoration', (WidgetTester tester) async {
-    expect(() => PinInputTextField(decoration: null), throwsAssertionError);
-  });
-
   testWidgets('Get pin text', (WidgetTester tester) async {
     var controller = TextEditingController();
     await pumpMaterialWidget(

@@ -21,7 +21,7 @@ class Cursor {
   final double width;
 
   /// Height of cursor.
-  final double height;
+  final double? height;
 
   /// Radius of cursor, default is [
   final Radius radius;
@@ -59,29 +59,23 @@ class Cursor {
     this.width = 4.0,
     this.height,
     this.radius = _kDefaultRadius,
-    this.color,
+    required this.color,
     this.fadeDuration = _kDefaultFadeDuration,
     this.blinkHalfPeriod = _kDefaultBlinkHalfPeriod,
     this.blinkWaitForStart = _kDefaultBlinkWaitForStart,
     this.enabled = false,
-  })  : assert(width != null && width >= 0.0),
-        assert(height == null || height >= 0.0),
-        assert(color != null),
-        assert(radius != null),
-        assert(enabled != null),
-        assert(fadeDuration != null),
-        assert(blinkHalfPeriod != null),
-        assert(blinkWaitForStart != null);
+  })  : assert(width >= 0.0),
+        assert(height == null || height >= 0.0);
 
   Cursor copyWith({
-    double width,
-    double height,
-    Radius radius,
-    Color color,
-    Duration fadeDuration,
-    Duration blinkHalfPeriod,
-    Duration blinkWaitForStart,
-    bool enabled,
+    double? width,
+    double? height,
+    Radius? radius,
+    Color? color,
+    Duration? fadeDuration,
+    Duration? blinkHalfPeriod,
+    Duration? blinkWaitForStart,
+    bool? enabled,
   }) =>
       Cursor(
         width: width ?? this.width,
