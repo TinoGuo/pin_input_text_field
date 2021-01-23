@@ -35,8 +35,7 @@ class UnderlineDecoration extends PinDecoration
     this.lineHeight: 2.0,
     this.lineStrokeCap,
     this.bgColorBuilder,
-  })  : assert(colorBuilder != null),
-        super(
+  }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
