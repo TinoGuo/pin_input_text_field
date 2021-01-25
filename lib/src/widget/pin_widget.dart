@@ -317,6 +317,9 @@ class _PinInputTextFieldState extends State<PinInputTextField>
           // Disabled this as it doesn't show error or
           enabled: false,
 
+          // Disabled filled color.
+          filled: false,
+
           /// Hide the all border.
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
