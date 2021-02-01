@@ -104,8 +104,11 @@ class UnderlineDecoration extends PinDecoration
     Paint underlinePaint = Paint()
       ..strokeWidth = lineHeight
       ..style = PaintingStyle.stroke
-      ..strokeCap = lineStrokeCap
       ..isAntiAlias = true;
+
+    if (lineStrokeCap != null) {
+      underlinePaint.strokeCap = lineStrokeCap;
+    }
 
     /// Assign paint if [bgColorBuilder] is not null
     Paint insidePaint;
