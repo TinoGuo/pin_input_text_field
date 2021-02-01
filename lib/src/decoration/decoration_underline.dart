@@ -16,6 +16,9 @@ class UnderlineDecoration extends PinDecoration
   /// The height of the underline.
   final double lineHeight;
 
+  /// The stroke cap of the underline.
+  final StrokeCap lineStrokeCap;
+
   /// The background color of index character.
   final ColorBuilder bgColorBuilder;
 
@@ -30,6 +33,7 @@ class UnderlineDecoration extends PinDecoration
     this.gapSpaces,
     @required this.colorBuilder,
     this.lineHeight: 2.0,
+    this.lineStrokeCap,
     this.bgColorBuilder,
   })  : assert(colorBuilder != null),
         super(
@@ -65,6 +69,7 @@ class UnderlineDecoration extends PinDecoration
       colorBuilder: this.colorBuilder,
       gapSpace: this.gapSpace,
       lineHeight: this.lineHeight,
+      lineStrokeCap: this.lineStrokeCap,
       gapSpaces: this.gapSpaces,
       bgColorBuilder: this.bgColorBuilder,
     );
@@ -100,6 +105,10 @@ class UnderlineDecoration extends PinDecoration
       ..strokeWidth = lineHeight
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
+
+    if (lineStrokeCap != null) {
+      underlinePaint.strokeCap = lineStrokeCap;
+    }
 
     /// Assign paint if [bgColorBuilder] is not null
     Paint insidePaint;
@@ -232,6 +241,7 @@ class UnderlineDecoration extends PinDecoration
           gapSpaces == other.gapSpaces &&
           colorBuilder == other.colorBuilder &&
           lineHeight == other.lineHeight &&
+          lineStrokeCap == other.lineStrokeCap &&
           bgColorBuilder == other.bgColorBuilder;
 
   @override
@@ -241,10 +251,11 @@ class UnderlineDecoration extends PinDecoration
       gapSpaces.hashCode ^
       colorBuilder.hashCode ^
       lineHeight.hashCode ^
+      lineStrokeCap.hashCode ^
       bgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, colorBuilder: $colorBuilder, lineHeight: $lineHeight, bgColorBuilder: $bgColorBuilder}';
+    return 'UnderlineDecoration{gapSpace: $gapSpace, gapSpaces: $gapSpaces, colorBuilder: $colorBuilder, lineHeight: $lineHeight, lineStrokeCap: $lineStrokeCap, bgColorBuilder: $bgColorBuilder}';
   }
 }
