@@ -17,7 +17,7 @@ class UnderlineDecoration extends PinDecoration
   final double lineHeight;
 
   /// The stroke cap of the underline.
-  final StrokeCap lineStrokeCap;
+  final StrokeCap? lineStrokeCap;
 
   /// The background color of index character.
   final ColorBuilder? bgColorBuilder;
@@ -106,7 +106,7 @@ class UnderlineDecoration extends PinDecoration
       ..isAntiAlias = true;
 
     if (lineStrokeCap != null) {
-      underlinePaint.strokeCap = lineStrokeCap;
+      underlinePaint.strokeCap = lineStrokeCap!;
     }
 
     /// Assign paint if [bgColorBuilder] is not null
