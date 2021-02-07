@@ -1,5 +1,8 @@
 [NullSafety Changelog](./NULL_SAFETY_CHANGELOG.md)
 
+## [3.3.1] - 2021/02/07
+* New : `StrokeCap` for UnderlineDecoration.
+
 ## [3.3.0] - 2020/12/30
 * Update: `inputFormatter` replace with `inputFormatters` to keep same as TextField.
 * Remove: Unused assert, Default inputFormatters.
