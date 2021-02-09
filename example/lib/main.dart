@@ -370,18 +370,25 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
                   }
                 },
-                child: Text('Submit'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
-                textColor: Colors.white,
-                color: _hasError ? Colors.red : Colors.green,
+                style: ElevatedButton.styleFrom(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  primary: _hasError ? Colors.red : Colors.green,
+                ),
               ),
             ],
           ),
