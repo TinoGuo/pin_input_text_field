@@ -351,6 +351,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                   return 'Pin cannot empty.';
                 }
+                if (pin.length < _pinLength) {
+                  setState(() {
+                    _hasError = true;
+                  });
+                  return 'Pin is not completed.';
+                }
                 setState(() {
                   _hasError = false;
                 });

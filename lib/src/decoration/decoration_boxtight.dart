@@ -12,15 +12,15 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
   final Color strokeColor;
 
   /// The background color of index character
-  final ColorBuilder bgColorBuilder;
+  final ColorBuilder? bgColorBuilder;
 
   const BoxTightDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
     this.strokeColor: Colors.cyan,
@@ -40,13 +40,13 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
-    ColorBuilder bgColorBuilder,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
+    ColorBuilder? bgColorBuilder,
   }) {
     return BoxTightDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -73,7 +73,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     Size size,
     String text,
     int pinLength,
-    Cursor cursor,
+    Cursor? cursor,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -81,8 +81,8 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     /// but, since we can access the drawn textfield behind from here,
     /// we use a simple logic to calculate it.
     double mainHeight;
-    if (errorText != null && errorText.isNotEmpty) {
-      mainHeight = size.height - (errorTextStyle.fontSize + 8.0);
+    if (errorText != null && errorText!.isNotEmpty) {
+      mainHeight = size.height - (errorTextStyle?.fontSize ?? 0 + 8.0);
     } else {
       mainHeight = size.height;
     }
@@ -94,7 +94,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
       ..isAntiAlias = true;
 
     /// Assign paint if [solidColor] is not null
-    Paint insidePaint;
+    Paint? insidePaint;
     if (bgColorBuilder != null) {
       insidePaint = Paint()
         ..strokeWidth = strokeWidth
@@ -132,7 +132,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
             bottomRight: corners[2],
             bottomLeft: corners[3],
           ),
-          insidePaint..color = bgColorBuilder.indexProperty(i),
+          insidePaint..color = bgColorBuilder!.indexProperty(i),
         );
       }
       if (i == 0) continue;
@@ -150,13 +150,13 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     var startX = 0.0;
 
     /// Determine whether display obscureText.
-    bool obscureOn = obscureStyle != null && obscureStyle.isTextObscure;
+    bool obscureOn = obscureStyle != null && obscureStyle!.isTextObscure;
     TextPainter textPainter;
 
     text.runes.forEach((rune) {
       String code;
       if (obscureOn) {
-        code = obscureStyle.obscureText;
+        code = obscureStyle!.obscureText;
       } else {
         code = String.fromCharCode(rune);
       }
@@ -184,7 +184,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
       index++;
     });
 
-    if (cursor.enabled && index < pinLength) {
+    if (cursor != null && cursor.enabled && index < pinLength) {
       drawCursor(
         canvas,
         size,
@@ -197,7 +197,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
         cursor,
       );
     } else if (hintText != null) {
-      hintText.substring(index).runes.forEach((rune) {
+      hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         textPainter = TextPainter(
           text: TextSpan(

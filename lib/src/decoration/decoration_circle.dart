@@ -10,28 +10,27 @@ class CirclePinDecoration extends PinDecoration
   final double gapSpace;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  final List<double> gapSpaces;
+  final List<double>? gapSpaces;
 
   /// The box border color of index character.
   final ColorBuilder strokeColorBuilder;
 
   // The background color of index character.
-  final ColorBuilder bgColorBuilder;
+  final ColorBuilder? bgColorBuilder;
 
   const CirclePinDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
     this.gapSpace: 16,
     this.gapSpaces,
-    @required this.strokeColorBuilder,
+    required this.strokeColorBuilder,
     this.strokeWidth: 1,
     this.bgColorBuilder,
-  })  : assert(strokeColorBuilder != null),
-        super(
+  }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
           errorText: errorText,
@@ -43,13 +42,13 @@ class CirclePinDecoration extends PinDecoration
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
-    ColorBuilder bgColorBuilder,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
+    ColorBuilder? bgColorBuilder,
   }) {
     return CirclePinDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -70,8 +69,8 @@ class CirclePinDecoration extends PinDecoration
   PinEntryType get pinEntryType => PinEntryType.circle;
 
   @override
-  void notifyChange(String pin) {
-    strokeColorBuilder.notifyChange(pin);
+  void notifyChange(String? pin) {
+    strokeColorBuilder.notifyChange(pin!);
     bgColorBuilder?.notifyChange(pin);
   }
 
@@ -81,7 +80,7 @@ class CirclePinDecoration extends PinDecoration
     Size size,
     String text,
     int pinLength,
-    Cursor cursor,
+    Cursor? cursor,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -89,8 +88,8 @@ class CirclePinDecoration extends PinDecoration
     /// but, since we can access the drawn textfield behind from here,
     /// we use a simple logic to calculate it.
     double mainHeight;
-    if (errorText != null && errorText.isNotEmpty) {
-      mainHeight = size.height - (errorTextStyle.fontSize + 8.0);
+    if (errorText != null && errorText!.isNotEmpty) {
+      mainHeight = size.height - (errorTextStyle?.fontSize ?? 0 + 8.0);
     } else {
       mainHeight = size.height;
     }
@@ -101,7 +100,7 @@ class CirclePinDecoration extends PinDecoration
       ..isAntiAlias = true;
 
     /// Assign paint if [solidColor] is not null
-    Paint insidePaint;
+    Paint? insidePaint;
     if (bgColorBuilder != null) {
       insidePaint = Paint()
         ..style = PaintingStyle.fill
@@ -118,9 +117,8 @@ class CirclePinDecoration extends PinDecoration
     List<double> actualGapSpaces;
     if (singleWidth / 2 < mainHeight / 2 - strokeWidth / 2) {
       radius = singleWidth / 2;
-      actualGapSpaces = gapSpaces == null
-          ? List.castFrom(gapSpaces)
-          : List.filled(pinLength - 1, gapSpace);
+      actualGapSpaces =
+          gapSpaces == null ? List.filled(pinLength - 1, gapSpace) : gapSpaces!;
     } else {
       radius = mainHeight / 2 - strokeWidth / 2;
       actualGapSpaces = List.filled(
@@ -136,10 +134,11 @@ class CirclePinDecoration extends PinDecoration
 
     /// Draw the each shape of pin.
     for (int i = 0; i < pinLength; i++) {
-      if (errorText != null && errorText.isNotEmpty) {
+      if (errorText != null && errorText!.isNotEmpty) {
         /// only draw error-color as border-color or solid-color
         /// if errorText is not null
-        borderPaint.color = errorTextStyle.color;
+        borderPaint.color =
+            errorTextStyle?.color ?? strokeColorBuilder.indexProperty(i);
       } else {
         borderPaint.color = strokeColorBuilder.indexProperty(i);
       }
@@ -150,11 +149,10 @@ class CirclePinDecoration extends PinDecoration
         borderPaint,
       );
       if (insidePaint != null) {
-        insidePaint..color = bgColorBuilder.indexProperty(i);
         canvas.drawCircle(
           Offset(startX + radius, startY),
           radius - strokeWidth / 2,
-          insidePaint,
+          insidePaint..color = bgColorBuilder!.indexProperty(i),
         );
       }
       startX += (radius * 2 + (i == pinLength - 1 ? 0 : actualGapSpaces[i]));
@@ -171,7 +169,7 @@ class CirclePinDecoration extends PinDecoration
     text.runes.forEach((rune) {
       String code;
       if (obscureOn) {
-        code = obscureStyle.obscureText;
+        code = obscureStyle!.obscureText;
       } else {
         code = String.fromCharCode(rune);
       }
@@ -200,7 +198,7 @@ class CirclePinDecoration extends PinDecoration
       index++;
     });
 
-    if (cursor.enabled && index < pinLength) {
+    if (cursor != null && cursor.enabled && index < pinLength) {
       drawCursor(
         canvas,
         size,
@@ -213,7 +211,7 @@ class CirclePinDecoration extends PinDecoration
         cursor,
       );
     } else if (hintText != null) {
-      hintText.substring(index).runes.forEach((rune) {
+      hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         textPainter = TextPainter(
           text: TextSpan(
@@ -239,7 +237,7 @@ class CirclePinDecoration extends PinDecoration
   double get getGapWidth => gapSpace;
 
   @override
-  List<double> get getGapWidthList => gapSpaces;
+  List<double>? get getGapWidthList => gapSpaces;
 
   @override
   bool operator ==(Object other) =>

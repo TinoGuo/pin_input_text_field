@@ -18,25 +18,25 @@ class PinInputTextField extends StatefulWidget {
   final int pinLength;
 
   /// The callback will execute when user click done.
-  final ValueChanged<String> onSubmit;
+  final ValueChanged<String>? onSubmit;
 
   /// Decorate the pin.
   final PinDecoration decoration;
 
   /// Just like [TextField]'s inputFormatter.
-  final List<TextInputFormatter> inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
 
   /// Just like [TextField]'s keyboardType.
   final TextInputType keyboardType;
 
   /// Controls the pin being edited.
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   /// Same as [TextField]'s autoFocus.
   final bool autoFocus;
 
   /// Same as [TextField]'s focusNode.
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   /// Same as [TextField]'s textInputAction.
   final TextInputAction textInputAction;
@@ -45,7 +45,7 @@ class PinInputTextField extends StatefulWidget {
   final bool enabled;
 
   /// Same as [TextField]'s onChanged.
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
 
   /// Same as [TextField]'s textCapitalization
   final TextCapitalization textCapitalization;
@@ -57,16 +57,16 @@ class PinInputTextField extends StatefulWidget {
   final bool enableInteractiveSelection;
 
   /// Same as [TextField]'s toolbarOptions
-  final ToolbarOptions toolbarOptions;
+  final ToolbarOptions? toolbarOptions;
 
   /// Same as [TextField]'s autofillHints
-  final Iterable<String> autofillHints;
+  final Iterable<String>? autofillHints;
 
   /// The cursor of the pin widget, the default is disabled.
   final Cursor cursor;
 
   PinInputTextField({
-    Key key,
+    Key? key,
     this.pinLength: _kDefaultPinLength,
     this.onSubmit,
     this.decoration = _kDefaultDecoration,
@@ -83,21 +83,20 @@ class PinInputTextField extends StatefulWidget {
     this.enableInteractiveSelection = false,
     this.toolbarOptions,
     this.autofillHints,
-    Cursor cursor,
+    Cursor? cursor,
   })  :
 
         /// pinLength must larger than 0.
         /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
-        assert(pinLength != null && pinLength > 0),
-        assert(decoration != null),
+        assert(pinLength > 0),
 
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
-            decoration.hintText.length == pinLength),
+            decoration.hintText!.length == pinLength),
         assert(!(decoration is SupportGap) ||
             (decoration is SupportGap &&
                     (decoration as SupportGap).getGapWidthList == null ||
-                (decoration as SupportGap).getGapWidthList.length ==
+                (decoration as SupportGap).getGapWidthList!.length ==
                     pinLength - 1)),
         textCapitalization = textCapitalization ?? TextCapitalization.none,
         cursor = cursor ?? Cursor.disabled(),
@@ -112,38 +111,38 @@ class PinInputTextField extends StatefulWidget {
 class _PinInputTextFieldState extends State<PinInputTextField>
     with SingleTickerProviderStateMixin {
   /// The display text to the user.
-  String _text;
+  String _text = "";
 
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
-  AnimationController _cursorBlinkOpacityController;
+  late AnimationController _cursorBlinkOpacityController;
   final ValueNotifier<bool> _cursorVisibilityNotifier =
       ValueNotifier<bool>(true);
-  _PinPaint _pinPaint;
-  Timer _cursorTimer;
+  late _PinPaint _pinPaint;
+  Timer? _cursorTimer;
   bool _targetCursorVisibility = false;
 
   /// The current cursor color, the default one should be transparent if the TextField does not have focus.
   Color _cursorColor = Colors.transparent;
 
-  TextEditingController get _effectiveController =>
+  TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   void _pinChanged() {
     setState(() => _updateText());
   }
 
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
 
   FocusNode get _effectiveFocusNode =>
       widget.focusNode ?? (_focusNode ??= FocusNode());
 
   void _updateText() {
-    if (_effectiveController.text.runes.length > widget.pinLength) {
+    if (_effectiveController!.text.runes.length > widget.pinLength) {
       _text = String.fromCharCodes(
-          _effectiveController.text.runes.take(widget.pinLength));
+          _effectiveController!.text.runes.take(widget.pinLength));
     } else {
-      _text = _effectiveController.text;
+      _text = _effectiveController!.text;
     }
 
     widget.decoration.notifyChange(_text);
@@ -160,7 +159,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
     if (widget.controller == null) {
       _controller = TextEditingController();
     }
-    _effectiveController.addListener(_pinChanged);
+    _effectiveController!.addListener(_pinChanged);
 
     //Ensure the initial value will be displayed when the field didn't get the focus.
     _updateText();
@@ -179,7 +178,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
   @override
   void dispose() {
     // Ensure no listener will execute after dispose.
-    _effectiveController.removeListener(_pinChanged);
+    _effectiveController!.removeListener(_pinChanged);
     _cursorBlinkOpacityController.removeListener(_onCursorColorTick);
     _stopCursorTimer();
     _effectiveFocusNode.removeListener(_handleFocusChanged);
@@ -191,21 +190,22 @@ class _PinInputTextFieldState extends State<PinInputTextField>
     super.didUpdateWidget(oldWidget);
 
     if (widget.controller == null && oldWidget.controller != null) {
-      oldWidget.controller.removeListener(_pinChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller.value);
-      _controller.addListener(_pinChanged);
+      oldWidget.controller!.removeListener(_pinChanged);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller!.addListener(_pinChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
-      _controller.removeListener(_pinChanged);
+      _controller!.removeListener(_pinChanged);
       _controller = null;
-      widget.controller.addListener(_pinChanged);
+      widget.controller!.addListener(_pinChanged);
       // Invalidate the text when controller hold different old text.
-      if (_text != widget.controller.text) {
+      if (_text != widget.controller!.text) {
         _pinChanged();
       }
     } else if (widget.controller != oldWidget.controller) {
       // The old controller and current controller is not null and not the same.
-      oldWidget.controller.removeListener(_pinChanged);
-      widget.controller.addListener(_pinChanged);
+      oldWidget.controller!.removeListener(_pinChanged);
+      widget.controller!.addListener(_pinChanged);
     }
 
     if (_effectiveFocusNode != oldWidget.focusNode) {
@@ -219,8 +219,8 @@ class _PinInputTextFieldState extends State<PinInputTextField>
         _text.runes.length > widget.pinLength) {
       setState(() {
         _text = _text.substring(0, widget.pinLength);
-        _effectiveController.text = _text;
-        _effectiveController.selection =
+        _effectiveController!.text = _text;
+        _effectiveController!.selection =
             TextSelection.collapsed(offset: _text.runes.length);
       });
     }
@@ -368,7 +368,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
 
   bool get _hasFocus => _effectiveFocusNode.hasFocus;
 
-  TextEditingValue get _value => _effectiveController.value;
+  TextEditingValue get _value => _effectiveController!.value;
 
   void _handleFocusChanged() {
     _startOrStopCursorTimerIfNeeded();
@@ -377,73 +377,52 @@ class _PinInputTextFieldState extends State<PinInputTextField>
 
 class PinInputTextFormField extends FormField<String> {
   /// Controls the pin being edited.
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   /// The max length of pin.
   final int pinLength;
 
   PinInputTextFormField({
-    Key key,
+    Key? key,
     this.controller,
-    String initialValue,
+    String? initialValue,
     this.pinLength = _kDefaultPinLength,
-    ValueChanged<String> onSubmit,
+    ValueChanged<String>? onSubmit,
     PinDecoration decoration = _kDefaultDecoration,
-    List<TextInputFormatter> inputFormatters,
+    List<TextInputFormatter>? inputFormatters,
     TextInputType keyboardType = TextInputType.phone,
-    FocusNode focusNode,
+    FocusNode? focusNode,
     bool autoFocus = false,
     TextInputAction textInputAction = TextInputAction.done,
     bool enabled = true,
-    FormFieldSetter<String> onSaved,
-    FormFieldValidator<String> validator,
-    @Deprecated("'autovalidate' is deprecated and shouldn't be used, use 'autovalidateMode' instead")
-        bool autovalidate = false,
+    FormFieldSetter<String>? onSaved,
+    FormFieldValidator<String>? validator,
     AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    ValueChanged<String> onChanged,
-    TextCapitalization textCapitalization,
+    ValueChanged<String>? onChanged,
+    TextCapitalization? textCapitalization,
     bool autocorrect = false,
     bool enableInteractiveSelection = false,
-    ToolbarOptions toolbarOptions,
-    Iterable<String> autofillHints,
-    Cursor cursor,
+    ToolbarOptions? toolbarOptions,
+    Iterable<String>? autofillHints,
+    Cursor? cursor,
   })  : assert(initialValue == null || controller == null),
-        assert(autovalidateMode != null),
         super(
             key: key,
             initialValue:
                 controller != null ? controller.text : (initialValue ?? ''),
             onSaved: onSaved,
-            validator: (value) {
-              var result = validator(value);
-              if (result == null) {
-                if (value.isEmpty) {
-                  return 'Input field is empty.';
-                }
-                if (value.length < pinLength) {
-                  if (pinLength - value.length > 1) {
-                    return 'Missing ${pinLength - value.length} digits of input.';
-                  } else {
-                    return 'Missing last digit of input.';
-                  }
-                }
-              }
-              return result;
-            },
-            // FIXME: remove deprecated field in near future
-            // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-            autovalidate: autovalidate,
+            validator: validator,
             autovalidateMode: autovalidateMode,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
-              final _PinInputTextFormFieldState state = field;
               return PinInputTextField(
                 pinLength: pinLength,
                 onSubmit: onSubmit,
                 decoration: decoration.copyWith(errorText: field.errorText),
                 inputFormatters: inputFormatters,
                 keyboardType: keyboardType,
-                controller: state._effectiveController,
+                controller:
+                    (field as _PinInputTextFormFieldState)._effectiveController,
                 focusNode: focusNode,
                 autoFocus: autoFocus,
                 textInputAction: textInputAction,
@@ -463,13 +442,13 @@ class PinInputTextFormField extends FormField<String> {
 }
 
 class _PinInputTextFormFieldState extends FormFieldState<String> {
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
-  TextEditingController get _effectiveController =>
+  TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   @override
-  PinInputTextFormField get widget => super.widget;
+  PinInputTextFormField get widget => super.widget as PinInputTextFormField;
 
   @override
   void initState() {
@@ -477,7 +456,7 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     if (widget.controller == null) {
       _controller = TextEditingController(text: widget.initialValue);
     }
-    _effectiveController.addListener(_handleControllerChanged);
+    _effectiveController!.addListener(_handleControllerChanged);
   }
 
   @override
@@ -485,32 +464,33 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.controller == null && oldWidget.controller != null) {
-      oldWidget.controller.removeListener(_handleControllerChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller.value);
-      _controller.addListener(_handleControllerChanged);
+      oldWidget.controller!.removeListener(_handleControllerChanged);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller!.addListener(_handleControllerChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
-      _controller.removeListener(_handleControllerChanged);
+      _controller!.removeListener(_handleControllerChanged);
       _controller = null;
-      widget.controller.addListener(_handleControllerChanged);
+      widget.controller!.addListener(_handleControllerChanged);
       // Invalidate the text when controller hold different old text.
-      if (value != widget.controller.text) {
+      if (value != widget.controller!.text) {
         _handleControllerChanged();
       }
     } else if (widget.controller != oldWidget.controller) {
       // The old controller and current controller is not null and not the same.
-      oldWidget.controller.removeListener(_handleControllerChanged);
-      widget.controller.addListener(_handleControllerChanged);
+      oldWidget.controller!.removeListener(_handleControllerChanged);
+      widget.controller!.addListener(_handleControllerChanged);
     }
 
     /// If the newLength is shorter than now and the current text length longer
     /// than [pinLength], So we should cut the superfluous subString.
     if (oldWidget.pinLength > widget.pinLength &&
-        value.runes.length > widget.pinLength) {
+        value!.runes.length > widget.pinLength) {
       setState(() {
-        setValue(value.substring(0, widget.pinLength));
-        _effectiveController.text = value;
-        _effectiveController.selection = TextSelection.collapsed(
-          offset: value.runes.length,
+        setValue(value!.substring(0, widget.pinLength));
+        _effectiveController!.text = value!;
+        _effectiveController!.selection = TextSelection.collapsed(
+          offset: value!.runes.length,
         );
       });
     }
@@ -518,7 +498,7 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
 
   @override
   void dispose() {
-    _effectiveController.removeListener(_handleControllerChanged);
+    _effectiveController!.removeListener(_handleControllerChanged);
     super.dispose();
   }
 
@@ -526,13 +506,13 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
   void reset() {
     super.reset();
     setState(() {
-      _effectiveController.text = widget.initialValue;
+      _effectiveController!.text = widget.initialValue!;
     });
   }
 
   @override
-  void didChange(String value) {
-    if (value.runes.length > widget.pinLength) {
+  void didChange(String? value) {
+    if (value!.runes.length > widget.pinLength) {
       super.didChange(String.fromCharCodes(
         value.runes.take(widget.pinLength),
       ));
@@ -549,8 +529,8 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    if (_effectiveController.text != value)
-      didChange(_effectiveController.text);
+    if (_effectiveController!.text != value)
+      didChange(_effectiveController!.text);
   }
 }
 
@@ -560,23 +540,23 @@ class _PinPaint extends CustomPainter {
   final PinEntryType type;
   final PinDecoration decoration;
   final ThemeData themeData;
-  Cursor cursor;
+  Cursor? cursor;
 
   _PinPaint({
-    @required this.text,
-    @required this.pinLength,
-    PinDecoration decoration,
+    required this.text,
+    required this.pinLength,
+    required PinDecoration decoration,
     this.type: PinEntryType.boxTight,
-    this.themeData,
+    required this.themeData,
     this.cursor,
   }) : this.decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData?.textTheme?.headline5,
+          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData?.textTheme?.caption
-                  ?.copyWith(color: themeData?.errorColor),
+              themeData.textTheme.caption
+                  ?.copyWith(color: themeData.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData?.textTheme?.headline5
-                  ?.copyWith(color: themeData?.hintColor),
+              themeData.textTheme.headline5
+                  ?.copyWith(color: themeData.hintColor),
         );
 
   @override
@@ -589,12 +569,12 @@ class _PinPaint extends CustomPainter {
   }
 
   _PinPaint copyWith({
-    String text,
-    int pinLength,
-    PinDecoration decoration,
-    PinEntryType type,
-    ThemeData themeData,
-    Cursor cursor,
+    String? text,
+    int? pinLength,
+    PinDecoration? decoration,
+    PinEntryType? type,
+    ThemeData? themeData,
+    Cursor? cursor,
   }) =>
       _PinPaint(
         text: text ?? this.text,

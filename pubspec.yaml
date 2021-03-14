@@ -1,10 +1,10 @@
 name: pin_input_text_field
 description: A textField widget to help display different style pin written in pure dart, no extra dependency.
-version: 3.3.1
+version: 4.0.0
 homepage: https://github.com/TinoGuo/pin_input_text_field
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -13,7 +13,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^1.14.0
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
