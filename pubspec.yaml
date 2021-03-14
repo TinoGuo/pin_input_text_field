@@ -4,7 +4,7 @@ version: 4.0.0
 homepage: https://github.com/TinoGuo/pin_input_text_field
 
 environment:
-  sdk: '>=2.12.0-29.10.beta <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -13,7 +13,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^1.14.0
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
