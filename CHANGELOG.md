@@ -1,3 +1,6 @@
+## [4.1.0] - 2021/05/22
+* Bump Dart to 2.13
+
 ## [4.0.0] - 2021/03/14
 * Migrate to Null Safety
 
