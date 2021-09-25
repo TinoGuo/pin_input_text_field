@@ -21,9 +21,9 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     TextStyle? errorTextStyle,
     String? hintText,
     TextStyle? hintTextStyle,
-    this.strokeWidth: 1.0,
-    this.radius: const Radius.circular(8.0),
-    this.strokeColor: Colors.cyan,
+    this.strokeWidth = 1.0,
+    this.radius = const Radius.circular(8.0),
+    this.strokeColor = Colors.cyan,
     this.bgColorBuilder,
   }) : super(
           textStyle: textStyle,
@@ -32,7 +32,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
-          bgColorBuilder: bgColorBuilder,
+          baseBgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -55,9 +55,9 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      strokeColor: this.strokeColor,
-      strokeWidth: this.strokeWidth,
-      radius: this.radius,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+      radius: radius,
       bgColorBuilder: this.bgColorBuilder,
     );
   }
@@ -153,7 +153,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     bool obscureOn = obscureStyle != null && obscureStyle!.isTextObscure;
     TextPainter textPainter;
 
-    text.runes.forEach((rune) {
+    for (var rune in text.runes) {
       String code;
       if (obscureOn) {
         code = obscureStyle!.obscureText;
@@ -182,7 +182,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
           textPainter.width / 2;
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
-    });
+    }
 
     if (cursor != null && cursor.enabled && index < pinLength) {
       drawCursor(

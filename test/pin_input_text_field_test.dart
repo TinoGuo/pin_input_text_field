@@ -23,8 +23,8 @@ void main() {
         tester,
         PinInputTextField(
           controller: controller,
-          decoration:
-              UnderlineDecoration(colorBuilder: FixedColorBuilder(Colors.cyan)),
+          decoration: const UnderlineDecoration(
+              colorBuilder: FixedColorBuilder(Colors.cyan)),
         ));
     await tester.enterText(find.byType(TextField), '1234');
     expect('1234', controller.text);
@@ -44,7 +44,7 @@ void main() {
               focusNode: focusNode,
               autoFocus: true,
             ),
-            TextField(),
+            const TextField(),
           ],
         ));
 
@@ -61,7 +61,7 @@ void main() {
               controller: TextEditingController(text: '123'),
               focusNode: focusNode,
             ),
-            TextField(),
+            const TextField(),
           ],
         ));
     expect(focusNode.hasFocus, false);

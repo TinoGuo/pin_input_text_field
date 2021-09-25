@@ -1,3 +1,6 @@
+## [4.1.1] - 2021/09/25
+* Apply Analyzer and lint
+
 ## [4.1.0] - 2021/05/22
 * Bump Dart to 2.13
 

@@ -1,7 +1,7 @@
 /// The object determine the obscure display
 class ObscureStyle {
   /// The wrap line string.
-  static final _wrapLine = '\n';
+  static const _wrapLine = '\n';
 
   /// Determine whether replace [obscureText] with number.
   final bool isTextObscure;
@@ -11,13 +11,13 @@ class ObscureStyle {
   final String obscureText;
 
   ObscureStyle({
-    this.isTextObscure: false,
-    this.obscureText: '•',
+    this.isTextObscure = false,
+    this.obscureText = '•',
   })  :
 
         /// Not allowed empty string and multiline string.
-        assert(obscureText.length > 0),
-        assert(obscureText.indexOf(_wrapLine) == -1);
+        assert(obscureText.isNotEmpty),
+        assert(!obscureText.contains(_wrapLine));
 
   @override
   bool operator ==(Object other) =>

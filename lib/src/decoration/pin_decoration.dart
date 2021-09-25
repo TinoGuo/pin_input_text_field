@@ -49,7 +49,7 @@ abstract class PinDecoration {
   final TextStyle? hintTextStyle;
 
   // The background color of index character
-  final ColorBuilder? bgColorBuilder;
+  final ColorBuilder? baseBgColorBuilder;
 
   PinEntryType get pinEntryType;
 
@@ -60,7 +60,7 @@ abstract class PinDecoration {
     this.errorTextStyle,
     this.hintText,
     this.hintTextStyle,
-    this.bgColorBuilder,
+    this.baseBgColorBuilder,
   });
 
   void drawPin(
@@ -96,7 +96,7 @@ abstract class PinDecoration {
           errorTextStyle == other.errorTextStyle &&
           hintText == other.hintText &&
           hintTextStyle == other.hintTextStyle &&
-          bgColorBuilder == other.bgColorBuilder;
+          baseBgColorBuilder == other.baseBgColorBuilder;
 
   @override
   int get hashCode =>
@@ -106,10 +106,10 @@ abstract class PinDecoration {
       errorTextStyle.hashCode ^
       hintText.hashCode ^
       hintTextStyle.hashCode ^
-      bgColorBuilder.hashCode;
+      baseBgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, bgColorBuilder: $bgColorBuilder}';
+    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, bgColorBuilder: $baseBgColorBuilder}';
   }
 }
