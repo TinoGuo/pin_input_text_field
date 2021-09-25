@@ -10,8 +10,8 @@ import 'package:pin_input_text_field/src/decoration/pin_decoration.dart';
 import 'package:pin_input_text_field/src/util/utils.dart';
 
 const _kDefaultPinLength = 6;
-const _kDefaultDecoration = const BoxLooseDecoration(
-    strokeColorBuilder: FixedColorBuilder(Colors.cyan));
+const _kDefaultDecoration =
+    BoxLooseDecoration(strokeColorBuilder: FixedColorBuilder(Colors.cyan));
 
 class PinInputTextField extends StatefulWidget {
   /// The max length of pin.
@@ -67,11 +67,11 @@ class PinInputTextField extends StatefulWidget {
 
   PinInputTextField({
     Key? key,
-    this.pinLength: _kDefaultPinLength,
+    this.pinLength = _kDefaultPinLength,
     this.onSubmit,
     this.decoration = _kDefaultDecoration,
     this.inputFormatters,
-    this.keyboardType: TextInputType.phone,
+    this.keyboardType = TextInputType.phone,
     this.controller,
     this.focusNode,
     this.autoFocus = false,
@@ -93,7 +93,7 @@ class PinInputTextField extends StatefulWidget {
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
             decoration.hintText!.length == pinLength),
-        assert(!(decoration is SupportGap) ||
+        assert(decoration is! SupportGap ||
             (decoration is SupportGap &&
                     (decoration as SupportGap).getGapWidthList == null ||
                 (decoration as SupportGap).getGapWidthList!.length ==
@@ -363,7 +363,9 @@ class _PinInputTextFieldState extends State<PinInputTextField>
     if (_cursorTimer == null && _hasFocus && _value.selection.isCollapsed) {
       _startCursorTimer();
     } else if (_cursorTimer != null &&
-        (!_hasFocus || !_value.selection.isCollapsed)) _stopCursorTimer();
+        (!_hasFocus || !_value.selection.isCollapsed)) {
+      _stopCursorTimer();
+    }
   }
 
   bool get _hasFocus => _effectiveFocusNode.hasFocus;
@@ -529,8 +531,9 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    if (_effectiveController!.text != value)
+    if (_effectiveController!.text != value) {
       didChange(_effectiveController!.text);
+    }
   }
 }
 
@@ -546,10 +549,10 @@ class _PinPaint extends CustomPainter {
     required this.text,
     required this.pinLength,
     required PinDecoration decoration,
-    this.type: PinEntryType.boxTight,
+    this.type = PinEntryType.boxTight,
     required this.themeData,
     this.cursor,
-  }) : this.decoration = decoration.copyWith(
+  }) : decoration = decoration.copyWith(
           textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
               themeData.textTheme.caption

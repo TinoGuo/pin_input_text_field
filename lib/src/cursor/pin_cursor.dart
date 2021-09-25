@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 // This value is an eyeball estimation of the time it takes for the iOS cursor
 // to ease in and out.
-const _kDefaultFadeDuration = const Duration(milliseconds: 250);
+const _kDefaultFadeDuration = Duration(milliseconds: 250);
 
 // The time it takes for the cursor to fade from fully opaque to fully
 // transparent and vice versa. A full cursor blink, from transparent to opaque
 // to transparent, is twice this duration.
-const _kDefaultBlinkHalfPeriod = const Duration(milliseconds: 500);
+const _kDefaultBlinkHalfPeriod = Duration(milliseconds: 500);
 
 // The time the cursor is static in opacity before animating to become
 // transparent.
-const _kDefaultBlinkWaitForStart = const Duration(milliseconds: 150);
+const _kDefaultBlinkWaitForStart = Duration(milliseconds: 150);
 
 const _kDefaultRadius = Radius.zero;
 

@@ -29,10 +29,10 @@ class UnderlineDecoration extends PinDecoration
     TextStyle? errorTextStyle,
     String? hintText,
     TextStyle? hintTextStyle,
-    this.gapSpace: 16.0,
+    this.gapSpace = 16.0,
     this.gapSpaces,
     required this.colorBuilder,
-    this.lineHeight: 2.0,
+    this.lineHeight = 2.0,
     this.lineStrokeCap,
     this.bgColorBuilder,
   }) : super(
@@ -42,7 +42,7 @@ class UnderlineDecoration extends PinDecoration
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
-          bgColorBuilder: bgColorBuilder,
+          baseBgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -65,11 +65,11 @@ class UnderlineDecoration extends PinDecoration
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      colorBuilder: this.colorBuilder,
-      gapSpace: this.gapSpace,
-      lineHeight: this.lineHeight,
-      lineStrokeCap: this.lineStrokeCap,
-      gapSpaces: this.gapSpaces,
+      colorBuilder: colorBuilder,
+      gapSpace: gapSpace,
+      lineHeight: lineHeight,
+      lineStrokeCap: lineStrokeCap,
+      gapSpaces: gapSpaces,
       bgColorBuilder: this.bgColorBuilder,
     );
   }
@@ -156,7 +156,7 @@ class UnderlineDecoration extends PinDecoration
     bool obscureOn = obscureStyle != null && obscureStyle!.isTextObscure;
     TextPainter textPainter;
 
-    text.runes.forEach((rune) {
+    for (var rune in text.runes) {
       String code;
       if (obscureOn) {
         code = obscureStyle!.obscureText;
@@ -185,7 +185,7 @@ class UnderlineDecoration extends PinDecoration
           actualGapSpaces.take(index).sumList();
       textPainter.paint(canvas, Offset(startX, startY));
       index++;
-    });
+    }
 
     if (cursor != null && cursor.enabled && index < pinLength) {
       drawCursor(

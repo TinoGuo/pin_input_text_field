@@ -25,10 +25,10 @@ class CirclePinDecoration extends PinDecoration
     TextStyle? errorTextStyle,
     String? hintText,
     TextStyle? hintTextStyle,
-    this.gapSpace: 16,
+    this.gapSpace = 16,
     this.gapSpaces,
     required this.strokeColorBuilder,
-    this.strokeWidth: 1,
+    this.strokeWidth = 1,
     this.bgColorBuilder,
   }) : super(
           textStyle: textStyle,
@@ -37,7 +37,7 @@ class CirclePinDecoration extends PinDecoration
           errorTextStyle: errorTextStyle,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
-          bgColorBuilder: bgColorBuilder,
+          baseBgColorBuilder: bgColorBuilder,
         );
 
   @override
@@ -57,10 +57,10 @@ class CirclePinDecoration extends PinDecoration
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      strokeColorBuilder: this.strokeColorBuilder,
-      strokeWidth: this.strokeWidth,
-      gapSpace: this.gapSpace,
-      gapSpaces: this.gapSpaces,
+      strokeColorBuilder: strokeColorBuilder,
+      strokeWidth: strokeWidth,
+      gapSpace: gapSpace,
+      gapSpaces: gapSpaces,
       bgColorBuilder: this.bgColorBuilder,
     );
   }
@@ -166,7 +166,7 @@ class CirclePinDecoration extends PinDecoration
     bool obscureOn = obscureStyle?.isTextObscure == true;
     TextPainter textPainter;
 
-    text.runes.forEach((rune) {
+    for (var rune in text.runes) {
       String code;
       if (obscureOn) {
         code = obscureStyle!.obscureText;
@@ -196,7 +196,7 @@ class CirclePinDecoration extends PinDecoration
             startY,
           ));
       index++;
-    });
+    }
 
     if (cursor != null && cursor.enabled && index < pinLength) {
       drawCursor(
