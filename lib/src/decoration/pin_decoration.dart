@@ -1,13 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
-import 'package:pin_input_text_field/src/builder/color_builder.dart';
 import 'package:pin_input_text_field/src/cursor/cursor_painter.dart';
-import 'package:pin_input_text_field/src/cursor/pin_cursor.dart';
 import 'package:pin_input_text_field/src/util/radius_util.dart';
 
-import '../style/obscure.dart';
 import '../util/utils.dart';
 
 part 'decoration_boxloose.dart';

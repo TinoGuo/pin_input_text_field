@@ -1,12 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
-import 'package:pin_input_text_field/src/cursor/pin_cursor.dart';
-import 'package:pin_input_text_field/src/decoration/pin_decoration.dart';
 import 'package:pin_input_text_field/src/util/utils.dart';
 
 const _kDefaultPinLength = 6;
