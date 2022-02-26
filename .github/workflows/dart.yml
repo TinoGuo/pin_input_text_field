@@ -82,4 +82,12 @@ jobs:
       name: build ios example
       working-directory: ./example
       run: flutter build ios --release --no-codesign
-
+    - name: build web example
+      working-directory: ./example
+      run: flutter build web
+    - if: ${{ matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' }}
+      name: deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.3
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: example/build/web # The folder the action should deploy.
