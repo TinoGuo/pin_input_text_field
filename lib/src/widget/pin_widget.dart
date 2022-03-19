@@ -204,9 +204,9 @@ class _PinInputTextFieldState extends State<PinInputTextField>
       widget.controller!.addListener(_pinChanged);
     }
 
-    if (_effectiveFocusNode != oldWidget.focusNode) {
-      oldWidget.focusNode?.removeListener(_handleFocusChanged);
-      _effectiveFocusNode.addListener(_handleFocusChanged);
+    if (widget.focusNode != oldWidget.focusNode) {
+      (oldWidget.focusNode ?? _focusNode)?.removeListener(_handleFocusChanged);
+      (widget.focusNode ?? _focusNode)?.addListener(_handleFocusChanged);
     }
 
     /// If the newLength is shorter than now and the current text length longer
