@@ -5,6 +5,7 @@
 
 # pin_input_text_field
 
+[English](./README.md)
 PinInputTextField是一个Flutter平台上用来展示不同样式的验证码，简单好用！支持所有[flutter](https://github.com/flutter/flutter)支持的平台
 
 ## 特点 🌟

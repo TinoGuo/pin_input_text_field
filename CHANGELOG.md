@@ -1,3 +1,6 @@
+## [4.1.2] - 2022/03/19
+* Correctly remove&add FocusNode listener [#73](https://github.com/TinoGuo/pin_input_text_field/issues/73)
+
 ## [4.1.1] - 2021/09/25
 * Apply Analyzer and lint
 
