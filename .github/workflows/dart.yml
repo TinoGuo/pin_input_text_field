@@ -35,6 +35,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          architecture: x64
 
   build-and-test:
     runs-on: ${{ matrix.os }}
@@ -64,9 +65,10 @@ jobs:
       with:
         path: ${{ matrix.flutter_path }}
         key: ${{ runner.os }}-flutter
-    - uses: subosito/flutter-action@v1
+    - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
+        architecture: x64
     - name: flutter hotbake
       run: |
         flutter pub get
