@@ -234,6 +234,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
       decoration: widget.decoration,
       themeData: Theme.of(context),
       cursor: widget.cursor.copyWith(color: _cursorColor),
+      textDirection: Directionality.of(context),
     );
     return CustomPaint(
       /// The foreground paint to display pin.
@@ -540,6 +541,7 @@ class _PinPaint extends CustomPainter {
   final PinDecoration decoration;
   final ThemeData themeData;
   Cursor? cursor;
+  TextDirection textDirection;
 
   _PinPaint({
     required this.text,
@@ -548,6 +550,7 @@ class _PinPaint extends CustomPainter {
     this.type = PinEntryType.boxTight,
     required this.themeData,
     this.cursor,
+    this.textDirection = TextDirection.ltr,
   }) : decoration = decoration.copyWith(
           textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
@@ -564,7 +567,7 @@ class _PinPaint extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // print('color: ${cursor.color} ${this.cursor.color}');
-    decoration.drawPin(canvas, size, text, pinLength, cursor);
+    decoration.drawPin(canvas, size, text, pinLength, cursor, textDirection);
   }
 
   _PinPaint copyWith({

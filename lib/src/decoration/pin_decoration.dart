@@ -64,6 +64,7 @@ abstract class PinDecoration {
     String text,
     int pinLength,
     Cursor? cursor,
+    TextDirection textDirection,
   );
 
   void notifyChange(String pin);

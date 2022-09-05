@@ -81,6 +81,7 @@ class CirclePinDecoration extends PinDecoration
     String text,
     int pinLength,
     Cursor? cursor,
+    TextDirection textDirection,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -179,7 +180,7 @@ class CirclePinDecoration extends PinDecoration
           text: code,
         ),
         textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
+        textDirection: textDirection,
       );
 
       /// Layout the text.
@@ -198,19 +199,12 @@ class CirclePinDecoration extends PinDecoration
       index++;
     }
 
-    if (cursor != null && cursor.enabled && index < pinLength) {
-      drawCursor(
-        canvas,
-        size,
-        Rect.fromLTWH(
-          radius * index * 2 + actualGapSpaces.take(index).sumList(),
-          0,
-          radius * 2,
-          size.height,
-        ),
-        cursor,
-      );
-    } else if (hintText != null) {
+    /// Setup the cursor.
+    final int cursorIndex = index;
+    Offset? cursorOffset;
+
+    /// Fill the remaining space with hint text.
+    if (hintText != null) {
       hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         textPainter = TextPainter(
@@ -219,17 +213,40 @@ class CirclePinDecoration extends PinDecoration
             text: code,
           ),
           textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
+          textDirection: textDirection,
         );
 
         /// Layout the text.
         textPainter.layout();
+
+        /// Save the size of the first hint text to offset the cursor.
+        if (index == cursorIndex) {
+          cursorOffset = Offset(textPainter.size.width / 2, 0);
+        }
 
         startY = mainHeight / 2 - textPainter.height / 2;
         textPainter.paint(canvas,
             Offset(centerPoints[index] - textPainter.width / 2, startY));
         index++;
       });
+    }
+
+    /// Draw the cursor if provided.
+    if (cursor != null && cursor.enabled && cursorIndex < pinLength) {
+      drawCursor(
+        canvas,
+        size,
+        Rect.fromLTWH(
+          radius * cursorIndex * 2 +
+              actualGapSpaces.take(cursorIndex).sumList(),
+          0,
+          radius * 2,
+          size.height,
+        ),
+        cursor,
+        cursorOffset,
+        textDirection,
+      );
     }
   }
 
