@@ -87,6 +87,7 @@ class BoxLooseDecoration extends PinDecoration
     String text,
     int pinLength,
     Cursor? cursor,
+    TextDirection textDirection,
   ) {
     /// Calculate the height of paint area for drawing the pin field.
     /// it should honor the error text (if any) drawn by
@@ -183,7 +184,7 @@ class BoxLooseDecoration extends PinDecoration
           text: code,
         ),
         textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
+        textDirection: textDirection,
       );
 
       /// Layout the text.
@@ -203,21 +204,12 @@ class BoxLooseDecoration extends PinDecoration
       index++;
     }
 
-    if (cursor != null && cursor.enabled && index < pinLength) {
-      drawCursor(
-        canvas,
-        size,
-        Rect.fromLTWH(
-          singleWidth * index +
-              actualGapSpaces.take(index).sumList() +
-              strokeWidth * (index * 2 + 1),
-          0,
-          singleWidth,
-          size.height,
-        ),
-        cursor,
-      );
-    } else if (hintText != null) {
+    /// Setup the cursor.
+    final int cursorIndex = index;
+    Offset? cursorOffset;
+
+    /// Fill the remaining space with hint text.
+    if (hintText != null) {
       hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         textPainter = TextPainter(
@@ -226,11 +218,16 @@ class BoxLooseDecoration extends PinDecoration
             text: code,
           ),
           textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
+          textDirection: textDirection,
         );
 
         /// Layout the text.
         textPainter.layout();
+
+        /// Save the size of the first hint text to offset the cursor.
+        if (index == cursorIndex) {
+          cursorOffset = Offset(textPainter.size.width / 2, 0);
+        }
 
         startY = mainHeight / 2 - textPainter.height / 2;
         startX = singleWidth * index +
@@ -242,6 +239,25 @@ class BoxLooseDecoration extends PinDecoration
         textPainter.paint(canvas, Offset(startX, startY));
         index++;
       });
+    }
+
+    /// Draw the cursor if provided.
+    if (cursor != null && cursor.enabled && cursorIndex < pinLength) {
+      drawCursor(
+        canvas,
+        size,
+        Rect.fromLTWH(
+          singleWidth * cursorIndex +
+              actualGapSpaces.take(cursorIndex).sumList() +
+              strokeWidth * (cursorIndex * 2 + 1),
+          0,
+          singleWidth,
+          size.height,
+        ),
+        cursor,
+        cursorOffset,
+        textDirection,
+      );
     }
   }
 

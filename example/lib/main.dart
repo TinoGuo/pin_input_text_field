@@ -498,6 +498,7 @@ class ExampleDecoration extends PinDecoration {
     String text,
     int pinLength,
     Cursor cursor,
+    TextDirection textDirection,
   ) {
     /// You can draw anything you want here.
     canvas.drawLine(
