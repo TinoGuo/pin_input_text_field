@@ -391,7 +391,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  primary: _hasError ? Colors.red : Colors.green,
+                  backgroundColor: _hasError ? Colors.red : Colors.green,
                 ),
               ),
             ],
