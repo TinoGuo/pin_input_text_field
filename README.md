@@ -133,13 +133,6 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## Notice ⚠️
-
-### Version 3.2.0
-`Cursor` property would override `HintText` due to the conflict display in same paint position.
-
-**If you have any idea, please make a [Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls).**
-
 ## Known Issue 🥶
 
 The `PinEditingController` listener will execute more than once when programmatically set text, you can filter some duplicate values in your code. 

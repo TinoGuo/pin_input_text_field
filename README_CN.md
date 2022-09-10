@@ -136,13 +136,6 @@ final bool isTextObscure;
 final String obscureText;
 ```
 
-## 注意点 ⚠️
-
-### 3.2.0
-`Cursor`会覆盖`HintText`设置，因为`Cursor`和`HintText`在同一个位置上.
-
-**如果你有什么好的建议，请提[Pull Request](https://github.com/TinoGuo/pin_input_text_field/pulls)，谢谢.**
-
 ## 已知问题 🥶
 
 目前`PinEditingController`的Listener会在手动设置text值时执行多次，可以在应用层的代码上过滤下

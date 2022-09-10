@@ -1,3 +1,6 @@
+## [4.2.0] - 2022/09/10
+* Fixed Cursor overriding HintText [#75](https://github.com/TinoGuo/pin_input_text_field/pull/75)
+
 ## [4.1.2] - 2022/03/19
 * Correctly remove&add FocusNode listener [#73](https://github.com/TinoGuo/pin_input_text_field/issues/73)
 
