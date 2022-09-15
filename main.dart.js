@@ -49965,7 +49965,7 @@ this.aY()},
 xH(){var s,r=this,q=r.iy$,p=r.m5$
 p=r.iy$=B.e.bh(J.am7(p.gn(p),0,1)*255)
 if(q!==p){s=r.z8$
-p=p>0&&p<255
+p=p>0
 r.z8$=p
 if(r.A$!=null&&s!==p)r.oJ()
 r.a53()
