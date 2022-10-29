@@ -19,7 +19,7 @@ const RESOURCES = {
 "assets/NOTICES": "6b5aa63d77c2b33359ffed7428a88c96",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
-"assets/shaders/ink_sparkle.frag": "e35b6596de523db6d8ed141b1569cb7a",
+"assets/shaders/ink_sparkle.frag": "2106829464cbc69620eb44f3664132c5",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
