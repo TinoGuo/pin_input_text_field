@@ -1,8 +1,5 @@
 ![](https://github.com/TinoGuo/pin_input_text_field/workflows/Flutter%20Build%20Test%20CI/badge.svg?branch=master)
 [![pub package](https://img.shields.io/pub/v/pin_input_text_field.svg)](https://pub.dartlang.org/packages/pin_input_text_field?branch=master)
-[![pub points](https://badges.bar/pin_input_text_field/pub%20points)](https://pub.dev/packages/pin_input_text_field/score)
-[![popularity](https://badges.bar/pin_input_text_field/popularity)](https://pub.dev/packages/pin_input_text_field/score)
-[![likes](https://badges.bar/pin_input_text_field/likes)](https://pub.dev/packages/pin_input_text_field/score)
 ![GitHub](https://img.shields.io/github/license/TinoGuo/pin_input_text_field)
 ![GitHub top language](https://img.shields.io/github/languages/top/TinoGuo/pin_input_text_field)
 
@@ -139,3 +136,21 @@ final String obscureText;
 ## 已知问题 🥶
 
 目前`PinEditingController`的Listener会在手动设置text值时执行多次，可以在应用层的代码上过滤下
+
+## License
+
+```text
+Copyright 2019 Tino Guo.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
