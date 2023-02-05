@@ -52,8 +52,8 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s enableInteractiveSelection
   final bool enableInteractiveSelection;
 
-  /// Same as [TextField]'s toolbarOptions
-  final ToolbarOptions? toolbarOptions;
+  /// Same as [TextField]'s contextMenuBuilder
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
 
   /// Same as [TextField]'s autofillHints
   final Iterable<String>? autofillHints;
@@ -77,7 +77,7 @@ class PinInputTextField extends StatefulWidget {
     textCapitalization,
     this.autocorrect = false,
     this.enableInteractiveSelection = false,
-    this.toolbarOptions,
+    this.contextMenuBuilder,
     this.autofillHints,
     Cursor? cursor,
   })  :
@@ -264,7 +264,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
         textAlign: TextAlign.center,
 
         /// Options of the edit menu
-        toolbarOptions: widget.toolbarOptions,
+        contextMenuBuilder: widget.contextMenuBuilder,
 
         /// Disable the actual textField selection.
         enableInteractiveSelection: widget.enableInteractiveSelection,
@@ -401,7 +401,7 @@ class PinInputTextFormField extends FormField<String> {
     TextCapitalization? textCapitalization,
     bool autocorrect = false,
     bool enableInteractiveSelection = false,
-    ToolbarOptions? toolbarOptions,
+    EditableTextContextMenuBuilder? contextMenuBuilder,
     Iterable<String>? autofillHints,
     Cursor? cursor,
   })  : assert(initialValue == null || controller == null),
@@ -430,7 +430,7 @@ class PinInputTextFormField extends FormField<String> {
                 textCapitalization: textCapitalization,
                 enableInteractiveSelection: enableInteractiveSelection,
                 autocorrect: autocorrect,
-                toolbarOptions: toolbarOptions,
+                contextMenuBuilder: contextMenuBuilder,
                 autofillHints: autofillHints,
                 cursor: cursor,
               );
@@ -552,12 +552,12 @@ class _PinPaint extends CustomPainter {
     this.cursor,
     this.textDirection = TextDirection.ltr,
   }) : decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
+          textStyle: decoration.textStyle ?? themeData.textTheme.headlineSmall,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData.textTheme.caption
-                  ?.copyWith(color: themeData.errorColor),
+              themeData.textTheme.bodySmall
+                  ?.copyWith(color: themeData.colorScheme.error),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData.textTheme.headline5
+              themeData.textTheme.headlineSmall
                   ?.copyWith(color: themeData.hintColor),
         );
 
