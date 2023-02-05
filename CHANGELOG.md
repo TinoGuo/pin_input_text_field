@@ -1,3 +1,7 @@
+## [4.3.0] - 2023/02/05
+* Adapt to new flutter version and rename deprecated fields
+* Upgrade lint version
+
 ## [4.2.0] - 2022/09/10
 * Fixed Cursor overriding HintText [#75](https://github.com/TinoGuo/pin_input_text_field/pull/75)
 
