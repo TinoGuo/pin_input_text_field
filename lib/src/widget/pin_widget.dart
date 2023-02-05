@@ -437,7 +437,7 @@ class PinInputTextFormField extends FormField<String> {
             });
 
   @override
-  _PinInputTextFormFieldState createState() => _PinInputTextFormFieldState();
+  FormFieldState<String> createState() => _PinInputTextFormFieldState();
 }
 
 class _PinInputTextFormFieldState extends FormFieldState<String> {
