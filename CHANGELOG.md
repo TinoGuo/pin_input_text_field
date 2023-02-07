@@ -1,3 +1,6 @@
+## [4.4.0] - 2023/02/07
+* Revert remove toolbarOptions
+
 ## [4.3.0] - 2023/02/05
 * Adapt to new flutter version and rename deprecated fields
 * Upgrade lint version

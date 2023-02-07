@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -52,6 +54,13 @@ class PinInputTextField extends StatefulWidget {
   /// Same as [TextField]'s enableInteractiveSelection
   final bool enableInteractiveSelection;
 
+  /// Same as [TextField]'s toolbarOptions
+  @Deprecated(
+    'Use `contextMenuBuilder` instead. '
+        'This feature was deprecated after flutter v3.3.0-0.5.pre.',
+  )
+  final ToolbarOptions? toolbarOptions;
+
   /// Same as [TextField]'s contextMenuBuilder
   final EditableTextContextMenuBuilder? contextMenuBuilder;
 
@@ -77,6 +86,7 @@ class PinInputTextField extends StatefulWidget {
     textCapitalization,
     this.autocorrect = false,
     this.enableInteractiveSelection = false,
+    this.toolbarOptions,
     this.contextMenuBuilder,
     this.autofillHints,
     Cursor? cursor,
@@ -264,6 +274,10 @@ class _PinInputTextFieldState extends State<PinInputTextField>
         textAlign: TextAlign.center,
 
         /// Options of the edit menu
+        // ignore: deprecated_member_use_from_same_package
+        toolbarOptions: widget.toolbarOptions,
+
+        /// Options of the edit menu
         contextMenuBuilder: widget.contextMenuBuilder,
 
         /// Disable the actual textField selection.
@@ -401,6 +415,7 @@ class PinInputTextFormField extends FormField<String> {
     TextCapitalization? textCapitalization,
     bool autocorrect = false,
     bool enableInteractiveSelection = false,
+    ToolbarOptions? toolbarOptions,
     EditableTextContextMenuBuilder? contextMenuBuilder,
     Iterable<String>? autofillHints,
     Cursor? cursor,
@@ -430,6 +445,7 @@ class PinInputTextFormField extends FormField<String> {
                 textCapitalization: textCapitalization,
                 enableInteractiveSelection: enableInteractiveSelection,
                 autocorrect: autocorrect,
+                toolbarOptions: toolbarOptions,
                 contextMenuBuilder: contextMenuBuilder,
                 autofillHints: autofillHints,
                 cursor: cursor,
@@ -552,12 +568,12 @@ class _PinPaint extends CustomPainter {
     this.cursor,
     this.textDirection = TextDirection.ltr,
   }) : decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData.textTheme.headlineSmall,
+          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData.textTheme.bodySmall
-                  ?.copyWith(color: themeData.colorScheme.error),
+              themeData.textTheme.caption
+                  ?.copyWith(color: themeData.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData.textTheme.headlineSmall
+              themeData.textTheme.headline5
                   ?.copyWith(color: themeData.hintColor),
         );
 
