@@ -18,7 +18,7 @@ class CirclePinDecoration extends PinDecoration
   // The background color of index character.
   final ColorBuilder? bgColorBuilder;
 
-  const CirclePinDecoration({
+  CirclePinDecoration({
     TextStyle? textStyle,
     ObscureStyle? obscureStyle,
     String? errorText,

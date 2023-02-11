@@ -14,7 +14,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
   /// The background color of index character
   final ColorBuilder? bgColorBuilder;
 
-  const BoxTightDecoration({
+  BoxTightDecoration({
     TextStyle? textStyle,
     ObscureStyle? obscureStyle,
     String? errorText,

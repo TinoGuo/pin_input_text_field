@@ -22,7 +22,7 @@ class BoxLooseDecoration extends PinDecoration
   /// The background color of index character.
   final ColorBuilder? bgColorBuilder;
 
-  const BoxLooseDecoration({
+  BoxLooseDecoration({
     TextStyle? textStyle,
     ObscureStyle? obscureStyle,
     String? errorText,

@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Orientation;
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 void main() => runApp(MyApp());
 
 const _kInputHeight = 64.0;
-const _kDefaultHint = 'abcd';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -70,8 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
       GlobalKey<FormFieldState<String>>(debugLabel: '_formkey');
 
   /// Control the input text field.
-  TextEditingController _pinEditingController =
-      TextEditingController(text: '123');
+  TextEditingController _pinEditingController = TextEditingController(text: '');
 
   GlobalKey<ScaffoldState> _globalKey =
       GlobalKey<ScaffoldState>(debugLabel: 'home page global key');
@@ -95,6 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _hasError = false;
 
   bool _cursorEnable = true;
+
+  Orientation _orientation = Orientation.vertical;
 
   /// Set a pin to the textField.
   void _setPinValue() {
@@ -130,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '😂',
             ),
-            hintText: _kDefaultHint,
           );
         });
         break;
@@ -142,7 +141,6 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '👿',
             ),
-            hintText: _kDefaultHint,
           );
         });
         break;
@@ -156,7 +154,6 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '☺️',
             ),
-            hintText: _kDefaultHint,
           );
         });
         break;
@@ -170,7 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
               isTextObscure: _obscureEnable,
               obscureText: '🤪',
             ),
-            hintText: _kDefaultHint,
           );
         });
         break;
@@ -273,7 +269,32 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Cursor orientation',
+            style: TextStyle(fontSize: 18),
+          ),
+          SizedBox(width: 12),
+          PopupMenuButton<Orientation>(
+            child: Icon(_orientation == Orientation.vertical
+                ? Icons.stay_current_portrait
+                : Icons.stay_current_landscape),
+            onSelected: _cursorOrientationSelected,
+            itemBuilder: (context) => Orientation.values
+                .map((e) => PopupMenuItem(value: e, child: Text(e.name)))
+                .toList(growable: false),
+          )
+        ],
+      ),
     ];
+  }
+
+  void _cursorOrientationSelected(Orientation orientation) {
+    setState(() {
+      _orientation = orientation;
+    });
   }
 
   Widget _buildPinInputTextFieldExample() {
@@ -300,16 +321,35 @@ class _MyHomePageState extends State<MyHomePage> {
                 debugPrint('onChanged execute. pin:$pin');
               },
               enableInteractiveSelection: false,
-              cursor: Cursor(
-                width: 2,
-                color: Colors.lightBlue,
-                radius: Radius.circular(1),
-                enabled: _cursorEnable,
-              ),
+              cursor: _orientation == Orientation.vertical
+                  ? _buildVerticalCursor()
+                  : _buildHorizontalCursor(),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Cursor _buildVerticalCursor() {
+    return Cursor(
+      width: 2,
+      color: Colors.lightBlue,
+      radius: Radius.circular(1),
+      enabled: _cursorEnable,
+      orientation: Orientation.vertical,
+    );
+  }
+
+  Cursor _buildHorizontalCursor() {
+    return Cursor(
+      height: 2,
+      width: 64,
+      offset: 16,
+      color: Colors.lightBlue,
+      radius: Radius.circular(1),
+      enabled: _cursorEnable,
+      orientation: Orientation.horizontal,
     );
   }
 
@@ -360,12 +400,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
                 return null;
               },
-              cursor: Cursor(
-                width: 2,
-                color: Colors.lightBlue,
-                radius: Radius.circular(1),
-                enabled: _cursorEnable,
-              ),
+              cursor: _orientation == Orientation.vertical ? _buildVerticalCursor() : _buildHorizontalCursor(),
             ),
           ),
           SizedBox(
@@ -412,28 +447,12 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.more_vert),
             onSelected: _selectedMenu,
             itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  child: Text('underline decoration'),
-                  value: PinEntryType.underline,
-                ),
-                PopupMenuItem(
-                  child: Text('box loose decoration'),
-                  value: PinEntryType.boxLoose,
-                ),
-                PopupMenuItem(
-                  child: Text('box tight decoration'),
-                  value: PinEntryType.boxTight,
-                ),
-                PopupMenuItem(
-                  child: Text('circle decoration'),
-                  value: PinEntryType.circle,
-                ),
-                PopupMenuItem(
-                  child: Text('Customize decorarion'),
-                  value: PinEntryType.customized,
-                )
-              ];
+              return PinEntryType.values
+                  .map((e) => PopupMenuItem(
+                        child: Text(e.name),
+                        value: e,
+                      ))
+                  .toList(growable: false);
             },
           ),
         ],
