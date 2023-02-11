@@ -123,7 +123,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
   @override
   Widget build(BuildContext context) {
     return TextFieldTapRegion(
-      onTapOutside: null,
+      onTapOutside: widget.tapRegionCallback,
       child: _buildTextField(),
     );
   }
@@ -163,10 +163,6 @@ class _PinInputTextFieldState extends State<PinInputTextField>
 
         /// Center the input to make more natural.
         textAlign: TextAlign.center,
-
-        /// Options of the edit menu
-        // ignore: deprecated_member_use_from_same_package
-        toolbarOptions: widget.toolbarOptions,
 
         /// Options of the edit menu
         contextMenuBuilder: widget.contextMenuBuilder,
@@ -390,12 +386,12 @@ class _PinPaint extends CustomPainter {
     this.cursor,
     this.textDirection = TextDirection.ltr,
   }) : decoration = decoration.copyWith(
-    textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
+    textStyle: decoration.textStyle ?? themeData.textTheme.headlineSmall,
     errorTextStyle: decoration.errorTextStyle ??
-        themeData.textTheme.caption
-            ?.copyWith(color: themeData.errorColor),
+        themeData.textTheme.bodySmall
+            ?.copyWith(color: themeData.colorScheme.error),
     hintTextStyle: decoration.hintTextStyle ??
-        themeData.textTheme.headline5
+        themeData.textTheme.headlineSmall
             ?.copyWith(color: themeData.hintColor),
   );
 

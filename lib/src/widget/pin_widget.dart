@@ -70,6 +70,8 @@ class PinInputTextField extends StatefulWidget {
   /// The cursor of the pin widget, the default is disabled.
   final Cursor cursor;
 
+  final TapRegionCallback? tapRegionCallback;
+
   PinInputTextField({
     Key? key,
     this.pinLength = _kDefaultPinLength,
@@ -90,6 +92,7 @@ class PinInputTextField extends StatefulWidget {
     this.contextMenuBuilder,
     this.autofillHints,
     Cursor? cursor,
+    this.tapRegionCallback,
   })  :
 
         /// pinLength must larger than 0.
@@ -145,6 +148,7 @@ class PinInputTextFormField extends FormField<String> {
     EditableTextContextMenuBuilder? contextMenuBuilder,
     Iterable<String>? autofillHints,
     Cursor? cursor,
+    TapRegionCallback? tapRegionCallback,
   })  : assert(initialValue == null || controller == null),
         super(
             key: key,
@@ -175,6 +179,7 @@ class PinInputTextFormField extends FormField<String> {
                 contextMenuBuilder: contextMenuBuilder,
                 autofillHints: autofillHints,
                 cursor: cursor,
+                tapRegionCallback: tapRegionCallback,
               );
             });
 
