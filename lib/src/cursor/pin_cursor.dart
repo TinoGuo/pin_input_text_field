@@ -13,12 +13,14 @@ const _kDefaultBlinkHalfPeriod = Duration(milliseconds: 500);
 // transparent.
 const _kDefaultBlinkWaitForStart = Duration(milliseconds: 150);
 
+const _kZeroDuration = Duration();
+
 const _kDefaultRadius = Radius.zero;
 
 /// Cursor data class.
 class Cursor {
   /// Width of cursor.
-  final double width;
+  final double? width;
 
   /// Height of cursor.
   final double? height;
@@ -45,6 +47,12 @@ class Cursor {
   /// Whether to show cursor, if the value is false, would ignore any other property setter.
   final bool enabled;
 
+  /// The orientation of cursor
+  final Orientation orientation;
+
+  /// The offset from center
+  final double offset;
+
   Cursor.disabled()
       : width = 0.0,
         height = 0.0,
@@ -53,19 +61,27 @@ class Cursor {
         fadeDuration = _kDefaultFadeDuration,
         blinkHalfPeriod = _kDefaultBlinkHalfPeriod,
         blinkWaitForStart = _kDefaultBlinkWaitForStart,
+        orientation = Orientation.vertical,
+        offset = 0.0,
         enabled = false;
 
-  Cursor({
-    this.width = 4.0,
+  const Cursor({
+    this.width,
     this.height,
     this.radius = _kDefaultRadius,
     required this.color,
     this.fadeDuration = _kDefaultFadeDuration,
     this.blinkHalfPeriod = _kDefaultBlinkHalfPeriod,
     this.blinkWaitForStart = _kDefaultBlinkWaitForStart,
+    this.orientation = Orientation.vertical,
+    this.offset = 0.0,
     this.enabled = false,
-  })  : assert(width >= 0.0),
-        assert(height == null || height >= 0.0);
+  })  : assert(width != null || height != null),
+        assert(width == null || width >= 0.0),
+        assert(height == null || height >= 0.0),
+        assert(fadeDuration > _kZeroDuration),
+        assert(blinkHalfPeriod > _kZeroDuration),
+        assert(blinkWaitForStart > _kZeroDuration);
 
   Cursor copyWith({
     double? width,
@@ -75,6 +91,8 @@ class Cursor {
     Duration? fadeDuration,
     Duration? blinkHalfPeriod,
     Duration? blinkWaitForStart,
+    Orientation? orientation,
+    double? offset,
     bool? enabled,
   }) =>
       Cursor(
@@ -85,6 +103,8 @@ class Cursor {
         fadeDuration: fadeDuration ?? this.fadeDuration,
         blinkHalfPeriod: blinkHalfPeriod ?? this.blinkHalfPeriod,
         blinkWaitForStart: blinkWaitForStart ?? this.blinkWaitForStart,
+        orientation: orientation ?? this.orientation,
+        offset: offset ?? this.offset,
         enabled: enabled ?? this.enabled,
       );
 
@@ -100,7 +120,9 @@ class Cursor {
           fadeDuration == other.fadeDuration &&
           blinkHalfPeriod == other.blinkHalfPeriod &&
           blinkWaitForStart == other.blinkWaitForStart &&
-          enabled == other.enabled;
+          enabled == other.enabled &&
+          orientation == other.orientation &&
+          offset == other.offset;
 
   @override
   int get hashCode =>
@@ -111,10 +133,18 @@ class Cursor {
       fadeDuration.hashCode ^
       blinkHalfPeriod.hashCode ^
       blinkWaitForStart.hashCode ^
-      enabled.hashCode;
+      enabled.hashCode ^
+      orientation.hashCode ^
+      offset.hashCode;
 
   @override
   String toString() {
-    return 'Cursor{width: $width, height: $height, radius: $radius, color: $color, fadeDuration: $fadeDuration, blinkHalfPeriod: $blinkHalfPeriod, blinkWaitForStart: $blinkWaitForStart, enabled: $enabled}';
+    return 'Cursor{width: $width, height: $height, radius: $radius, color: $color, fadeDuration: $fadeDuration, blinkHalfPeriod: $blinkHalfPeriod, blinkWaitForStart: $blinkWaitForStart, enabled: $enabled, orientation: $orientation, offset: $offset}';
   }
+}
+
+/// Whether in portrait or landscape.
+enum Orientation {
+  horizontal,
+  vertical,
 }

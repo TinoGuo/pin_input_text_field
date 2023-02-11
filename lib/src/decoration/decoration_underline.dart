@@ -22,7 +22,7 @@ class UnderlineDecoration extends PinDecoration
   /// The background color of index character.
   final ColorBuilder? bgColorBuilder;
 
-  const UnderlineDecoration({
+  UnderlineDecoration({
     TextStyle? textStyle,
     ObscureStyle? obscureStyle,
     String? errorText,

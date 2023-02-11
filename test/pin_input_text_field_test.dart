@@ -10,11 +10,13 @@ Future<void> pumpMaterialWidget(WidgetTester tester, Widget child) {
   ));
 }
 
+final decoration = UnderlineDecoration(colorBuilder: const FixedColorBuilder(Colors.white));
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Create Text Field', (WidgetTester tester) async {
-    await pumpMaterialWidget(tester, PinInputTextField());
+    await pumpMaterialWidget(tester, PinInputTextField(decoration: decoration,));
   });
 
   testWidgets('Get pin text', (WidgetTester tester) async {
@@ -23,8 +25,8 @@ void main() {
         tester,
         PinInputTextField(
           controller: controller,
-          decoration: const UnderlineDecoration(
-              colorBuilder: FixedColorBuilder(Colors.cyan)),
+          decoration: UnderlineDecoration(
+              colorBuilder: const FixedColorBuilder(Colors.cyan)),
         ));
     await tester.enterText(find.byType(TextField), '1234');
     expect('1234', controller.text);
@@ -43,6 +45,7 @@ void main() {
               controller: TextEditingController(text: '123'),
               focusNode: focusNode,
               autoFocus: true,
+              decoration: decoration,
             ),
             const TextField(),
           ],
@@ -60,6 +63,7 @@ void main() {
               key: key,
               controller: TextEditingController(text: '123'),
               focusNode: focusNode,
+              decoration: decoration,
             ),
             const TextField(),
           ],
