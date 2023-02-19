@@ -61,9 +61,6 @@ class PinInputTextField extends StatefulWidget {
   )
   final ToolbarOptions? toolbarOptions;
 
-  /// Same as [TextField]'s contextMenuBuilder
-  final EditableTextContextMenuBuilder? contextMenuBuilder;
-
   /// Same as [TextField]'s autofillHints
   final Iterable<String>? autofillHints;
 
@@ -87,7 +84,6 @@ class PinInputTextField extends StatefulWidget {
     this.autocorrect = false,
     this.enableInteractiveSelection = false,
     this.toolbarOptions,
-    this.contextMenuBuilder,
     this.autofillHints,
     Cursor? cursor,
   })  :
@@ -277,9 +273,6 @@ class _PinInputTextFieldState extends State<PinInputTextField>
         // ignore: deprecated_member_use_from_same_package
         toolbarOptions: widget.toolbarOptions,
 
-        /// Options of the edit menu
-        contextMenuBuilder: widget.contextMenuBuilder,
-
         /// Disable the actual textField selection.
         enableInteractiveSelection: widget.enableInteractiveSelection,
 
@@ -416,7 +409,6 @@ class PinInputTextFormField extends FormField<String> {
     bool autocorrect = false,
     bool enableInteractiveSelection = false,
     ToolbarOptions? toolbarOptions,
-    EditableTextContextMenuBuilder? contextMenuBuilder,
     Iterable<String>? autofillHints,
     Cursor? cursor,
   })  : assert(initialValue == null || controller == null),
@@ -446,7 +438,6 @@ class PinInputTextFormField extends FormField<String> {
                 enableInteractiveSelection: enableInteractiveSelection,
                 autocorrect: autocorrect,
                 toolbarOptions: toolbarOptions,
-                contextMenuBuilder: contextMenuBuilder,
                 autofillHints: autofillHints,
                 cursor: cursor,
               );

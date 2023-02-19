@@ -71,3 +71,6 @@ build/
 
 android
 ios
+macos
+web
+windows

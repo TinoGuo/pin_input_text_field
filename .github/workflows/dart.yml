@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - 5.0
   pull_request:
 
 jobs:
@@ -34,6 +35,7 @@ jobs:
           key: ${{ runner.os }}-flutter
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.3.10'
           channel: 'stable'
           architecture: x64
 
@@ -67,6 +69,7 @@ jobs:
         key: ${{ runner.os }}-flutter
     - uses: subosito/flutter-action@v2
       with:
+        flutter-version: '3.3.10'
         channel: 'stable'
         architecture: x64
     - name: flutter hotbake
