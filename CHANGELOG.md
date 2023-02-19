@@ -2,10 +2,13 @@
 * New:
   * Support cursor with orientation and offset
   * Add TextFieldTapRegion and callback
-* **Breaking Change** 
+**Breaking Change** 
 - No more support below 3.7.0
 - No default decoration provided in PinInputTextField
 - PinDecoration is not const
+
+## [4.4.1] - 2023/02/19
+* Revert parameter changes 4.2.0 between 4.4.0 inclusively, this version will be the last version to support below 3.7.0
 
 ## [4.4.0] - 2023/02/07
 * Revert remove toolbarOptions

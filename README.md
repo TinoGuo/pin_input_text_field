@@ -8,6 +8,9 @@
 [中文](./README_CN.md)
 PinInputTextField is a TextField widget to help display different style pin. It supports all the platforms [flutter](https://github.com/flutter/flutter) supports.
 
+## Notes 🚨
+**please use 4.4.1 for flutter version is below 3.7.0**
+
 ## Feature 🌟
 * allow you customized the shape, any!
 * built-in 4 commonly used pin styles of shape
