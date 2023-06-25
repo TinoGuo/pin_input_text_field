@@ -6,7 +6,7 @@ repository: https://github.com/TinoGuo/pin_input_text_field
 issue_tracker: https://github.com/TinoGuo/pin_input_text_field/issues
 
 environment:
-  sdk: '>=2.13.0 <3.0.0'
+  sdk: '>=2.13.0 <4.0.0'
   flutter: ">=3.7.0"
 
 dependencies:

@@ -52,7 +52,7 @@ class ListPage extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage(this.textFieldType, {Key key}) : super(key: key);
+  MyHomePage(this.textFieldType, {Key? key}) : super(key: key);
 
   final TextFieldType textFieldType;
 
@@ -75,24 +75,24 @@ class _MyHomePageState extends State<MyHomePage> {
       GlobalKey<ScaffoldState>(debugLabel: 'home page global key');
 
   /// Decorate the outside of the Pin.
-  PinDecoration _pinDecoration;
+  PinDecoration? _pinDecoration;
 
   /// Control whether show the obscureCode.
-  bool _obscureEnable = false;
+  bool? _obscureEnable = false;
 
   PinEntryType _pinEntryType = PinEntryType.underline;
   ColorBuilder _solidColor =
-      PinListenColorBuilder(Colors.grey, Colors.grey[400]);
-  bool _solidEnable = false;
+      PinListenColorBuilder(Colors.grey, Colors.grey[400]!);
+  bool? _solidEnable = false;
 
   /// Control whether textField is enable.
-  bool _enable = true;
+  bool? _enable = true;
 
   /// Indicate whether the PinInputTextFormField has error or not
   /// after being validated.
   bool _hasError = false;
 
-  bool _cursorEnable = true;
+  bool? _cursorEnable = true;
 
   Orientation _orientation = Orientation.vertical;
 
@@ -125,9 +125,9 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _pinDecoration = UnderlineDecoration(
             colorBuilder: PinListenColorBuilder(Colors.cyan, Colors.green),
-            bgColorBuilder: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable! ? _solidColor : null,
             obscureStyle: ObscureStyle(
-              isTextObscure: _obscureEnable,
+              isTextObscure: _obscureEnable!,
               obscureText: '😂',
             ),
           );
@@ -136,9 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.boxTight:
         setState(() {
           _pinDecoration = BoxTightDecoration(
-            bgColorBuilder: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable! ? _solidColor : null,
             obscureStyle: ObscureStyle(
-              isTextObscure: _obscureEnable,
+              isTextObscure: _obscureEnable!,
               obscureText: '👿',
             ),
           );
@@ -149,9 +149,9 @@ class _MyHomePageState extends State<MyHomePage> {
           _pinDecoration = BoxLooseDecoration(
             strokeColorBuilder:
                 PinListenColorBuilder(Colors.cyan, Colors.green),
-            bgColorBuilder: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable! ? _solidColor : null,
             obscureStyle: ObscureStyle(
-              isTextObscure: _obscureEnable,
+              isTextObscure: _obscureEnable!,
               obscureText: '☺️',
             ),
           );
@@ -160,11 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
       case PinEntryType.circle:
         setState(() {
           _pinDecoration = CirclePinDecoration(
-            bgColorBuilder: _solidEnable ? _solidColor : null,
+            bgColorBuilder: _solidEnable! ? _solidColor : null,
             strokeColorBuilder:
                 PinListenColorBuilder(Colors.cyan, Colors.green),
             obscureStyle: ObscureStyle(
-              isTextObscure: _obscureEnable,
+              isTextObscure: _obscureEnable!,
               obscureText: '🤪',
             ),
           );
@@ -308,10 +308,10 @@ class _MyHomePageState extends State<MyHomePage> {
             height: _kInputHeight,
             child: PinInputTextField(
               pinLength: _pinLength,
-              decoration: _pinDecoration,
+              decoration: _pinDecoration!,
               controller: _pinEditingController,
               textInputAction: TextInputAction.go,
-              enabled: _enable,
+              enabled: _enable!,
               keyboardType: TextInputType.text,
               textCapitalization: TextCapitalization.characters,
               onSubmit: (pin) {
@@ -336,7 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
       width: 2,
       color: Colors.lightBlue,
       radius: Radius.circular(1),
-      enabled: _cursorEnable,
+      enabled: _cursorEnable!,
       orientation: Orientation.vertical,
     );
   }
@@ -348,7 +348,7 @@ class _MyHomePageState extends State<MyHomePage> {
       offset: 16,
       color: Colors.lightBlue,
       radius: Radius.circular(1),
-      enabled: _cursorEnable,
+      enabled: _cursorEnable!,
       orientation: Orientation.horizontal,
     );
   }
@@ -365,15 +365,15 @@ class _MyHomePageState extends State<MyHomePage> {
             child: PinInputTextFormField(
               key: _formKey,
               pinLength: _pinLength,
-              decoration: _pinDecoration,
+              decoration: _pinDecoration!,
               controller: _pinEditingController,
               textInputAction: TextInputAction.go,
-              enabled: _enable,
+              enabled: _enable!,
               keyboardType: TextInputType.text,
               textCapitalization: TextCapitalization.characters,
               onSubmit: (pin) {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
+                if (_formKey.currentState?.validate() == true) {
+                  _formKey.currentState?.save();
                 }
               },
               onChanged: (pin) {
@@ -383,13 +383,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 debugPrint('onSaved pin:$pin');
               },
               validator: (pin) {
-                if (pin.isEmpty) {
+                if (pin?.isEmpty == true) {
                   setState(() {
                     _hasError = true;
                   });
                   return 'Pin cannot empty.';
                 }
-                if (pin.length < _pinLength) {
+                if (pin!.length < _pinLength) {
                   setState(() {
                     _hasError = true;
                   });
@@ -411,8 +411,8 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState?.validate() == true) {
+                    _formKey.currentState?.save();
                   }
                 },
                 child: Text(
@@ -471,13 +471,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class ExampleDecoration extends PinDecoration {
   ExampleDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
-    ColorBuilder bgColorBuilder,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
+    ColorBuilder? bgColorBuilder,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -489,13 +489,13 @@ class ExampleDecoration extends PinDecoration {
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
-    ColorBuilder bgColorBuilder,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
+    ColorBuilder? bgColorBuilder,
   }) {
     return ExampleDecoration(
         textStyle: textStyle ?? this.textStyle,
@@ -516,7 +516,7 @@ class ExampleDecoration extends PinDecoration {
     Size size,
     String text,
     int pinLength,
-    Cursor cursor,
+    Cursor? cursor,
     TextDirection textDirection,
   ) {
     /// You can draw anything you want here.
