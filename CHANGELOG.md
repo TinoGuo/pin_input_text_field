@@ -1,3 +1,6 @@
+## [4.5.1] - 2023/06/25
+* Update dart sdk constraints
+
 ## [4.5.0] - 2023/02/11
 * New:
   * Support cursor with orientation and offset
