@@ -1,0 +1,57 @@
+name: Flutter Build Test CI
+
+on:
+  schedule:
+    - cron: '0 8 1/7 * *'
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        cache: true
+    - if: matrix.os == 'macos-latest'
+      name: set java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '11'
+    - name: flutter hotbake
+      run: |
+        flutter doctor --verbose
+        flutter pub get
+        flutter analyze
+        flutter test
+    - name: build platform directory
+      working-directory: ./example
+      run: flutter create .
+    # build example
+    - name: build android example
+      working-directory: ./example
+      run: flutter build appbundle
+    - if: matrix.os == 'macos-latest'
+      name: build ios example
+      working-directory: ./example
+      run: flutter build ios --release --no-codesign
+    - name: build web example
+      working-directory: ./example
+      run: flutter build web
+    - if: ${{ matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' }}
+      name: deploy
+      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: example/build/web # The folder the action should deploy.
