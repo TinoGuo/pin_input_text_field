@@ -5,7 +5,7 @@ void main() {
   group('check all platform mini size', () {
     testWidgets('check all platform', (tester) async {
       var fontSize = platformMiniFontSize();
-      expect(double.minPositive, fontSize);
+      expect(1, fontSize);
     }, variant: TargetPlatformVariant.all());
 
     testWidgets('check web', (tester) async {
