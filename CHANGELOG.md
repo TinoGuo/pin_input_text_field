@@ -1,3 +1,6 @@
+## [4.5.2] - 2024/08/22
+* #101 Fix Bad state error, thx [dejunDev](https://github.com/dejunDev)
+
 ## [4.5.1] - 2023/06/25
 * Update dart sdk constraints
 
