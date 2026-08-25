@@ -19,6 +19,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     ObscureStyle? obscureStyle,
     String? errorText,
     TextStyle? errorTextStyle,
+    double errorTextSpacing = PinDecoration.defaultErrorTextSpacing,
     String? hintText,
     TextStyle? hintTextStyle,
     this.strokeWidth = 1.0,
@@ -30,6 +31,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
           obscureStyle: obscureStyle,
           errorText: errorText,
           errorTextStyle: errorTextStyle,
+          errorTextSpacing: errorTextSpacing,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
           baseBgColorBuilder: bgColorBuilder,
@@ -53,6 +55,7 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
       obscureStyle: obscureStyle ?? this.obscureStyle,
       errorText: errorText ?? this.errorText,
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      errorTextSpacing: errorTextSpacing,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
       strokeColor: strokeColor,
@@ -83,7 +86,8 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
     /// we use a simple logic to calculate it.
     double mainHeight;
     if (errorText != null && errorText!.isNotEmpty) {
-      mainHeight = size.height - (errorTextStyle?.fontSize ?? 0 + 8.0);
+      mainHeight =
+          size.height - ((errorTextStyle?.fontSize ?? 0) + errorTextSpacing);
     } else {
       mainHeight = size.height;
     }

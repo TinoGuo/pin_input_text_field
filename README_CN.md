@@ -127,6 +127,15 @@ PinInputTextField的自定义属性
 
 请使用PinInputTextFormField来做表单验证.
 
+所有内置样式默认在 PIN 框与验证错误文字之间预留 8 个逻辑像素，可以在样式中修改：
+
+```dart
+BoxLooseDecoration(
+  errorTextSpacing: 16, // 不配置时默认为 8
+  strokeColorBuilder: const FixedColorBuilder(Colors.black),
+)
+```
+
 ### 密码模式
 
 ```
