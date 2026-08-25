@@ -1,3 +1,7 @@
+## [Unreleased]
+* Fix #99 validation error text overlapping the pin area.
+* Add configurable `errorTextSpacing` to built-in decorations; defaults to 8 logical pixels.
+
 ## [4.5.2] - 2024/08/22
 * #101 Fix Bad state error, thx [dejunDev](https://github.com/dejunDev)
 

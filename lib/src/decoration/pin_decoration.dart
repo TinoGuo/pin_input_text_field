@@ -27,6 +27,9 @@ class SupportGap {
 }
 
 abstract class PinDecoration {
+  /// The default vertical spacing reserved above validation error text.
+  static const double defaultErrorTextSpacing = 8.0;
+
   /// The style of painting text.
   final TextStyle? textStyle;
 
@@ -38,6 +41,10 @@ abstract class PinDecoration {
 
   /// The style of error text.
   final TextStyle? errorTextStyle;
+
+  /// The vertical spacing reserved between the pin area and validation error
+  /// text.
+  final double errorTextSpacing;
 
   final String? hintText;
 
@@ -53,10 +60,11 @@ abstract class PinDecoration {
     this.obscureStyle,
     this.errorText,
     this.errorTextStyle,
+    this.errorTextSpacing = defaultErrorTextSpacing,
     this.hintText,
     this.hintTextStyle,
     this.baseBgColorBuilder,
-  });
+  }) : assert(errorTextSpacing >= 0);
 
   void drawPin(
     Canvas canvas,
@@ -90,6 +98,7 @@ abstract class PinDecoration {
           obscureStyle == other.obscureStyle &&
           errorText == other.errorText &&
           errorTextStyle == other.errorTextStyle &&
+          errorTextSpacing == other.errorTextSpacing &&
           hintText == other.hintText &&
           hintTextStyle == other.hintTextStyle &&
           baseBgColorBuilder == other.baseBgColorBuilder;
@@ -100,12 +109,13 @@ abstract class PinDecoration {
       obscureStyle.hashCode ^
       errorText.hashCode ^
       errorTextStyle.hashCode ^
+      errorTextSpacing.hashCode ^
       hintText.hashCode ^
       hintTextStyle.hashCode ^
       baseBgColorBuilder.hashCode;
 
   @override
   String toString() {
-    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, hintText: $hintText, hintTextStyle: $hintTextStyle, bgColorBuilder: $baseBgColorBuilder}';
+    return 'PinDecoration{textStyle: $textStyle, obscureStyle: $obscureStyle, errorText: $errorText, errorTextStyle: $errorTextStyle, errorTextSpacing: $errorTextSpacing, hintText: $hintText, hintTextStyle: $hintTextStyle, bgColorBuilder: $baseBgColorBuilder}';
   }
 }

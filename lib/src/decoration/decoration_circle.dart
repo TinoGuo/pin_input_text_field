@@ -23,6 +23,7 @@ class CirclePinDecoration extends PinDecoration
     ObscureStyle? obscureStyle,
     String? errorText,
     TextStyle? errorTextStyle,
+    double errorTextSpacing = PinDecoration.defaultErrorTextSpacing,
     String? hintText,
     TextStyle? hintTextStyle,
     this.gapSpace = 16,
@@ -35,6 +36,7 @@ class CirclePinDecoration extends PinDecoration
           obscureStyle: obscureStyle,
           errorText: errorText,
           errorTextStyle: errorTextStyle,
+          errorTextSpacing: errorTextSpacing,
           hintText: hintText,
           hintTextStyle: hintTextStyle,
           baseBgColorBuilder: bgColorBuilder,
@@ -55,6 +57,7 @@ class CirclePinDecoration extends PinDecoration
       obscureStyle: obscureStyle ?? this.obscureStyle,
       errorText: errorText ?? this.errorText,
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
+      errorTextSpacing: errorTextSpacing,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
       strokeColorBuilder: strokeColorBuilder,
@@ -90,7 +93,8 @@ class CirclePinDecoration extends PinDecoration
     /// we use a simple logic to calculate it.
     double mainHeight;
     if (errorText != null && errorText!.isNotEmpty) {
-      mainHeight = size.height - (errorTextStyle?.fontSize ?? 0 + 8.0);
+      mainHeight =
+          size.height - ((errorTextStyle?.fontSize ?? 0) + errorTextSpacing);
     } else {
       mainHeight = size.height;
     }
