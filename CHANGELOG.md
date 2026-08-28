@@ -1,3 +1,6 @@
+## [Unreleased]
+* Fix: forward deprecated `toolbarOptions` to the underlying `TextField` [#94](https://github.com/TinoGuo/pin_input_text_field/issues/94).
+
 ## [4.5.2] - 2024/08/22
 * #101 Fix Bad state error, thx [dejunDev](https://github.com/dejunDev)
 
