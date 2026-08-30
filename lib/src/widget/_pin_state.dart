@@ -166,6 +166,10 @@ class _PinInputTextFieldState extends State<PinInputTextField>
         textAlign: TextAlign.center,
 
         /// Options of the edit menu
+        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+        toolbarOptions: widget.toolbarOptions,
+
+        /// Options of the edit menu
         contextMenuBuilder: widget.contextMenuBuilder,
 
         /// Disable the actual textField selection.
