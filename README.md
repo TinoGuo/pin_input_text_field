@@ -124,6 +124,16 @@ Customizable attributes for PinInputTextField
 ### FormField
 Instead of using PinInputTextField, using PinInputTextFormField to control validate.
 
+All built-in decorations reserve 8 logical pixels between the pin area and the
+validation error text by default. Configure the spacing on the decoration:
+
+```dart
+BoxLooseDecoration(
+  errorTextSpacing: 16, // Defaults to 8 when omitted.
+  strokeColorBuilder: const FixedColorBuilder(Colors.black),
+)
+```
+
 ### ObscureStyle 
 
 ```

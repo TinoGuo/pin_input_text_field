@@ -1,0 +1,15 @@
+version: 2
+
+updates:
+  - package-ecosystem: "pub"
+    directories:
+      - "/"
+      - "/example"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Singapore"
+    allow:
+      - dependency-type: "direct"
+    # Automatic rebasing is Dependabot's default behavior. Do not disable it.
