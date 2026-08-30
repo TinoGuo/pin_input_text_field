@@ -149,6 +149,25 @@ final String obscureText;
 
 目前`PinEditingController`的Listener会在手动设置text值时执行多次，可以在应用层的代码上过滤下
 
+## 准备发布版本
+
+请先在已更新的 checkout 中做一次 dry run：
+
+```bash
+./scripts/prepare_release.sh --dry-run
+./scripts/prepare_release.sh patch
+```
+
+脚本支持 `patch`、`minor`、`major`，也支持直接指定版本号，例如 `4.5.3`。它会刷新远端 tag，
+如果最新 tag 无法匹配当前历史就会停止；同时也能处理 `pubspec.yaml` 版本高于已有 tag 的历史情况。
+实际执行 `patch` 时，要求本地 `master` 干净且与 `origin/master` 一致；脚本只更新根目录的
+`pubspec.yaml` 与 `CHANGELOG.md`，自动 commit 和 push，随后 push 下一个不带 `v` 的版本 tag，
+并用生成的 release notes 创建 GitHub Release。它不会修改 `example/pubspec.yaml`。
+
+`release.yml` 会为普通或带 `v` 的 SemVer tag 创建 GitHub Release；`publish.yml` 则会通过
+`pub.dev` environment 发布普通 SemVer tag。首次自动发布前，需要先在 pub.dev 为此仓库配置
+GitHub Actions 发布。
+
 ## License
 
 ```text

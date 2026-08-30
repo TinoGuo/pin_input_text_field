@@ -1,0 +1,34 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions: {}
+
+concurrency:
+  group: pub-dev-${{ github.ref }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pub.dev
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Dart and pub.dev authentication
+        uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1 # v1.8.0
+      - name: Set up Flutter
+        uses: flutter-actions/setup-flutter@adb607ae976a9e00473569facfc69813c637a060 # v4.3
+      - name: Install dependencies
+        run: dart pub get
+      - name: Validate package
+        run: dart pub publish --dry-run
+      - name: Publish package
+        run: dart pub publish --force

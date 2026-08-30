@@ -1,6 +1,7 @@
 name: Flutter Build Test CI
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 8 1/7 * *'
   push:
@@ -18,14 +19,14 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v7
-    - uses: subosito/flutter-action@v2
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
       with:
         channel: stable
         cache: true
     - if: matrix.os == 'macos-latest'
       name: set java
-      uses: actions/setup-java@v5
+      uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
       with:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
@@ -46,6 +47,10 @@ jobs:
       name: build ios example
       working-directory: ./example
       run: flutter build ios --release --no-codesign
+    - if: matrix.os == 'macos-latest'
+      name: build macos example
+      working-directory: ./example
+      run: flutter build macos
     - name: build web example
       working-directory: ./example
       run: |
@@ -53,7 +58,7 @@ jobs:
         grep -Fq '<base href="/pin_input_text_field/">' build/web/index.html
     - if: ${{ matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' }}
       name: deploy
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
       with:
         branch: gh-pages # The branch the action should deploy to.
         folder: example/build/web # The folder the action should deploy.

@@ -1,4 +1,4 @@
-library pin_input_text_field;
+library;
 
 export 'src/builder/color_builder.dart';
 export 'src/cursor/pin_cursor.dart';

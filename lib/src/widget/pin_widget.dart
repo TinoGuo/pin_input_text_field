@@ -73,7 +73,7 @@ class PinInputTextField extends StatefulWidget {
   final TapRegionCallback? tapRegionCallback;
 
   PinInputTextField({
-    Key? key,
+    super.key,
     this.pinLength = _kDefaultPinLength,
     this.onSubmit,
     required this.decoration,
@@ -108,8 +108,7 @@ class PinInputTextField extends StatefulWidget {
                 (decoration as SupportGap).getGapWidthList!.length ==
                     pinLength - 1)),
         textCapitalization = textCapitalization ?? TextCapitalization.none,
-        cursor = cursor ?? Cursor.disabled(),
-        super(key: key);
+        cursor = cursor ?? Cursor.disabled();
 
   @override
   State createState() {
@@ -125,7 +124,7 @@ class PinInputTextFormField extends FormField<String> {
   final int pinLength;
 
   PinInputTextFormField({
-    Key? key,
+    super.key,
     this.controller,
     String? initialValue,
     this.pinLength = _kDefaultPinLength,
@@ -136,9 +135,9 @@ class PinInputTextFormField extends FormField<String> {
     FocusNode? focusNode,
     bool autoFocus = false,
     TextInputAction textInputAction = TextInputAction.done,
-    bool enabled = true,
-    FormFieldSetter<String>? onSaved,
-    FormFieldValidator<String>? validator,
+    super.enabled,
+    super.onSaved,
+    super.validator,
     AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
     ValueChanged<String>? onChanged,
     TextCapitalization? textCapitalization,
@@ -151,13 +150,9 @@ class PinInputTextFormField extends FormField<String> {
     TapRegionCallback? tapRegionCallback,
   })  : assert(initialValue == null || controller == null),
         super(
-            key: key,
             initialValue:
                 controller != null ? controller.text : (initialValue ?? ''),
-            onSaved: onSaved,
-            validator: validator,
             autovalidateMode: autovalidateMode,
-            enabled: enabled,
             builder: (FormFieldState<String> field) {
               return PinInputTextField(
                 pinLength: pinLength,

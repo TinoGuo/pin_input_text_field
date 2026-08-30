@@ -9,7 +9,7 @@ class _PinInputTextFieldState extends State<PinInputTextField>
 
   late AnimationController _cursorBlinkOpacityController;
   final ValueNotifier<bool> _cursorVisibilityNotifier =
-  ValueNotifier<bool>(true);
+      ValueNotifier<bool>(true);
   Timer? _cursorTimer;
   bool _targetCursorVisibility = false;
 
@@ -59,9 +59,8 @@ class _PinInputTextFieldState extends State<PinInputTextField>
 
   void _onCursorColorTick() {
     if (widget.cursor.enabled) {
-      _cursorColor = widget.cursor.color.withAlpha(
-        (_cursorBlinkOpacityController.value * 255).round(),
-      );
+      _cursorColor = widget.cursor.color
+          .withValues(alpha: _cursorBlinkOpacityController.value);
       _cursorVisibilityNotifier.value = _cursorBlinkOpacityController.value > 0;
       setState(() {});
     }
@@ -391,14 +390,14 @@ class _PinPaint extends CustomPainter {
     this.cursor,
     this.textDirection = TextDirection.ltr,
   }) : decoration = decoration.copyWith(
-    textStyle: decoration.textStyle ?? themeData.textTheme.headlineSmall,
-    errorTextStyle: decoration.errorTextStyle ??
-        themeData.textTheme.bodySmall
-            ?.copyWith(color: themeData.colorScheme.error),
-    hintTextStyle: decoration.hintTextStyle ??
-        themeData.textTheme.headlineSmall
-            ?.copyWith(color: themeData.hintColor),
-  );
+          textStyle: decoration.textStyle ?? themeData.textTheme.headlineSmall,
+          errorTextStyle: decoration.errorTextStyle ??
+              themeData.textTheme.bodySmall
+                  ?.copyWith(color: themeData.colorScheme.error),
+          hintTextStyle: decoration.hintTextStyle ??
+              themeData.textTheme.headlineSmall
+                  ?.copyWith(color: themeData.hintColor),
+        );
 
   @override
   bool shouldRepaint(_PinPaint oldDelegate) => oldDelegate != this;
@@ -429,14 +428,14 @@ class _PinPaint extends CustomPainter {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is _PinPaint &&
-              runtimeType == other.runtimeType &&
-              text == other.text &&
-              pinLength == other.pinLength &&
-              type == other.type &&
-              decoration == other.decoration &&
-              themeData == other.themeData &&
-              cursor == other.cursor;
+      other is _PinPaint &&
+          runtimeType == other.runtimeType &&
+          text == other.text &&
+          pinLength == other.pinLength &&
+          type == other.type &&
+          decoration == other.decoration &&
+          themeData == other.themeData &&
+          cursor == other.cursor;
 
   @override
   int get hashCode =>

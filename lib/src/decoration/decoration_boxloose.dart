@@ -23,29 +23,20 @@ class BoxLooseDecoration extends PinDecoration
   final ColorBuilder? bgColorBuilder;
 
   BoxLooseDecoration({
-    TextStyle? textStyle,
-    ObscureStyle? obscureStyle,
-    String? errorText,
-    TextStyle? errorTextStyle,
-    double errorTextSpacing = PinDecoration.defaultErrorTextSpacing,
-    String? hintText,
-    TextStyle? hintTextStyle,
+    super.textStyle,
+    super.obscureStyle,
+    super.errorText,
+    super.errorTextStyle,
+    super.errorTextSpacing = PinDecoration.defaultErrorTextSpacing,
+    super.hintText,
+    super.hintTextStyle,
     this.radius = const Radius.circular(8.0),
     this.strokeWidth = 1.0,
     this.gapSpace = 16.0,
     this.gapSpaces,
     required this.strokeColorBuilder,
     this.bgColorBuilder,
-  }) : super(
-          textStyle: textStyle,
-          obscureStyle: obscureStyle,
-          errorText: errorText,
-          errorTextStyle: errorTextStyle,
-          errorTextSpacing: errorTextSpacing,
-          hintText: hintText,
-          hintTextStyle: hintTextStyle,
-          baseBgColorBuilder: bgColorBuilder,
-        );
+  }) : super(baseBgColorBuilder: bgColorBuilder);
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxLoose;

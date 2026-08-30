@@ -6,15 +6,15 @@ repository: https://github.com/TinoGuo/pin_input_text_field
 issue_tracker: https://github.com/TinoGuo/pin_input_text_field/issues
 
 environment:
-  sdk: '>=2.13.0 <4.0.0'
-  flutter: ">=3.7.0"
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ">=3.0.1 <7.0.0"
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
   test:

@@ -147,6 +147,28 @@ final String obscureText;
 
 The `PinEditingController` listener will execute more than once when programmatically set text, you can filter some duplicate values in your code.
 
+## Preparing a release
+
+Start with a dry run from an up-to-date checkout:
+
+```bash
+./scripts/prepare_release.sh --dry-run
+./scripts/prepare_release.sh patch
+```
+
+The helper supports `patch`, `minor`, `major`, and an explicit version such as
+`4.5.3`. It refreshes remote tags, refuses a latest tag that cannot be matched
+to the current history, and handles a `pubspec.yaml` version that is newer than
+the tagged history. A real `patch` release requires a clean `master` matching
+`origin/master`; it writes the root `pubspec.yaml` and `CHANGELOG.md`, commits
+and pushes them, pushes the next bare version tag, and creates the GitHub
+Release with generated notes. It never changes `example/pubspec.yaml`.
+
+`release.yml` creates a GitHub Release for either bare or `v` SemVer tags, and
+`publish.yml` publishes bare SemVer tags to pub.dev through the `pub.dev`
+environment. Configure pub.dev's GitHub Actions publishing for this repository
+before the first automated publish.
+
 ## License
 
 ```text

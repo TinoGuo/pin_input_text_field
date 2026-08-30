@@ -15,27 +15,18 @@ class BoxTightDecoration extends PinDecoration with CursorPaint {
   final ColorBuilder? bgColorBuilder;
 
   BoxTightDecoration({
-    TextStyle? textStyle,
-    ObscureStyle? obscureStyle,
-    String? errorText,
-    TextStyle? errorTextStyle,
-    double errorTextSpacing = PinDecoration.defaultErrorTextSpacing,
-    String? hintText,
-    TextStyle? hintTextStyle,
+    super.textStyle,
+    super.obscureStyle,
+    super.errorText,
+    super.errorTextStyle,
+    super.errorTextSpacing = PinDecoration.defaultErrorTextSpacing,
+    super.hintText,
+    super.hintTextStyle,
     this.strokeWidth = 1.0,
     this.radius = const Radius.circular(8.0),
     this.strokeColor = Colors.cyan,
     this.bgColorBuilder,
-  }) : super(
-          textStyle: textStyle,
-          obscureStyle: obscureStyle,
-          errorText: errorText,
-          errorTextStyle: errorTextStyle,
-          errorTextSpacing: errorTextSpacing,
-          hintText: hintText,
-          hintTextStyle: hintTextStyle,
-          baseBgColorBuilder: bgColorBuilder,
-        );
+  }) : super(baseBgColorBuilder: bgColorBuilder);
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxTight;
