@@ -1,7 +1,28 @@
 ## [Unreleased]
-* Fix: forward deprecated `toolbarOptions` to the underlying `TextField` [#94](https://github.com/TinoGuo/pin_input_text_field/issues/94).
-* Fix #99 validation error text overlapping the pin area.
-* Add configurable `errorTextSpacing` to built-in decorations; defaults to 8 logical pixels.
+
+## [4.5.3] - 2026/09/06
+
+## What's Changed
+* 4.5.0 tasks by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/86
+* [CHORE] Remove example dir by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/91
+* [FEAT] Adapt to dart3 by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/97
+* [CHORE] Bump by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/98
+* [CHORE] Bump dependency version by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/100
+* [CHORE] Update github action by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/102
+* Update utils.dart by @dejunDev in https://github.com/TinoGuo/pin_input_text_field/pull/103
+* [CHORE] Bump version by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/104
+* Fix compatibility with Flutter 3.47 stable by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/105
+* chore: configure Dependabot updates by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/106
+* Bump flutter_lints from 3.0.2 to 6.0.0 by @dependabot[bot] in https://github.com/TinoGuo/pin_input_text_field/pull/107
+* Fix validator error spacing and make it configurable by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/108
+* Fix GitHub Pages preview rendering by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/109
+* Fix toolbar options forwarding by @TinoGuo in https://github.com/TinoGuo/pin_input_text_field/pull/110
+
+## New Contributors
+* @dejunDev made their first contribution in https://github.com/TinoGuo/pin_input_text_field/pull/103
+* @dependabot[bot] made their first contribution in https://github.com/TinoGuo/pin_input_text_field/pull/107
+
+**Full Changelog**: https://github.com/TinoGuo/pin_input_text_field/compare/v4.4.1...4.5.3
 
 ## [4.5.2] - 2024/08/22
 * #101 Fix Bad state error, thx [dejunDev](https://github.com/dejunDev)
